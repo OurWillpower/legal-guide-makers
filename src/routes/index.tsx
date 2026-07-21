@@ -610,6 +610,7 @@ function Home() {
               <li><a href="#why-us" className="hover:text-gold">Why Us</a></li>
               <li><a href="#founder" className="hover:text-gold">Founder</a></li>
               <li><a href="#testimonials" className="hover:text-gold">Testimonials</a></li>
+              <li><Link to="/faq" className="hover:text-gold">FAQ</Link></li>
               <li><Link to="/booking" className="hover:text-gold">Book Consultation</Link></li>
               <li><Link to="/contact" className="hover:text-gold">Contact</Link></li>
             </ul>
