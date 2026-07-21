@@ -16,6 +16,8 @@ import {
   Users,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import logoAsset from "@/assets/win-logo-mark.png.asset.json";
+import { submitBooking, type BookingInput } from "@/lib/bookings.functions";
 import { submitBooking, type BookingInput } from "@/lib/bookings.functions";
 
 export const Route = createFileRoute("/booking")({
