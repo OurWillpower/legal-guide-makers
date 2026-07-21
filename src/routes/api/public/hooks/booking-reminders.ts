@@ -6,12 +6,32 @@ export const Route = createFileRoute("/api/public/hooks/booking-reminders")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const apikey = request.headers.get("apikey");
-        if (!apikey || apikey !== process.env.SUPABASE_PUBLISHABLE_KEY) {
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+        const provided =
+          request.headers.get("x-cron-secret") ??
+          request.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ??
+          "";
+
+        const { data: secretRow, error: secretErr } = await supabaseAdmin
+          .from("internal_secrets")
+          .select("value")
+          .eq("name", "cron_webhook_secret")
+          .maybeSingle();
+        if (secretErr || !secretRow?.value) {
+          return new Response("Server not configured", { status: 500 });
+        }
+
+        const a = Buffer.from(provided);
+        const b = Buffer.from(secretRow.value);
+        if (a.length !== b.length) {
+          return new Response("Forbidden", { status: 403 });
+        }
+        const { timingSafeEqual } = await import("crypto");
+        if (!timingSafeEqual(a, b)) {
           return new Response("Forbidden", { status: 403 });
         }
 
-        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { renderDbTemplate } = await import("@/lib/email-render.server");
         const { sendWhatsappTemplate } = await import("@/lib/whatsapp.server");
         const now = Date.now();
