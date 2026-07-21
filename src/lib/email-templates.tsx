@@ -180,7 +180,11 @@ export interface BookingEmailProps {
   preferredDate: string;
   preferredTime: string;
   message?: string | null;
+  bookingId?: string;
+  cancelled?: boolean;
+  rescheduled?: boolean;
 }
+
 
 export const BookingConfirmationEmail: React.FC<BookingEmailProps> = (props) => (
   <Shell preview={`Your consultation request has been received — ${props.service}`}>
