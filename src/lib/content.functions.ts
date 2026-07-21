@@ -92,7 +92,7 @@ export const getPublicBookingStatus = createServerFn({ method: "GET" })
     const { data: b } = await supabaseAdmin
       .from("bookings")
       .select(
-        "id, name, service, preferred_date, preferred_time, status, cancelled_at, cancellation_reason, reschedule_count, message, manage_token, created_at",
+        "id, name, service, preferred_date, preferred_time, status, cancelled_at, cancellation_reason, reschedule_count, message, manage_token, created_at, payment_status, payment_amount, payment_currency, payment_reference",
       )
       .eq("id", data.id)
       .maybeSingle();
