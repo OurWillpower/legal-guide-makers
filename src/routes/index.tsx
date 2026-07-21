@@ -444,8 +444,11 @@ function Home() {
           </h2>
           <div className="divider-gold mx-auto my-6 max-w-xs" />
           <p className="text-muted-foreground">
-            A few words from the businesses we've helped scale, close rounds and
-            stay compliant.
+            A few words from businesses we've helped scale, close rounds and stay compliant.
+          </p>
+          <p className="mt-3 text-xs italic text-muted-foreground/80">
+            Names and identifying details of some clients have been anonymised on request.
+            Consent obtained for every quote shown.
           </p>
         </div>
 
