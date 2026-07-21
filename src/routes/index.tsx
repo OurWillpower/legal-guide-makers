@@ -302,7 +302,7 @@ function Home() {
               { k: "10+", v: "Years of Experience" },
               { k: "150+", v: "Companies Advised" },
               { k: "PAN", v: "India Presence" },
-              { k: "24/7", v: "Client Support" },
+              { k: "Global", v: "UK-Trained Counsel" },
             ].map((s) => (
               <div
                 key={s.v}
