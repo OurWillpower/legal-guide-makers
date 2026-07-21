@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Scale,
   ShieldCheck,
@@ -16,9 +16,13 @@ import {
   Mail,
   Phone,
   Calendar,
+  Quote,
+  Star,
 } from "lucide-react";
 import logoAsset from "@/assets/win-logo.png.asset.json";
-import portrait from "@/assets/vrushali-portrait.jpg";
+import portraitAsset from "@/assets/vrushali-portrait.png.asset.json";
+
+const portrait = portraitAsset.url;
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -94,6 +98,30 @@ const differentiators = [
   { icon: Globe, title: "Pan-India Presence", desc: "Local depth with a global perspective." },
 ];
 
+const testimonials = [
+  {
+    initials: "RM",
+    name: "Rohan Mehta",
+    role: "Founder & CEO, SaaS Startup",
+    quote:
+      "WIN Legal Advisors made our Series A term-sheet negotiations painless. Sharp, commercial and always ahead of the room.",
+  },
+  {
+    initials: "AS",
+    name: "Ananya Sharma",
+    role: "General Counsel, FinTech",
+    quote:
+      "Their DPDP readiness playbook was the clearest we've seen. We closed our enterprise-security review in half the time.",
+  },
+  {
+    initials: "KJ",
+    name: "Kunal Joshi",
+    role: "Co-founder, D2C Brand",
+    quote:
+      "From incorporation to trademark and vendor contracts — one team, zero drama. They think like operators, not just lawyers.",
+  },
+];
+
 function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -118,15 +146,16 @@ function Home() {
             <a href="#services" className="hover:text-gold transition-colors">Services</a>
             <a href="#why-us" className="hover:text-gold transition-colors">Why Us</a>
             <a href="#founder" className="hover:text-gold transition-colors">Founder</a>
-            <a href="#contact" className="hover:text-gold transition-colors">Contact</a>
+            <a href="#testimonials" className="hover:text-gold transition-colors">Testimonials</a>
+            <Link to="/contact" className="hover:text-gold transition-colors">Contact</Link>
           </nav>
-          <a
-            href="#contact"
+          <Link
+            to="/booking"
             className="hidden items-center gap-2 rounded-full bg-gradient-gold px-5 py-2.5 text-sm font-semibold text-navy-deep shadow-gold transition-transform hover:scale-[1.03] md:inline-flex"
           >
             <Calendar className="h-4 w-4" />
             Book Consultation
-          </a>
+          </Link>
         </div>
       </header>
 
@@ -170,13 +199,13 @@ function Home() {
             </div>
 
             <div className="mt-10 flex flex-wrap gap-4">
-              <a
-                href="#contact"
+              <Link
+                to="/booking"
                 className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-7 py-3.5 text-sm font-semibold text-navy-deep shadow-gold transition-transform hover:scale-[1.03]"
               >
                 <Calendar className="h-4 w-4" />
                 Book a Free Legal Consultation
-              </a>
+              </Link>
               <a
                 href="#services"
                 className="inline-flex items-center gap-2 rounded-full border border-gold/40 px-7 py-3.5 text-sm font-semibold text-cream transition-colors hover:bg-gold/10"
@@ -367,6 +396,60 @@ function Home() {
         </div>
       </section>
 
+      {/* TESTIMONIALS */}
+      <section id="testimonials" className="mx-auto max-w-7xl px-6 py-24">
+        <div className="mx-auto max-w-2xl text-center">
+          <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
+            Client Voices
+          </span>
+          <h2 className="mt-4 font-serif text-4xl font-bold text-navy-deep md:text-5xl">
+            Trusted by founders, boards & general counsel
+          </h2>
+          <div className="divider-gold mx-auto my-6 max-w-xs" />
+          <p className="text-muted-foreground">
+            A few words from the businesses we've helped scale, close rounds and
+            stay compliant.
+          </p>
+        </div>
+
+        <div className="mt-16 grid gap-6 md:grid-cols-3">
+          {testimonials.map((t) => (
+            <figure
+              key={t.name}
+              className="relative flex h-full flex-col rounded-3xl border border-navy/10 bg-card p-8 shadow-sm transition-all hover:-translate-y-1 hover:shadow-elegant"
+            >
+              <Quote className="absolute right-6 top-6 h-8 w-8 text-gold/25" />
+              <div className="flex gap-0.5 text-gold">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="h-4 w-4 fill-gold" />
+                ))}
+              </div>
+              <blockquote className="mt-5 flex-1 text-navy-deep">
+                <p className="font-serif text-lg leading-relaxed">
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+              </blockquote>
+              <figcaption className="mt-8 flex items-center gap-4 border-t border-navy/10 pt-6">
+                <div
+                  className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-gradient-navy font-serif text-lg font-bold text-gold"
+                  aria-hidden
+                >
+                  {t.initials}
+                </div>
+                <div>
+                  <div className="font-serif text-base font-semibold text-navy-deep">
+                    {t.name}
+                  </div>
+                  <div className="text-xs uppercase tracking-widest text-gold">
+                    {t.role}
+                  </div>
+                </div>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+
       {/* CTA / CONTACT */}
       <section id="contact" className="relative overflow-hidden bg-gradient-navy text-cream">
         <div
@@ -387,23 +470,24 @@ function Home() {
             opportunities specific to your business — no obligation.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <a
-              href="mailto:contact@winlegaladvisors.com"
+            <Link
+              to="/booking"
               className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-8 py-4 text-sm font-semibold text-navy-deep shadow-gold transition-transform hover:scale-[1.03]"
             >
               <Calendar className="h-4 w-4" />
               Book a Free Consultation
-            </a>
-            <a
-              href="mailto:contact@winlegaladvisors.com"
+            </Link>
+            <Link
+              to="/contact"
               className="inline-flex items-center gap-2 rounded-full border border-gold/40 px-8 py-4 text-sm font-semibold text-cream transition-colors hover:bg-gold/10"
             >
               <Mail className="h-4 w-4" />
-              contact@winlegaladvisors.com
-            </a>
+              Send us a message
+            </Link>
           </div>
         </div>
       </section>
+
 
       {/* FOOTER */}
       <footer className="bg-navy-deep text-cream/70">
@@ -434,6 +518,9 @@ function Home() {
               <li><a href="#services" className="hover:text-gold">Services</a></li>
               <li><a href="#why-us" className="hover:text-gold">Why Us</a></li>
               <li><a href="#founder" className="hover:text-gold">Founder</a></li>
+              <li><a href="#testimonials" className="hover:text-gold">Testimonials</a></li>
+              <li><Link to="/booking" className="hover:text-gold">Book Consultation</Link></li>
+              <li><Link to="/contact" className="hover:text-gold">Contact</Link></li>
             </ul>
           </div>
           <div>
