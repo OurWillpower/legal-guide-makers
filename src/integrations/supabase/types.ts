@@ -14,45 +14,93 @@ export type Database = {
   }
   public: {
     Tables: {
+      booking_settings: {
+        Row: {
+          blocked_dates: Json
+          buffer_days: number
+          consultation_duration_minutes: number
+          id: string
+          time_slots: Json
+          timezone: string
+          updated_at: string
+        }
+        Insert: {
+          blocked_dates?: Json
+          buffer_days?: number
+          consultation_duration_minutes?: number
+          id?: string
+          time_slots?: Json
+          timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          blocked_dates?: Json
+          buffer_days?: number
+          consultation_duration_minutes?: number
+          id?: string
+          time_slots?: Json
+          timezone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
+          cancellation_reason: string | null
+          cancelled_at: string | null
           company: string | null
           created_at: string
           email: string
+          google_event_id: string | null
           id: string
+          manage_token: string
           message: string | null
           name: string
           phone: string | null
           preferred_date: string
           preferred_time: string
+          reschedule_count: number
           service: string
           status: string
+          user_id: string | null
         }
         Insert: {
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
           company?: string | null
           created_at?: string
           email: string
+          google_event_id?: string | null
           id?: string
+          manage_token?: string
           message?: string | null
           name: string
           phone?: string | null
           preferred_date: string
           preferred_time: string
+          reschedule_count?: number
           service: string
           status?: string
+          user_id?: string | null
         }
         Update: {
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
           company?: string | null
           created_at?: string
           email?: string
+          google_event_id?: string | null
           id?: string
+          manage_token?: string
           message?: string | null
           name?: string
           phone?: string | null
           preferred_date?: string
           preferred_time?: string
+          reschedule_count?: number
           service?: string
           status?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -86,15 +134,114 @@ export type Database = {
         }
         Relationships: []
       }
+      services: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          slug: string
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description: string
+          icon?: string
+          id?: string
+          slug: string
+          sort_order?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          slug?: string
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      testimonials: {
+        Row: {
+          author_name: string
+          author_role: string | null
+          avatar_url: string | null
+          created_at: string
+          id: string
+          published: boolean
+          quote: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          author_name: string
+          author_role?: string | null
+          avatar_url?: string | null
+          created_at?: string
+          id?: string
+          published?: boolean
+          quote: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          author_name?: string
+          author_role?: string | null
+          avatar_url?: string | null
+          created_at?: string
+          id?: string
+          published?: boolean
+          quote?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -221,6 +368,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
