@@ -19,9 +19,10 @@ import {
   Quote,
   Star,
 } from "lucide-react";
-import logoAsset from "@/assets/win-logo.png.asset.json";
+import logoAsset from "@/assets/win-logo-mark.png.asset.json";
 import portraitAsset from "@/assets/vrushali-portrait.png.asset.json";
 
+const logo = logoAsset.url;
 const portrait = portraitAsset.url;
 
 export const Route = createFileRoute("/")({
