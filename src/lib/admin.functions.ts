@@ -194,3 +194,56 @@ export const adminListMessages = createServerFn({ method: "GET" })
     if (error) throw error;
     return data ?? [];
   });
+
+// --- FAQs
+const faqSchema = z.object({
+  id: z.string().uuid().optional(),
+  question: z.string().trim().min(1).max(500),
+  answer: z.string().trim().min(1).max(5000),
+  sort_order: z.number().int().min(0).max(9999),
+  published: z.boolean(),
+});
+
+export const adminListFaqs = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context.supabase, context.userId);
+    const { data, error } = await context.supabase
+      .from("faqs")
+      .select("*")
+      .order("sort_order", { ascending: true });
+    if (error) throw error;
+    return data ?? [];
+  });
+
+export const saveFaq = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => faqSchema.parse(raw))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.supabase, context.userId);
+    const row = {
+      question: data.question,
+      answer: data.answer,
+      sort_order: data.sort_order,
+      published: data.published,
+      updated_at: new Date().toISOString(),
+    };
+    if (data.id) {
+      const { error } = await context.supabase.from("faqs").update(row).eq("id", data.id);
+      if (error) throw error;
+    } else {
+      const { error } = await context.supabase.from("faqs").insert(row);
+      if (error) throw error;
+    }
+    return { ok: true };
+  });
+
+export const deleteFaq = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((id: string) => z.string().uuid().parse(id))
+  .handler(async ({ data: id, context }) => {
+    await assertAdmin(context.supabase, context.userId);
+    const { error } = await context.supabase.from("faqs").delete().eq("id", id);
+    if (error) throw error;
+    return { ok: true };
+  });
