@@ -98,6 +98,30 @@ const differentiators = [
   { icon: Globe, title: "Pan-India Presence", desc: "Local depth with a global perspective." },
 ];
 
+const testimonials = [
+  {
+    initials: "RM",
+    name: "Rohan Mehta",
+    role: "Founder & CEO, SaaS Startup",
+    quote:
+      "WIN Legal Advisors made our Series A term-sheet negotiations painless. Sharp, commercial and always ahead of the room.",
+  },
+  {
+    initials: "AS",
+    name: "Ananya Sharma",
+    role: "General Counsel, FinTech",
+    quote:
+      "Their DPDP readiness playbook was the clearest we've seen. We closed our enterprise-security review in half the time.",
+  },
+  {
+    initials: "KJ",
+    name: "Kunal Joshi",
+    role: "Co-founder, D2C Brand",
+    quote:
+      "From incorporation to trademark and vendor contracts — one team, zero drama. They think like operators, not just lawyers.",
+  },
+];
+
 function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground">
