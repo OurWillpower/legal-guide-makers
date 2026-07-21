@@ -15,7 +15,12 @@ export interface BookingPdfInput {
   status?: string | null;
   cancelledAt?: string | null;
   createdAt?: string | null;
+  paymentStatus?: string | null;
+  paymentAmount?: number | null;
+  paymentCurrency?: string | null;
+  paymentReference?: string | null;
 }
+
 
 const NAVY = rgb(15 / 255, 25 / 255, 48 / 255);
 const NAVY_SOFT = rgb(26 / 255, 42 / 255, 74 / 255);
@@ -61,8 +66,8 @@ export async function generateBookingPdf(b: BookingPdfInput): Promise<Uint8Array
     x: 40, y: height - 97,
     size: 8, font, color: rgb(0.82, 0.75, 0.55),
   });
-  page.drawText("Consultation Confirmation", {
-    x: width - 40 - bold.widthOfTextAtSize("Consultation Confirmation", 14),
+  page.drawText("Payment Receipt", {
+    x: width - 40 - bold.widthOfTextAtSize("Payment Receipt", 14),
     y: height - 60,
     size: 14, font: bold, color: CREAM,
   });
@@ -119,6 +124,50 @@ export async function generateBookingPdf(b: BookingPdfInput): Promise<Uint8Array
   }
   y -= 230;
 
+  // Payment section
+  const payStatus = (b.paymentStatus || "complimentary").toLowerCase();
+  const payLabel: Record<string, string> = {
+    complimentary: "Complimentary — no charge",
+    pending: "Payment pending",
+    paid: "Paid — thank you",
+    refunded: "Refunded",
+    waived: "Fee waived",
+  };
+  const amount = Number(b.paymentAmount ?? 0);
+  const currency = (b.paymentCurrency || "INR").toUpperCase();
+  const amountText = amount > 0
+    ? `${currency} ${amount.toFixed(2)}`
+    : "No charge";
+  const payColor = payStatus === "paid"
+    ? rgb(0.09, 0.5, 0.32)
+    : payStatus === "pending"
+      ? GOLD
+      : payStatus === "refunded"
+        ? rgb(0.72, 0.13, 0.13)
+        : NAVY_SOFT;
+
+  page.drawRectangle({ x: 40, y: y - 78, width: width - 80, height: 78, color: CREAM, borderColor: GOLD, borderWidth: 0.5 });
+  page.drawText("PAYMENT", { x: 55, y: y - 20, size: 9, font: bold, color: MUTED });
+  page.drawText(payLabel[payStatus] ?? payStatus.toUpperCase(), {
+    x: 55, y: y - 40, size: 12, font: bold, color: payColor,
+  });
+  page.drawText("AMOUNT", {
+    x: width - 55 - bold.widthOfTextAtSize("AMOUNT", 9), y: y - 20, size: 9, font: bold, color: MUTED,
+  });
+  page.drawText(amountText, {
+    x: width - 55 - bold.widthOfTextAtSize(amountText, 14), y: y - 42, size: 14, font: bold, color: NAVY,
+  });
+  if (b.paymentReference) {
+    page.drawText(`Reference: ${b.paymentReference}`, {
+      x: 55, y: y - 60, size: 9, font, color: MUTED,
+    });
+  } else if (payStatus === "complimentary") {
+    page.drawText("Initial consultation offered at no cost.", {
+      x: 55, y: y - 60, size: 9, font, color: MUTED,
+    });
+  }
+  y -= 100;
+
   if (b.message) {
     page.drawText("YOUR NOTE", { x: 40, y, size: 9, font: bold, color: MUTED });
     y -= 16;
@@ -129,6 +178,7 @@ export async function generateBookingPdf(b: BookingPdfInput): Promise<Uint8Array
     }
     y -= 10;
   }
+
 
   // Prep checklist
   page.drawText("BEFORE OUR CALL — HELPFUL DOCUMENTS", { x: 40, y, size: 9, font: bold, color: MUTED });
