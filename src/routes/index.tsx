@@ -485,6 +485,67 @@ function Home() {
         </div>
       </section>
 
+      {/* FAQ PREVIEW */}
+      <section id="faq" className="bg-cream">
+        <div className="mx-auto max-w-4xl px-6 py-24">
+          <div className="text-center">
+            <p className="text-xs uppercase tracking-[0.3em] text-gold">Frequently Asked</p>
+            <h2 className="mt-3 font-serif text-4xl font-bold text-navy-deep md:text-5xl">
+              Answers before you book
+            </h2>
+            <div className="divider-gold mx-auto my-6 max-w-xs" />
+            <p className="text-muted-foreground">
+              Consultation format, timelines, documents to bring, and how we protect what you share.
+            </p>
+          </div>
+
+          <div className="mt-12 space-y-4">
+            {[
+              {
+                q: "How does a consultation work and how long is it?",
+                a: "A 30–45 minute video call on Google Meet or Teams. You'll get an email confirmation with an Add to Google Calendar link and a downloadable .ics invite; the video link is sent 24 hours before the call.",
+              },
+              {
+                q: "How soon can I get a slot?",
+                a: "Most consultations are confirmed within one business day and held within 2–4 business days. Urgent regulatory or investor matters can be fast-tracked — mention it in your booking note.",
+              },
+              {
+                q: "What documents should I bring or share?",
+                a: "Whatever is relevant — incorporation docs, contracts under review, term sheets, DPDP/privacy notices, legal notices, and a one-page summary of what you'd like to discuss. Everything you share is treated as confidential.",
+              },
+              {
+                q: "Can I reschedule or cancel later?",
+                a: "Yes — sign in and manage your booking any time. You can reschedule up to three times and cancel any time before the appointment.",
+              },
+            ].map((f) => (
+              <details
+                key={f.q}
+                className="group rounded-2xl border border-navy/10 bg-card p-6 shadow-sm transition-all open:shadow-elegant"
+              >
+                <summary className="flex cursor-pointer list-none items-start justify-between gap-4">
+                  <span className="flex items-start gap-3">
+                    <HelpCircle className="mt-0.5 h-5 w-5 shrink-0 text-gold" />
+                    <span className="font-serif text-lg font-semibold text-navy-deep">{f.q}</span>
+                  </span>
+                  <span className="mt-1 text-gold transition-transform group-open:rotate-45">+</span>
+                </summary>
+                <p className="mt-4 pl-8 text-sm leading-relaxed text-muted-foreground">{f.a}</p>
+              </details>
+            ))}
+          </div>
+
+          <div className="mt-10 text-center">
+            <Link
+              to="/faq"
+              className="inline-flex items-center gap-2 rounded-full border border-navy/20 bg-white px-6 py-3 text-sm font-semibold text-navy-deep transition-colors hover:border-gold hover:text-gold"
+            >
+              See all FAQs
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* CTA / CONTACT */}
       <section id="contact" className="relative overflow-hidden bg-gradient-navy text-cream">
         <div
