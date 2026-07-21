@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Scale,
   ShieldCheck,
@@ -16,9 +16,13 @@ import {
   Mail,
   Phone,
   Calendar,
+  Quote,
+  Star,
 } from "lucide-react";
 import logoAsset from "@/assets/win-logo.png.asset.json";
-import portrait from "@/assets/vrushali-portrait.jpg";
+import portraitAsset from "@/assets/vrushali-portrait.png.asset.json";
+
+const portrait = portraitAsset.url;
 
 export const Route = createFileRoute("/")({
   component: Home,
