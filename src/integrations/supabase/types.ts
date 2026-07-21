@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      booking_events: {
+        Row: {
+          actor: string | null
+          booking_id: string
+          created_at: string
+          event_type: string
+          id: string
+          meta: Json
+        }
+        Insert: {
+          actor?: string | null
+          booking_id: string
+          created_at?: string
+          event_type: string
+          id?: string
+          meta?: Json
+        }
+        Update: {
+          actor?: string | null
+          booking_id?: string
+          created_at?: string
+          event_type?: string
+          id?: string
+          meta?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_events_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       booking_settings: {
         Row: {
           blocked_dates: Json
@@ -65,6 +100,9 @@ export type Database = {
           service: string
           status: string
           user_id: string | null
+          whatsapp_24h_sent_at: string | null
+          whatsapp_2h_sent_at: string | null
+          whatsapp_opt_in: boolean
         }
         Insert: {
           cancellation_reason?: string | null
@@ -86,6 +124,9 @@ export type Database = {
           service: string
           status?: string
           user_id?: string | null
+          whatsapp_24h_sent_at?: string | null
+          whatsapp_2h_sent_at?: string | null
+          whatsapp_opt_in?: boolean
         }
         Update: {
           cancellation_reason?: string | null
@@ -107,6 +148,9 @@ export type Database = {
           service?: string
           status?: string
           user_id?: string | null
+          whatsapp_24h_sent_at?: string | null
+          whatsapp_2h_sent_at?: string | null
+          whatsapp_opt_in?: boolean
         }
         Relationships: []
       }
@@ -137,6 +181,42 @@ export type Database = {
           name?: string
           phone?: string | null
           subject?: string | null
+        }
+        Relationships: []
+      }
+      email_templates: {
+        Row: {
+          created_at: string
+          description: string | null
+          html: string
+          id: string
+          subject: string
+          template_key: string
+          text: string
+          updated_at: string
+          variables: string[]
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          html: string
+          id?: string
+          subject: string
+          template_key: string
+          text?: string
+          updated_at?: string
+          variables?: string[]
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          html?: string
+          id?: string
+          subject?: string
+          template_key?: string
+          text?: string
+          updated_at?: string
+          variables?: string[]
         }
         Relationships: []
       }
