@@ -24,9 +24,29 @@ const bookingSchema = z.object({
 
 export type BookingInput = z.infer<typeof bookingSchema>;
 
+async function logBookingEvent(
+  bookingId: string,
+  eventType: string,
+  meta: Record<string, unknown> = {},
+  actor?: string,
+) {
+  try {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    await supabaseAdmin.from("booking_events").insert({
+      booking_id: bookingId,
+      event_type: eventType,
+      meta,
+      actor: actor ?? null,
+    });
+  } catch (err) {
+    console.warn("[bookings] event log skipped:", err);
+  }
+}
+
 async function sendBookingEmail(opts: {
   to: string;
   name: string;
+  phone?: string | null;
   service: string;
   preferredDate: string;
   preferredTime: string;
@@ -38,69 +58,66 @@ async function sendBookingEmail(opts: {
   const apiKey = process.env.LOVABLE_API_KEY;
   if (!apiKey) return;
   try {
-    const [{ sendLovableEmail }, { render }, tpl] = await Promise.all([
+    const [{ sendLovableEmail }, { renderDbTemplate }] = await Promise.all([
       import("@lovable.dev/email-js"),
-      import("@react-email/render"),
-      import("./email-templates"),
+      import("./email-render.server"),
     ]);
-    const React = (await import("react")).default;
 
-    // Build calendar helpers (best-effort — if time parsing fails we still send the email).
-    let googleCalUrl: string | undefined;
-    let icsUrl: string | undefined;
-    let manageUrl: string | undefined;
+    let googleCalUrl = "";
     try {
       const startISO = slotToISO(opts.preferredDate, opts.preferredTime);
       googleCalUrl = googleCalendarUrl({
         title: `Legal Consultation — WIN Legal Advisors (${opts.service})`,
         startISO,
         durationMinutes: 45,
-        description:
-          "Your legal consultation with WIN Legal Advisors. A video call link will be shared before the appointment.",
+        description: "Your legal consultation with WIN Legal Advisors.",
         location: "WIN Legal Advisors (Video call)",
       });
     } catch (err) {
       console.warn("[bookings] calendar url skipped:", err);
     }
-    let pdfUrl: string | undefined;
-    if (opts.manageToken) {
-      const base = siteBaseUrl();
-      icsUrl = `${base}/api/public/booking-ics/${opts.bookingId}?token=${encodeURIComponent(opts.manageToken)}`;
-      pdfUrl = `${base}/api/public/booking-pdf/${opts.bookingId}?token=${encodeURIComponent(opts.manageToken)}`;
-      manageUrl = `${base}/manage-booking/${opts.bookingId}`;
-    }
+    const base = siteBaseUrl();
+    const icsUrl = opts.manageToken
+      ? `${base}/api/public/booking-ics/${opts.bookingId}?token=${encodeURIComponent(opts.manageToken)}`
+      : "";
+    const pdfUrl = opts.manageToken
+      ? `${base}/api/public/booking-pdf/${opts.bookingId}?token=${encodeURIComponent(opts.manageToken)}`
+      : "";
+    const manageUrl = opts.manageToken ? `${base}/manage-booking/${opts.bookingId}` : "";
+    const statusUrl = opts.manageToken
+      ? `${base}/status/${opts.bookingId}?token=${encodeURIComponent(opts.manageToken)}`
+      : "";
 
-    const element = React.createElement(tpl.BookingConfirmationEmail, {
+    const key = opts.cancelled
+      ? "booking_cancelled"
+      : opts.rescheduled
+        ? "booking_rescheduled"
+        : "booking_confirmation";
+
+    const data = {
       name: opts.name,
-      email: opts.to,
-      phone: null,
-      company: null,
       service: opts.service,
       preferredDate: opts.preferredDate,
       preferredTime: opts.preferredTime,
-      message: null,
-      bookingId: opts.bookingId,
-      cancelled: opts.cancelled,
-      rescheduled: opts.rescheduled,
+      manageUrl,
       googleCalendarUrl: googleCalUrl,
       icsUrl,
-      manageUrl,
       pdfUrl,
-    });
-    const html = await render(element);
-    const text = await render(element, { plainText: true });
-    const subject = opts.cancelled
-      ? "Your consultation has been cancelled — WIN Legal Advisors"
-      : opts.rescheduled
-        ? "Your consultation has been rescheduled — WIN Legal Advisors"
-        : "Your consultation is confirmed — WIN Legal Advisors";
+      statusUrl,
+    };
+    const rendered = await renderDbTemplate(key, data);
+    if (!rendered) {
+      console.warn(`[bookings] template ${key} not found`);
+      return;
+    }
+
     await sendLovableEmail(
       {
         to: opts.to,
         from: "WIN Legal Advisors <hello@winlegaladvisors.com>",
-        subject,
-        html,
-        text,
+        subject: rendered.subject,
+        html: rendered.html,
+        text: rendered.text,
         purpose: "booking_confirmation",
         reply_to: "contact@winlegaladvisors.com",
       },
@@ -110,6 +127,7 @@ async function sendBookingEmail(opts: {
     console.warn("[bookings] email skipped:", err);
   }
 }
+
 
 export const submitBooking = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
