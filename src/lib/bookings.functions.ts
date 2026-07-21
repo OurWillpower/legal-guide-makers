@@ -162,6 +162,7 @@ export const submitBooking = createServerFn({ method: "POST" })
       preferredDate: data.preferredDate,
       preferredTime: data.preferredTime,
       bookingId: row.id,
+      manageToken: row.manage_token,
     });
 
     return { id: row.id, ok: true };
