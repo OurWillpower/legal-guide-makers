@@ -196,6 +196,75 @@ export const submitBooking = createServerFn({ method: "POST" })
     return { id: row.id, ok: true };
   });
 
+// Public (no-auth) booking — clients can request a consultation without
+// creating an account. They still get a manage_token via email for
+// reschedule / cancel / status.
+export const submitBookingPublic = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => bookingSchema.parse(data))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { createGcalEvent } = await import("./google-calendar.server");
+
+    const { data: row, error } = await supabaseAdmin
+      .from("bookings")
+      .insert({
+        user_id: null,
+        name: data.name,
+        email: data.email,
+        phone: data.phone || null,
+        company: data.company || null,
+        service: data.service,
+        preferred_date: data.preferredDate,
+        preferred_time: data.preferredTime,
+        message: data.message || null,
+      })
+      .select("id, manage_token")
+      .single();
+
+    if (error || !row) {
+      console.error("[bookings] public insert failed:", error);
+      throw new Error("Could not save your request. Please try again.");
+    }
+
+    try {
+      const startISO = slotToISO(data.preferredDate, data.preferredTime);
+      const gcal = await createGcalEvent({
+        summary: `Legal Consultation — ${data.name} (${data.service})`,
+        description: `Client: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone || "—"}\nService: ${data.service}\n\nMessage:\n${data.message || "—"}`,
+        location: "WIN Legal Advisors (Video call link to follow)",
+        startISO,
+        durationMinutes: 45,
+        attendeeEmail: data.email,
+        attendeeName: data.name,
+      });
+      if (gcal?.id) {
+        await supabaseAdmin.from("bookings").update({ google_event_id: gcal.id }).eq("id", row.id);
+      }
+    } catch (err) {
+      console.warn("[bookings] gcal skipped:", err);
+    }
+
+    await logBookingEvent(row.id, "created", {
+      service: data.service,
+      date: data.preferredDate,
+      time: data.preferredTime,
+      channel: "public",
+    });
+
+    await sendBookingEmail({
+      to: data.email,
+      name: data.name,
+      phone: data.phone,
+      service: data.service,
+      preferredDate: data.preferredDate,
+      preferredTime: data.preferredTime,
+      bookingId: row.id,
+      manageToken: row.manage_token,
+    });
+
+    return { id: row.id, manageToken: row.manage_token, ok: true };
+  });
+
 export const getMyBookings = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
