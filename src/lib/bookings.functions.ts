@@ -209,7 +209,7 @@ export const rescheduleBooking = createServerFn({ method: "POST" })
     // Owner-scoped update via RLS
     const { data: existing, error: readErr } = await context.supabase
       .from("bookings")
-      .select("id, name, email, service, reschedule_count, cancelled_at")
+      .select("id, name, email, service, reschedule_count, cancelled_at, manage_token")
       .eq("id", data.id)
       .maybeSingle();
     if (readErr || !existing) throw new Error("Booking not found");
