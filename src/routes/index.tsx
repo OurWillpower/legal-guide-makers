@@ -182,6 +182,7 @@ function Home() {
             <a href="#why-us" className="hover:text-gold transition-colors">Why Us</a>
             <a href="#founder" className="hover:text-gold transition-colors">Founder</a>
             <a href="#testimonials" className="hover:text-gold transition-colors">Testimonials</a>
+            <a href="#faq" className="hover:text-gold transition-colors">FAQ</a>
             <Link to="/contact" className="hover:text-gold transition-colors">Contact</Link>
           </nav>
           <Link
