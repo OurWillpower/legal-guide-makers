@@ -91,6 +91,10 @@ export type Database = {
           manage_token: string
           message: string | null
           name: string
+          payment_amount: number
+          payment_currency: string
+          payment_reference: string | null
+          payment_status: string
           phone: string | null
           preferred_date: string
           preferred_time: string
@@ -115,6 +119,10 @@ export type Database = {
           manage_token?: string
           message?: string | null
           name: string
+          payment_amount?: number
+          payment_currency?: string
+          payment_reference?: string | null
+          payment_status?: string
           phone?: string | null
           preferred_date: string
           preferred_time: string
@@ -139,6 +147,10 @@ export type Database = {
           manage_token?: string
           message?: string | null
           name?: string
+          payment_amount?: number
+          payment_currency?: string
+          payment_reference?: string | null
+          payment_status?: string
           phone?: string | null
           preferred_date?: string
           preferred_time?: string
