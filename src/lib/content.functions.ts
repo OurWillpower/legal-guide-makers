@@ -79,3 +79,31 @@ export const listFaqs = createServerFn({ method: "GET" }).handler(async () => {
     .order("sort_order", { ascending: true });
   return data ?? [];
 });
+
+// Public booking status — gated by manage_token so anyone with the link can view.
+export const getPublicBookingStatus = createServerFn({ method: "GET" })
+  .inputValidator((raw: unknown) => {
+    const v = raw as { id?: string; token?: string };
+    if (!v?.id || !v?.token) throw new Error("Missing id/token");
+    return { id: String(v.id), token: String(v.token) };
+  })
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: b } = await supabaseAdmin
+      .from("bookings")
+      .select(
+        "id, name, service, preferred_date, preferred_time, status, cancelled_at, cancellation_reason, reschedule_count, message, manage_token, created_at",
+      )
+      .eq("id", data.id)
+      .maybeSingle();
+    if (!b || b.manage_token !== data.token) return null;
+    const { data: events } = await supabaseAdmin
+      .from("booking_events")
+      .select("id, event_type, meta, created_at")
+      .eq("booking_id", data.id)
+      .order("created_at", { ascending: true });
+    // Strip manage_token from the response
+    const { manage_token: _t, ...safe } = b;
+    return { booking: safe, events: events ?? [] };
+  });
+
