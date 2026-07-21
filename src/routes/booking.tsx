@@ -162,6 +162,24 @@ function BookingPage() {
           </p>
         </div>
 
+        {authState === "signed-out" && (
+          <div className="mt-10 rounded-2xl border border-gold/40 bg-cream p-8 text-center">
+            <h2 className="mb-2 font-serif text-2xl font-semibold text-navy-deep">
+              Sign in to book
+            </h2>
+            <p className="mb-6 text-muted-foreground">
+              We need a quick account so you can reschedule or cancel your consultation later.
+            </p>
+            <Link to="/auth" search={{ redirect: "/booking" }}>
+              <Button className="bg-gradient-navy hover:opacity-95">Sign in or create account</Button>
+            </Link>
+          </div>
+        )}
+
+        {authState === "signed-in" && (
+        <>
+
+
         {/* Stepper */}
         <ol className="mx-auto mt-10 flex max-w-md items-center justify-between">
           {[1, 2, 3].map((n) => (
