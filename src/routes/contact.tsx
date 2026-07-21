@@ -63,13 +63,12 @@ function ContactPage() {
     <div className="min-h-screen bg-background">
       <header className="border-b border-navy/10 bg-background/85 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link to="/" className="flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center rounded-md bg-gradient-navy">
-              <span className="font-serif text-base font-bold text-gold">W</span>
-            </span>
-            <span className="font-serif text-lg font-bold text-navy-deep">
-              WIN Legal Advisors
-            </span>
+          <Link to="/" className="flex items-center">
+            <img
+              src={logoAsset.url}
+              alt="WIN Legal Advisors — Vision to Victory"
+              className="h-10 w-auto"
+            />
           </Link>
           <Link
             to="/"
