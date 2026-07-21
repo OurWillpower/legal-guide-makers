@@ -62,9 +62,11 @@ async function sendBookingEmail(opts: {
     } catch (err) {
       console.warn("[bookings] calendar url skipped:", err);
     }
+    let pdfUrl: string | undefined;
     if (opts.manageToken) {
       const base = siteBaseUrl();
       icsUrl = `${base}/api/public/booking-ics/${opts.bookingId}?token=${encodeURIComponent(opts.manageToken)}`;
+      pdfUrl = `${base}/api/public/booking-pdf/${opts.bookingId}?token=${encodeURIComponent(opts.manageToken)}`;
       manageUrl = `${base}/manage-booking/${opts.bookingId}`;
     }
 
@@ -83,6 +85,7 @@ async function sendBookingEmail(opts: {
       googleCalendarUrl: googleCalUrl,
       icsUrl,
       manageUrl,
+      pdfUrl,
     });
     const html = await render(element);
     const text = await render(element, { plainText: true });
