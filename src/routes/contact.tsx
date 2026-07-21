@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { ArrowLeft, CheckCircle2, Mail, Phone, Globe } from "lucide-react";
+import logoAsset from "@/assets/win-logo-mark.png.asset.json";
 import { submitContactMessage, type ContactInput } from "@/lib/contact.functions";
 
 export const Route = createFileRoute("/contact")({
