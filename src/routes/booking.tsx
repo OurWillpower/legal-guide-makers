@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+
 import {
   Calendar as CalendarIcon,
   Clock,
@@ -78,8 +81,18 @@ function plusDaysIso(days: number) {
 
 function BookingPage() {
   const submit = useServerFn(submitBooking);
+  const [authState, setAuthState] = useState<"loading" | "signed-in" | "signed-out">("loading");
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setAuthState(data.session ? "signed-in" : "signed-out"));
+    const { data } = supabase.auth.onAuthStateChange((_e, session) =>
+      setAuthState(session ? "signed-in" : "signed-out"),
+    );
+    return () => data.subscription.unsubscribe();
+  }, []);
 
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+
   const [form, setForm] = useState<BookingInput>({
     name: "",
     email: "",
@@ -148,6 +161,24 @@ function BookingPage() {
             Three quick steps. We'll confirm your slot within one business day.
           </p>
         </div>
+
+        {authState === "signed-out" && (
+          <div className="mt-10 rounded-2xl border border-gold/40 bg-cream p-8 text-center">
+            <h2 className="mb-2 font-serif text-2xl font-semibold text-navy-deep">
+              Sign in to book
+            </h2>
+            <p className="mb-6 text-muted-foreground">
+              We need a quick account so you can reschedule or cancel your consultation later.
+            </p>
+            <Link to="/auth" search={{ redirect: "/booking" }}>
+              <Button className="bg-gradient-navy hover:opacity-95">Sign in or create account</Button>
+            </Link>
+          </div>
+        )}
+
+        {authState === "signed-in" && (
+        <>
+
 
         {/* Stepper */}
         <ol className="mx-auto mt-10 flex max-w-md items-center justify-between">
@@ -394,7 +425,10 @@ function BookingPage() {
             </div>
           )}
         </div>
+        </>
+        )}
       </main>
+
     </div>
   );
 }

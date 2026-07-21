@@ -44,8 +44,45 @@ export const Route = createFileRoute("/")({
       { property: "og:url", content: "/" },
     ],
     links: [{ rel: "canonical", href: "/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": ["LegalService", "LocalBusiness"],
+              "@id": "https://www.winlegaladvisors.com/#organization",
+              name: "WIN Legal Advisors",
+              url: "https://www.winlegaladvisors.com",
+              image: "https://www.winlegaladvisors.com/favicon.png",
+              description:
+                "Corporate legal, compliance, contracts, DPDP & data privacy, IPR, M&A and regulatory advisory led by Adv. Vrushali Borade.",
+              slogan: "Vision to Victory",
+              areaServed: "IN",
+              priceRange: "$$",
+              address: { "@type": "PostalAddress", addressCountry: "IN" },
+              founder: {
+                "@type": "Person",
+                name: "Adv. Vrushali Borade",
+                jobTitle: "Founder & Corporate Legal Expert",
+              },
+              sameAs: ["https://www.winlegaladvisors.com"],
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://www.winlegaladvisors.com/#website",
+              url: "https://www.winlegaladvisors.com",
+              name: "WIN Legal Advisors",
+              publisher: { "@id": "https://www.winlegaladvisors.com/#organization" },
+            },
+          ],
+        }),
+      },
+    ],
   }),
 });
+
 
 const services = [
   {
