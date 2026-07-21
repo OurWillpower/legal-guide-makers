@@ -81,8 +81,18 @@ function plusDaysIso(days: number) {
 
 function BookingPage() {
   const submit = useServerFn(submitBooking);
+  const [authState, setAuthState] = useState<"loading" | "signed-in" | "signed-out">("loading");
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setAuthState(data.session ? "signed-in" : "signed-out"));
+    const { data } = supabase.auth.onAuthStateChange((_e, session) =>
+      setAuthState(session ? "signed-in" : "signed-out"),
+    );
+    return () => data.subscription.unsubscribe();
+  }, []);
 
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+
   const [form, setForm] = useState<BookingInput>({
     name: "",
     email: "",
