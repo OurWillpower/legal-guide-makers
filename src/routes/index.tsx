@@ -490,17 +490,11 @@ function Home() {
       <footer className="bg-navy-deep text-cream/70">
         <div className="mx-auto grid max-w-7xl gap-10 border-t border-gold/10 px-6 py-14 md:grid-cols-4">
           <div className="md:col-span-2">
-            <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-md bg-cream/5 ring-1 ring-gold/30">
-                <span className="font-serif text-lg font-bold text-gold">W</span>
-              </span>
-              <div>
-                <div className="font-serif text-lg font-bold text-cream">WIN Legal Advisors</div>
-                <div className="text-[10px] uppercase tracking-[0.28em] text-gold">
-                  Vision to Victory
-                </div>
-              </div>
-            </div>
+            <img
+              src={logo}
+              alt="WIN Legal Advisors — Vision to Victory"
+              className="h-16 w-auto brightness-125"
+            />
             <p className="mt-4 max-w-md text-sm">
               Corporate legal, compliance, contracts, DPDP, IPR and regulatory
               advisory for scalable, investor-ready companies.
