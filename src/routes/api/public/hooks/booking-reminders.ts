@@ -6,8 +6,21 @@ export const Route = createFileRoute("/api/public/hooks/booking-reminders")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const apikey = request.headers.get("apikey");
-        if (!apikey || apikey !== process.env.SUPABASE_PUBLISHABLE_KEY) {
+        const expected = process.env.CRON_WEBHOOK_SECRET;
+        if (!expected) {
+          return new Response("Server not configured", { status: 500 });
+        }
+        const provided =
+          request.headers.get("x-cron-secret") ??
+          request.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ??
+          "";
+        const a = Buffer.from(provided);
+        const b = Buffer.from(expected);
+        if (a.length !== b.length) {
+          return new Response("Forbidden", { status: 403 });
+        }
+        const { timingSafeEqual } = await import("crypto");
+        if (!timingSafeEqual(a, b)) {
           return new Response("Forbidden", { status: 403 });
         }
 
