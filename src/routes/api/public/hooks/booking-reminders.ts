@@ -102,11 +102,17 @@ export const Route = createFileRoute("/api/public/hooks/booking-reminders")({
               },
               { apiKey },
             );
-            const patch: Record<string, string> =
-              which === "2h"
-                ? { reminder_2h_sent_at: new Date().toISOString() }
-                : { reminder_24h_sent_at: new Date().toISOString() };
-            await supabaseAdmin.from("bookings").update(patch).eq("id", b.id);
+            if (which === "2h") {
+              await supabaseAdmin
+                .from("bookings")
+                .update({ reminder_2h_sent_at: new Date().toISOString() })
+                .eq("id", b.id);
+            } else {
+              await supabaseAdmin
+                .from("bookings")
+                .update({ reminder_24h_sent_at: new Date().toISOString() })
+                .eq("id", b.id);
+            }
             sent += 1;
           } catch (err) {
             console.warn("[reminders] send failed:", err);

@@ -36,7 +36,7 @@ export const Route = createFileRoute("/api/public/booking-pdf/$id")({
           createdAt: data.created_at,
         });
 
-        return new Response(pdf, {
+        return new Response(new Uint8Array(pdf).buffer as ArrayBuffer, {
           status: 200,
           headers: {
             "Content-Type": "application/pdf",
