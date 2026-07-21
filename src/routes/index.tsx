@@ -302,7 +302,7 @@ function Home() {
               { k: "10+", v: "Years of Experience" },
               { k: "150+", v: "Companies Advised" },
               { k: "PAN", v: "India Presence" },
-              { k: "24/7", v: "Client Support" },
+              { k: "Global", v: "UK-Trained Counsel" },
             ].map((s) => (
               <div
                 key={s.v}
@@ -420,10 +420,11 @@ function Home() {
                 "LLM (United Kingdom)",
                 "LLB — Symbiosis Law School, Pune",
                 "QLTT Certified — England & Wales",
-                "Advisor to startups, SMEs and enterprises",
+                "Enrolled Advocate — Bar Council of Maharashtra & Goa",
+                "10+ years advising startups, SMEs and enterprises",
               ].map((q) => (
                 <li key={q} className="flex items-center gap-3">
-                  <ShieldCheck className="h-5 w-5 text-gold" />
+                  <ShieldCheck className="h-5 w-5 shrink-0 text-gold" aria-hidden />
                   <span>{q}</span>
                 </li>
               ))}
@@ -443,8 +444,11 @@ function Home() {
           </h2>
           <div className="divider-gold mx-auto my-6 max-w-xs" />
           <p className="text-muted-foreground">
-            A few words from the businesses we've helped scale, close rounds and
-            stay compliant.
+            A few words from businesses we've helped scale, close rounds and stay compliant.
+          </p>
+          <p className="mt-3 text-xs italic text-muted-foreground/80">
+            Names and identifying details of some clients have been anonymised on request.
+            Consent obtained for every quote shown.
           </p>
         </div>
 
@@ -620,21 +624,49 @@ function Home() {
               Contact
             </div>
             <ul className="mt-4 space-y-3 text-sm">
-              <li className="flex items-center gap-2">
-                <Globe className="h-4 w-4 text-gold" />
-                www.winlegaladvisors.com
+              <li className="flex items-start gap-2">
+                <Globe className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden />
+                <a href="https://www.winlegaladvisors.com" className="hover:text-gold">
+                  www.winlegaladvisors.com
+                </a>
               </li>
-              <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-gold" />
-                contact@winlegaladvisors.com
+              <li className="flex items-start gap-2">
+                <Mail className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden />
+                <a href="mailto:contact@winlegaladvisors.com" className="hover:text-gold">
+                  contact@winlegaladvisors.com
+                </a>
               </li>
-              <li className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-gold" />
-                India · Pan-India Practice
+              <li className="flex items-start gap-2">
+                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden />
+                <span>By appointment · Pune, Maharashtra</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Landmark className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden />
+                <span>Pan-India Practice · Advisory across all jurisdictions</span>
               </li>
             </ul>
           </div>
         </div>
+
+        {/* Bar Council disclaimer strip (mandatory under BCI Rules) */}
+        <div className="border-t border-gold/10 bg-navy-deep/60">
+          <div className="mx-auto max-w-7xl px-6 py-6 text-[11px] leading-relaxed text-cream/55">
+            <p className="font-semibold uppercase tracking-widest text-gold">Disclaimer & Rules of the Bar Council of India</p>
+            <p className="mt-2">
+              As per the Rules of the Bar Council of India, advocates are not permitted to
+              solicit work or advertise. By accessing this website (www.winlegaladvisors.com),
+              you acknowledge and confirm that you are seeking information relating to
+              WIN Legal Advisors of your own accord and that no form of solicitation,
+              advertisement or inducement has been made by the firm or its members.
+              Information obtained from this website is intended for the user's general
+              knowledge only and is not legal advice, nor does it create a lawyer–client
+              relationship. WIN Legal Advisors is not liable for any consequence of action
+              taken by the user relying on material on this website. Please consult a
+              qualified professional for advice specific to your matter.
+            </p>
+          </div>
+        </div>
+
         <div className="border-t border-gold/10">
           <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-6 py-6 text-xs text-cream/50 md:flex-row">
             <div>© {new Date().getFullYear()} WIN Legal Advisors. All rights reserved.</div>

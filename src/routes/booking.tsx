@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+
 
 import {
   Calendar as CalendarIcon,
@@ -20,7 +19,8 @@ import {
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import logoAsset from "@/assets/win-logo-mark.png.asset.json";
-import { submitBooking, type BookingInput } from "@/lib/bookings.functions";
+import { submitBookingPublic, type BookingInput } from "@/lib/bookings.functions";
+import { ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/booking")({
   component: BookingPage,
@@ -80,16 +80,9 @@ function plusDaysIso(days: number) {
 }
 
 function BookingPage() {
-  const submit = useServerFn(submitBooking);
-  const [authState, setAuthState] = useState<"loading" | "signed-in" | "signed-out">("loading");
+  const submit = useServerFn(submitBookingPublic);
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setAuthState(data.session ? "signed-in" : "signed-out"));
-    const { data } = supabase.auth.onAuthStateChange((_e, session) =>
-      setAuthState(session ? "signed-in" : "signed-out"),
-    );
-    return () => data.subscription.unsubscribe();
-  }, []);
+
 
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
 
@@ -162,22 +155,12 @@ function BookingPage() {
           </p>
         </div>
 
-        {authState === "signed-out" && (
-          <div className="mt-10 rounded-2xl border border-gold/40 bg-cream p-8 text-center">
-            <h2 className="mb-2 font-serif text-2xl font-semibold text-navy-deep">
-              Sign in to book
-            </h2>
-            <p className="mb-6 text-muted-foreground">
-              We need a quick account so you can reschedule or cancel your consultation later.
-            </p>
-            <Link to="/auth" search={{ redirect: "/booking" }}>
-              <Button className="bg-gradient-navy hover:opacity-95">Sign in or create account</Button>
-            </Link>
-          </div>
-        )}
+        <div className="mx-auto mt-6 flex max-w-xl items-center justify-center gap-2 rounded-full bg-cream px-4 py-2 text-xs text-navy/70">
+          <ShieldCheck className="h-4 w-4 text-gold" aria-hidden />
+          <span>Complimentary · No account needed · Confidential</span>
+        </div>
 
-        {authState === "signed-in" && (
-        <>
+
 
 
         {/* Stepper */}
@@ -425,8 +408,7 @@ function BookingPage() {
             </div>
           )}
         </div>
-        </>
-        )}
+
       </main>
 
     </div>
