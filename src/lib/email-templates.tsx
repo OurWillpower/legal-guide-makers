@@ -186,6 +186,7 @@ export interface BookingEmailProps {
   googleCalendarUrl?: string;
   icsUrl?: string;
   manageUrl?: string;
+  pdfUrl?: string;
 }
 
 const CalButton: React.FC<{ href: string; children: React.ReactNode; primary?: boolean }> = ({
@@ -249,6 +250,7 @@ export const BookingConfirmationEmail: React.FC<BookingEmailProps> = (props) => 
             </CalButton>
           ) : null}
           {props.icsUrl ? <CalButton href={props.icsUrl}>Download .ics (Apple / Outlook)</CalButton> : null}
+          {props.pdfUrl ? <CalButton href={props.pdfUrl}>Download PDF summary</CalButton> : null}
         </div>
       </>
     ) : null}
