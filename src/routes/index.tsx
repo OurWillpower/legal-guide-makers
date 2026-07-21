@@ -420,10 +420,11 @@ function Home() {
                 "LLM (United Kingdom)",
                 "LLB — Symbiosis Law School, Pune",
                 "QLTT Certified — England & Wales",
-                "Advisor to startups, SMEs and enterprises",
+                "Enrolled Advocate — Bar Council of Maharashtra & Goa",
+                "10+ years advising startups, SMEs and enterprises",
               ].map((q) => (
                 <li key={q} className="flex items-center gap-3">
-                  <ShieldCheck className="h-5 w-5 text-gold" />
+                  <ShieldCheck className="h-5 w-5 shrink-0 text-gold" aria-hidden />
                   <span>{q}</span>
                 </li>
               ))}
