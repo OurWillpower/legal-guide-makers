@@ -130,6 +130,65 @@ function PublicStatus() {
               ) : null}
             </div>
 
+            {(() => {
+              const b = data.booking as {
+                payment_status?: string | null;
+                payment_amount?: number | null;
+                payment_currency?: string | null;
+                payment_reference?: string | null;
+              };
+              const status = (b.payment_status ?? "complimentary").toLowerCase();
+              const amount = Number(b.payment_amount ?? 0);
+              const currency = (b.payment_currency ?? "INR").toUpperCase();
+              const label: Record<string, string> = {
+                complimentary: "Complimentary",
+                pending: "Payment pending",
+                paid: "Paid",
+                refunded: "Refunded",
+                waived: "Fee waived",
+              };
+              const badge: Record<string, string> = {
+                complimentary: "bg-slate-100 text-slate-700 border-slate-200",
+                pending: "bg-amber-50 text-amber-800 border-amber-200",
+                paid: "bg-emerald-50 text-emerald-800 border-emerald-200",
+                refunded: "bg-rose-50 text-rose-800 border-rose-200",
+                waived: "bg-slate-100 text-slate-700 border-slate-200",
+              };
+              const receiptUrl = `/api/public/booking-pdf/${data.booking.id}?token=${encodeURIComponent(token)}`;
+              return (
+                <section className="mt-6 rounded-2xl border border-gold/30 bg-background p-6">
+                  <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <Receipt className="h-6 w-6 text-gold" />
+                      <div>
+                        <div className="text-xs uppercase tracking-widest text-muted-foreground">Payment</div>
+                        <div className="mt-1 flex items-center gap-2">
+                          <span className="font-serif text-lg font-semibold text-navy-deep">
+                            {amount > 0 ? `${currency} ${amount.toFixed(2)}` : "No charge"}
+                          </span>
+                          <span className={`inline-block rounded-full border px-2.5 py-0.5 text-xs font-medium ${badge[status] ?? badge.complimentary}`}>
+                            {label[status] ?? status}
+                          </span>
+                        </div>
+                        {b.payment_reference && (
+                          <div className="mt-1 text-xs text-muted-foreground">Ref: {b.payment_reference}</div>
+                        )}
+                      </div>
+                    </div>
+                    <a
+                      href={receiptUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 rounded-lg border border-navy/20 bg-cream px-4 py-2 text-sm font-medium text-navy-deep hover:border-gold hover:bg-gold/10"
+                    >
+                      <Download className="h-4 w-4" /> Download receipt (PDF)
+                    </a>
+                  </div>
+                </section>
+              );
+            })()}
+
+
             <section className="mt-10">
               <h2 className="font-serif text-xl font-semibold text-navy-deep">Timeline</h2>
               <ol className="mt-4 space-y-3 border-l border-gold/40 pl-6">
