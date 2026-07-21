@@ -372,6 +372,60 @@ function Home() {
         </div>
       </section>
 
+      {/* TESTIMONIALS */}
+      <section id="testimonials" className="mx-auto max-w-7xl px-6 py-24">
+        <div className="mx-auto max-w-2xl text-center">
+          <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
+            Client Voices
+          </span>
+          <h2 className="mt-4 font-serif text-4xl font-bold text-navy-deep md:text-5xl">
+            Trusted by founders, boards & general counsel
+          </h2>
+          <div className="divider-gold mx-auto my-6 max-w-xs" />
+          <p className="text-muted-foreground">
+            A few words from the businesses we've helped scale, close rounds and
+            stay compliant.
+          </p>
+        </div>
+
+        <div className="mt-16 grid gap-6 md:grid-cols-3">
+          {testimonials.map((t) => (
+            <figure
+              key={t.name}
+              className="relative flex h-full flex-col rounded-3xl border border-navy/10 bg-card p-8 shadow-sm transition-all hover:-translate-y-1 hover:shadow-elegant"
+            >
+              <Quote className="absolute right-6 top-6 h-8 w-8 text-gold/25" />
+              <div className="flex gap-0.5 text-gold">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="h-4 w-4 fill-gold" />
+                ))}
+              </div>
+              <blockquote className="mt-5 flex-1 text-navy-deep">
+                <p className="font-serif text-lg leading-relaxed">
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+              </blockquote>
+              <figcaption className="mt-8 flex items-center gap-4 border-t border-navy/10 pt-6">
+                <div
+                  className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-gradient-navy font-serif text-lg font-bold text-gold"
+                  aria-hidden
+                >
+                  {t.initials}
+                </div>
+                <div>
+                  <div className="font-serif text-base font-semibold text-navy-deep">
+                    {t.name}
+                  </div>
+                  <div className="text-xs uppercase tracking-widest text-gold">
+                    {t.role}
+                  </div>
+                </div>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+
       {/* CTA / CONTACT */}
       <section id="contact" className="relative overflow-hidden bg-gradient-navy text-cream">
         <div
@@ -392,23 +446,24 @@ function Home() {
             opportunities specific to your business — no obligation.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <a
-              href="mailto:contact@winlegaladvisors.com"
+            <Link
+              to="/booking"
               className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-8 py-4 text-sm font-semibold text-navy-deep shadow-gold transition-transform hover:scale-[1.03]"
             >
               <Calendar className="h-4 w-4" />
               Book a Free Consultation
-            </a>
-            <a
-              href="mailto:contact@winlegaladvisors.com"
+            </Link>
+            <Link
+              to="/contact"
               className="inline-flex items-center gap-2 rounded-full border border-gold/40 px-8 py-4 text-sm font-semibold text-cream transition-colors hover:bg-gold/10"
             >
               <Mail className="h-4 w-4" />
-              contact@winlegaladvisors.com
-            </a>
+              Send us a message
+            </Link>
           </div>
         </div>
       </section>
+
 
       {/* FOOTER */}
       <footer className="bg-navy-deep text-cream/70">
