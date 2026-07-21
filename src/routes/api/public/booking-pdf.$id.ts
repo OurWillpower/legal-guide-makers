@@ -13,7 +13,7 @@ export const Route = createFileRoute("/api/public/booking-pdf/$id")({
         const { data, error } = await supabaseAdmin
           .from("bookings")
           .select(
-            "id, name, email, phone, company, service, preferred_date, preferred_time, message, status, cancelled_at, created_at, manage_token",
+            "id, name, email, phone, company, service, preferred_date, preferred_time, message, status, cancelled_at, created_at, manage_token, payment_status, payment_amount, payment_currency, payment_reference",
           )
           .eq("id", params.id)
           .maybeSingle();
@@ -34,6 +34,10 @@ export const Route = createFileRoute("/api/public/booking-pdf/$id")({
           status: data.status,
           cancelledAt: data.cancelled_at,
           createdAt: data.created_at,
+          paymentStatus: (data as { payment_status?: string }).payment_status ?? "complimentary",
+          paymentAmount: (data as { payment_amount?: number }).payment_amount ?? 0,
+          paymentCurrency: (data as { payment_currency?: string }).payment_currency ?? "INR",
+          paymentReference: (data as { payment_reference?: string | null }).payment_reference ?? null,
         });
 
         return new Response(new Uint8Array(pdf).buffer as ArrayBuffer, {
