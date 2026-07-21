@@ -17,6 +17,9 @@ import {
   adminListFaqs,
   saveFaq,
   deleteFaq,
+  adminListEmailTemplates,
+  saveEmailTemplate,
+  previewEmailTemplate,
 } from "@/lib/admin.functions";
 import { getBookingSettings } from "@/lib/content.functions";
 import { Button } from "@/components/ui/button";
@@ -34,7 +37,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Admin — WIN Legal Advisors" }, { name: "robots", content: "noindex" }] }),
 });
 
-type Tab = "bookings" | "messages" | "testimonials" | "services" | "faqs" | "settings";
+type Tab = "bookings" | "messages" | "testimonials" | "services" | "faqs" | "emails" | "settings";
 
 function AdminDashboard() {
   const checkAdmin = useServerFn(isAdmin);
@@ -60,7 +63,7 @@ function AdminDashboard() {
 
       <div className="mx-auto max-w-7xl px-6 py-8">
         <div className="mb-6 flex flex-wrap gap-2 border-b border-navy/10">
-          {(["bookings", "messages", "testimonials", "services", "faqs", "settings"] as Tab[]).map((t) => (
+          {(["bookings", "messages", "testimonials", "services", "faqs", "emails", "settings"] as Tab[]).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -68,7 +71,7 @@ function AdminDashboard() {
                 tab === t ? "border-gold text-navy-deep" : "border-transparent text-muted-foreground hover:text-navy"
               }`}
             >
-              {t === "faqs" ? "FAQ" : t}
+              {t === "faqs" ? "FAQ" : t === "emails" ? "Email templates" : t}
             </button>
           ))}
         </div>
@@ -78,6 +81,7 @@ function AdminDashboard() {
         {tab === "testimonials" && <TestimonialsPanel />}
         {tab === "services" && <ServicesPanel />}
         {tab === "faqs" && <FaqsPanel />}
+        {tab === "emails" && <EmailTemplatesPanel />}
         {tab === "settings" && <SettingsPanel />}
       </div>
     </div>
