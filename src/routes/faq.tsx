@@ -8,6 +8,22 @@ const faqs = [
     a: "Yes — every prospective client gets a complimentary 30–45 minute consultation to understand your needs and outline how WIN Legal Advisors can help.",
   },
   {
+    q: "How does a consultation work?",
+    a: "Consultations are held over a secure video call (Google Meet or Microsoft Teams). Once you book, you'll receive an email confirmation with an Add to Google Calendar link and a downloadable .ics invite. The video link and any prep notes are sent 24 hours before the call.",
+  },
+  {
+    q: "How long is each consultation, and how soon can I get a slot?",
+    a: "A standard consultation runs 30–45 minutes. We typically confirm your slot within one business day, and most clients are seen within 2–4 business days. For urgent regulatory or investor matters, mention it in your booking note and we'll fast-track a time.",
+  },
+  {
+    q: "What documents should I bring or share before the call?",
+    a: "Share whatever is relevant to your question — commonly: incorporation certificate and MoA/AoA, key contracts under review (customer, vendor, employment, SaaS), term sheets or SHA drafts, DPDP/privacy notices, any legal notices or regulatory correspondence, and a short one-page summary of what you'd like to discuss. Reply to your confirmation email with attachments; anything you share is treated as confidential.",
+  },
+  {
+    q: "What is the typical timeline for common engagements?",
+    a: "Consultations: same or next business day. DPDP readiness assessment: 2–4 weeks. Contract templates suite: 1–2 weeks. Company incorporation: 10–15 business days after documents are ready. M&A / fundraise support and regulatory approvals depend on scope and third parties — we scope timelines upfront.",
+  },
+  {
     q: "Which industries do you work with?",
     a: "We advise SaaS and technology companies, fintech, healthcare, D2C brands, manufacturing, professional services, and early-stage startups across India.",
   },
@@ -21,7 +37,11 @@ const faqs = [
   },
   {
     q: "How is pricing structured?",
-    a: "We offer transparent engagement models — fixed-fee packages for defined scopes (like DPDP readiness, incorporation, or contract templates), monthly retainers for ongoing counsel, and hourly rates for advisory work.",
+    a: "We offer transparent engagement models — fixed-fee packages for defined scopes (like DPDP readiness, incorporation, or contract templates), monthly retainers for ongoing counsel, and hourly rates for advisory work. We share a written fee estimate before any paid work begins.",
+  },
+  {
+    q: "Is my information confidential?",
+    a: "Absolutely. All communications, documents and consultation notes are covered by attorney–client confidentiality. We can sign a mutual NDA before the consultation on request.",
   },
   {
     q: "Where are you based?",
@@ -29,7 +49,7 @@ const faqs = [
   },
   {
     q: "Can I reschedule or cancel my booked consultation?",
-    a: "Yes. Sign in to your account and open the booking to reschedule or cancel any time before the appointment.",
+    a: "Yes. Sign in to your account and open the booking to reschedule (up to three times) or cancel any time before the appointment. You'll receive an updated email and calendar invite each time.",
   },
 ];
 
