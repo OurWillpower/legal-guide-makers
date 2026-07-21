@@ -458,7 +458,7 @@ function Home() {
           }}
         />
         <div className="relative mx-auto max-w-5xl px-6 py-24 text-center">
-          <img src={logoAsset.url} alt="WIN Legal Advisors" className="mx-auto h-20 w-auto rounded-lg" />
+          <img src={logo} alt="WIN Legal Advisors — Vision to Victory" className="mx-auto h-24 w-auto brightness-125" />
           <h2 className="mt-8 font-serif text-4xl font-bold md:text-5xl">
             Ready to build a <span className="text-gold-gradient">legally strong</span> company?
           </h2>
