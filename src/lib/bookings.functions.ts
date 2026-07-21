@@ -275,6 +275,12 @@ export const rescheduleBooking = createServerFn({ method: "POST" })
       console.warn("[bookings] gcal reschedule skipped:", err);
     }
 
+    await logBookingEvent(data.id, "rescheduled", {
+      date: data.preferredDate,
+      time: data.preferredTime,
+      count: existing.reschedule_count + 1,
+    });
+
     await sendBookingEmail({
       to: existing.email,
       name: existing.name,
@@ -330,6 +336,8 @@ export const cancelBooking = createServerFn({ method: "POST" })
     } catch (err) {
       console.warn("[bookings] gcal delete skipped:", err);
     }
+
+    await logBookingEvent(data.id, "cancelled", { reason: data.reason || null });
 
     await sendBookingEmail({
       to: existing.email,
