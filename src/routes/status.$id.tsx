@@ -3,7 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import { getPublicBookingStatus } from "@/lib/content.functions";
-import { Calendar, Clock, CheckCircle2, XCircle, RotateCcw, Bell, Sparkles } from "lucide-react";
+import { Calendar, Clock, CheckCircle2, XCircle, RotateCcw, Bell, Sparkles, Download, Receipt } from "lucide-react";
 import logoAsset from "@/assets/win-logo-mark.png.asset.json";
 
 const statusSearchSchema = z.object({ token: z.string().min(10) });
