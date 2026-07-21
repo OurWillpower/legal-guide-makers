@@ -31,9 +31,12 @@ async function sendBookingEmail(opts: {
   preferredDate: string;
   preferredTime: string;
   bookingId: string;
+  manageToken?: string | null;
   cancelled?: boolean;
   rescheduled?: boolean;
 }) {
+  const apiKey = process.env.LOVABLE_API_KEY;
+  if (!apiKey) return;
   const apiKey = process.env.LOVABLE_API_KEY;
   if (!apiKey) return;
   try {
