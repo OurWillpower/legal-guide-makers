@@ -19,6 +19,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedMyBookingsRouteImport } from './routes/_authenticated/my-bookings'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedManageBookingIdRouteImport } from './routes/_authenticated/manage-booking.$id'
+import { Route as ApiPublicBookingIcsIdRouteImport } from './routes/api/public/booking-ics.$id'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -70,6 +71,11 @@ const AuthenticatedManageBookingIdRoute =
     path: '/manage-booking/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicBookingIcsIdRoute = ApiPublicBookingIcsIdRouteImport.update({
+  id: '/api/public/booking-ics/$id',
+  path: '/api/public/booking-ics/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -81,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRoute
   '/my-bookings': typeof AuthenticatedMyBookingsRoute
   '/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
+  '/api/public/booking-ics/$id': typeof ApiPublicBookingIcsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -92,6 +99,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRoute
   '/my-bookings': typeof AuthenticatedMyBookingsRoute
   '/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
+  '/api/public/booking-ics/$id': typeof ApiPublicBookingIcsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -105,6 +113,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/my-bookings': typeof AuthenticatedMyBookingsRoute
   '/_authenticated/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
+  '/api/public/booking-ics/$id': typeof ApiPublicBookingIcsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -118,6 +127,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/my-bookings'
     | '/manage-booking/$id'
+    | '/api/public/booking-ics/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -129,6 +139,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/my-bookings'
     | '/manage-booking/$id'
+    | '/api/public/booking-ics/$id'
   id:
     | '__root__'
     | '/'
@@ -141,6 +152,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/my-bookings'
     | '/_authenticated/manage-booking/$id'
+    | '/api/public/booking-ics/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -151,6 +163,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   FaqRoute: typeof FaqRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ApiPublicBookingIcsIdRoute: typeof ApiPublicBookingIcsIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -225,6 +238,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedManageBookingIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/booking-ics/$id': {
+      id: '/api/public/booking-ics/$id'
+      path: '/api/public/booking-ics/$id'
+      fullPath: '/api/public/booking-ics/$id'
+      preLoaderRoute: typeof ApiPublicBookingIcsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -251,6 +271,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   FaqRoute: FaqRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ApiPublicBookingIcsIdRoute: ApiPublicBookingIcsIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
