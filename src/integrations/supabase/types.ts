@@ -59,6 +59,8 @@ export type Database = {
           phone: string | null
           preferred_date: string
           preferred_time: string
+          reminder_24h_sent_at: string | null
+          reminder_2h_sent_at: string | null
           reschedule_count: number
           service: string
           status: string
@@ -78,6 +80,8 @@ export type Database = {
           phone?: string | null
           preferred_date: string
           preferred_time: string
+          reminder_24h_sent_at?: string | null
+          reminder_2h_sent_at?: string | null
           reschedule_count?: number
           service: string
           status?: string
@@ -97,6 +101,8 @@ export type Database = {
           phone?: string | null
           preferred_date?: string
           preferred_time?: string
+          reminder_24h_sent_at?: string | null
+          reminder_2h_sent_at?: string | null
           reschedule_count?: number
           service?: string
           status?: string
@@ -131,6 +137,36 @@ export type Database = {
           name?: string
           phone?: string | null
           subject?: string | null
+        }
+        Relationships: []
+      }
+      faqs: {
+        Row: {
+          answer: string
+          created_at: string
+          id: string
+          published: boolean
+          question: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          answer: string
+          created_at?: string
+          id?: string
+          published?: boolean
+          question: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          answer?: string
+          created_at?: string
+          id?: string
+          published?: boolean
+          question?: string
+          sort_order?: number
+          updated_at?: string
         }
         Relationships: []
       }
