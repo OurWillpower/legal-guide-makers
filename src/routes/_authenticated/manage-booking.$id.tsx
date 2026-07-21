@@ -156,7 +156,7 @@ function ManageBooking() {
                 className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
               >
                 <option value="">Select a time…</option>
-                {(settings?.time_slots ?? []).map((t: string) => (
+                {((settings?.time_slots as string[] | undefined) ?? []).map((t: string) => (
                   <option key={t} value={t}>
                     {t}
                   </option>
