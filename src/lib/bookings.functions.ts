@@ -176,9 +176,16 @@ export const submitBooking = createServerFn({ method: "POST" })
       console.warn("[bookings] gcal skipped:", err);
     }
 
+    await logBookingEvent(row.id, "created", {
+      service: data.service,
+      date: data.preferredDate,
+      time: data.preferredTime,
+    });
+
     await sendBookingEmail({
       to: data.email,
       name: data.name,
+      phone: data.phone,
       service: data.service,
       preferredDate: data.preferredDate,
       preferredTime: data.preferredTime,
