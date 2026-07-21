@@ -35,7 +35,7 @@ async function logBookingEvent(
     await supabaseAdmin.from("booking_events").insert({
       booking_id: bookingId,
       event_type: eventType,
-      meta,
+      meta: meta as never,
       actor: actor ?? null,
     });
   } catch (err) {
