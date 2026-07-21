@@ -254,6 +254,7 @@ export const rescheduleBooking = createServerFn({ method: "POST" })
       preferredDate: data.preferredDate,
       preferredTime: data.preferredTime,
       bookingId: data.id,
+      manageToken: existing.manage_token,
       rescheduled: true,
     });
 
