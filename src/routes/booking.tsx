@@ -19,7 +19,8 @@ import {
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import logoAsset from "@/assets/win-logo-mark.png.asset.json";
-import { submitBooking, type BookingInput } from "@/lib/bookings.functions";
+import { submitBookingPublic, type BookingInput } from "@/lib/bookings.functions";
+import { ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/booking")({
   component: BookingPage,
