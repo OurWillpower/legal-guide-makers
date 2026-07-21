@@ -37,8 +37,6 @@ async function sendBookingEmail(opts: {
 }) {
   const apiKey = process.env.LOVABLE_API_KEY;
   if (!apiKey) return;
-  const apiKey = process.env.LOVABLE_API_KEY;
-  if (!apiKey) return;
   try {
     const [{ sendLovableEmail }, { render }, tpl] = await Promise.all([
       import("@lovable.dev/email-js"),
@@ -46,6 +44,30 @@ async function sendBookingEmail(opts: {
       import("./email-templates"),
     ]);
     const React = (await import("react")).default;
+
+    // Build calendar helpers (best-effort — if time parsing fails we still send the email).
+    let googleCalUrl: string | undefined;
+    let icsUrl: string | undefined;
+    let manageUrl: string | undefined;
+    try {
+      const startISO = slotToISO(opts.preferredDate, opts.preferredTime);
+      googleCalUrl = googleCalendarUrl({
+        title: `Legal Consultation — WIN Legal Advisors (${opts.service})`,
+        startISO,
+        durationMinutes: 45,
+        description:
+          "Your legal consultation with WIN Legal Advisors. A video call link will be shared before the appointment.",
+        location: "WIN Legal Advisors (Video call)",
+      });
+    } catch (err) {
+      console.warn("[bookings] calendar url skipped:", err);
+    }
+    if (opts.manageToken) {
+      const base = siteBaseUrl();
+      icsUrl = `${base}/api/public/booking-ics/${opts.bookingId}?token=${encodeURIComponent(opts.manageToken)}`;
+      manageUrl = `${base}/manage-booking/${opts.bookingId}`;
+    }
+
     const element = React.createElement(tpl.BookingConfirmationEmail, {
       name: opts.name,
       email: opts.to,
@@ -58,6 +80,9 @@ async function sendBookingEmail(opts: {
       bookingId: opts.bookingId,
       cancelled: opts.cancelled,
       rescheduled: opts.rescheduled,
+      googleCalendarUrl: googleCalUrl,
+      icsUrl,
+      manageUrl,
     });
     const html = await render(element);
     const text = await render(element, { plainText: true });
