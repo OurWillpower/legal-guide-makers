@@ -19,9 +19,10 @@ import {
   Quote,
   Star,
 } from "lucide-react";
-import logoAsset from "@/assets/win-logo.png.asset.json";
+import logoAsset from "@/assets/win-logo-mark.png.asset.json";
 import portraitAsset from "@/assets/vrushali-portrait.png.asset.json";
 
+const logo = logoAsset.url;
 const portrait = portraitAsset.url;
 
 export const Route = createFileRoute("/")({
@@ -129,17 +130,13 @@ function Home() {
       <header className="sticky top-0 z-50 border-b border-navy/10 bg-background/85 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <a href="#top" className="flex items-center gap-3">
-            <span className="grid h-11 w-11 place-items-center rounded-md bg-gradient-navy shadow-elegant">
-              <span className="font-serif text-lg font-bold text-gold">W</span>
-            </span>
-            <span className="flex flex-col leading-tight">
-              <span className="font-serif text-lg font-bold tracking-wide text-navy-deep">
-                WIN Legal Advisors
-              </span>
-              <span className="text-[10px] uppercase tracking-[0.28em] text-gold">
-                Vision to Victory
-              </span>
-            </span>
+            <img
+              src={logo}
+              alt="WIN Legal Advisors — Vision to Victory"
+              className="h-11 w-auto"
+              width={220}
+              height={98}
+            />
           </a>
           <nav className="hidden items-center gap-8 text-sm font-medium text-navy md:flex">
             <a href="#about" className="hover:text-gold transition-colors">About</a>
@@ -461,7 +458,7 @@ function Home() {
           }}
         />
         <div className="relative mx-auto max-w-5xl px-6 py-24 text-center">
-          <img src={logoAsset.url} alt="WIN Legal Advisors" className="mx-auto h-20 w-auto rounded-lg" />
+          <img src={logo} alt="WIN Legal Advisors — Vision to Victory" className="mx-auto h-24 w-auto brightness-125" />
           <h2 className="mt-8 font-serif text-4xl font-bold md:text-5xl">
             Ready to build a <span className="text-gold-gradient">legally strong</span> company?
           </h2>
@@ -493,17 +490,11 @@ function Home() {
       <footer className="bg-navy-deep text-cream/70">
         <div className="mx-auto grid max-w-7xl gap-10 border-t border-gold/10 px-6 py-14 md:grid-cols-4">
           <div className="md:col-span-2">
-            <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-md bg-cream/5 ring-1 ring-gold/30">
-                <span className="font-serif text-lg font-bold text-gold">W</span>
-              </span>
-              <div>
-                <div className="font-serif text-lg font-bold text-cream">WIN Legal Advisors</div>
-                <div className="text-[10px] uppercase tracking-[0.28em] text-gold">
-                  Vision to Victory
-                </div>
-              </div>
-            </div>
+            <img
+              src={logo}
+              alt="WIN Legal Advisors — Vision to Victory"
+              className="h-16 w-auto brightness-125"
+            />
             <p className="mt-4 max-w-md text-sm">
               Corporate legal, compliance, contracts, DPDP, IPR and regulatory
               advisory for scalable, investor-ready companies.
