@@ -175,13 +175,13 @@ function Home() {
             </div>
 
             <div className="mt-10 flex flex-wrap gap-4">
-              <a
-                href="#contact"
+              <Link
+                to="/booking"
                 className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-7 py-3.5 text-sm font-semibold text-navy-deep shadow-gold transition-transform hover:scale-[1.03]"
               >
                 <Calendar className="h-4 w-4" />
                 Book a Free Legal Consultation
-              </a>
+              </Link>
               <a
                 href="#services"
                 className="inline-flex items-center gap-2 rounded-full border border-gold/40 px-7 py-3.5 text-sm font-semibold text-cream transition-colors hover:bg-gold/10"
