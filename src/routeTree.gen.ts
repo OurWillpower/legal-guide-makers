@@ -18,6 +18,7 @@ import { Route as BookingRouteImport } from './routes/booking'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StatusIdRouteImport } from './routes/status.$id'
 import { Route as AuthenticatedMyBookingsRouteImport } from './routes/_authenticated/my-bookings'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedManageBookingIdRouteImport } from './routes/_authenticated/manage-booking.$id'
@@ -69,6 +70,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StatusIdRoute = StatusIdRouteImport.update({
+  id: '/status/$id',
+  path: '/status/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedMyBookingsRoute = AuthenticatedMyBookingsRouteImport.update({
   id: '/my-bookings',
   path: '/my-bookings',
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/my-bookings': typeof AuthenticatedMyBookingsRoute
+  '/status/$id': typeof StatusIdRoute
   '/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
   '/api/public/booking-ics/$id': typeof ApiPublicBookingIcsIdRoute
   '/api/public/booking-pdf/$id': typeof ApiPublicBookingPdfIdRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/my-bookings': typeof AuthenticatedMyBookingsRoute
+  '/status/$id': typeof StatusIdRoute
   '/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
   '/api/public/booking-ics/$id': typeof ApiPublicBookingIcsIdRoute
   '/api/public/booking-pdf/$id': typeof ApiPublicBookingPdfIdRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/my-bookings': typeof AuthenticatedMyBookingsRoute
+  '/status/$id': typeof StatusIdRoute
   '/_authenticated/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
   '/api/public/booking-ics/$id': typeof ApiPublicBookingIcsIdRoute
   '/api/public/booking-pdf/$id': typeof ApiPublicBookingPdfIdRoute
@@ -165,6 +174,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin'
     | '/my-bookings'
+    | '/status/$id'
     | '/manage-booking/$id'
     | '/api/public/booking-ics/$id'
     | '/api/public/booking-pdf/$id'
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin'
     | '/my-bookings'
+    | '/status/$id'
     | '/manage-booking/$id'
     | '/api/public/booking-ics/$id'
     | '/api/public/booking-pdf/$id'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/_authenticated/admin'
     | '/_authenticated/my-bookings'
+    | '/status/$id'
     | '/_authenticated/manage-booking/$id'
     | '/api/public/booking-ics/$id'
     | '/api/public/booking-pdf/$id'
@@ -214,6 +226,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
+  StatusIdRoute: typeof StatusIdRoute
   ApiPublicBookingIcsIdRoute: typeof ApiPublicBookingIcsIdRoute
   ApiPublicBookingPdfIdRoute: typeof ApiPublicBookingPdfIdRoute
   ApiPublicHooksBookingRemindersRoute: typeof ApiPublicHooksBookingRemindersRoute
@@ -282,6 +295,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/status/$id': {
+      id: '/status/$id'
+      path: '/status/$id'
+      fullPath: '/status/$id'
+      preLoaderRoute: typeof StatusIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/my-bookings': {
@@ -354,6 +374,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
+  StatusIdRoute: StatusIdRoute,
   ApiPublicBookingIcsIdRoute: ApiPublicBookingIcsIdRoute,
   ApiPublicBookingPdfIdRoute: ApiPublicBookingPdfIdRoute,
   ApiPublicHooksBookingRemindersRoute: ApiPublicHooksBookingRemindersRoute,

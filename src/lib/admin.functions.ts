@@ -247,3 +247,72 @@ export const deleteFaq = createServerFn({ method: "POST" })
     if (error) throw error;
     return { ok: true };
   });
+
+// --- Email templates
+const emailTemplateSchema = z.object({
+  id: z.string().uuid(),
+  subject: z.string().trim().min(1).max(300),
+  html: z.string().min(1).max(60000),
+  text: z.string().max(20000).optional().or(z.literal("")),
+});
+
+export const adminListEmailTemplates = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context.supabase, context.userId);
+    const { data, error } = await context.supabase
+      .from("email_templates")
+      .select("id, template_key, subject, html, text, description, variables, updated_at")
+      .order("template_key", { ascending: true });
+    if (error) throw error;
+    return data ?? [];
+  });
+
+export const saveEmailTemplate = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => emailTemplateSchema.parse(raw))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.supabase, context.userId);
+    const { error } = await context.supabase
+      .from("email_templates")
+      .update({
+        subject: data.subject,
+        html: data.html,
+        text: data.text || "",
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", data.id);
+    if (error) throw error;
+    return { ok: true };
+  });
+
+export const previewEmailTemplate = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) =>
+    z
+      .object({
+        subject: z.string(),
+        html: z.string(),
+      })
+      .parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.supabase, context.userId);
+    const { interpolate, wrapBrandShell } = await import("@/lib/email-render.server");
+    const sampleData: Record<string, string> = {
+      name: "Priya Sharma",
+      service: "DPDP & Data Privacy Consultation",
+      preferredDate: "2026-08-15",
+      preferredTime: "3:00 PM",
+      manageUrl: "https://www.winlegaladvisors.com/manage-booking/sample",
+      googleCalendarUrl: "https://calendar.google.com/",
+      icsUrl: "https://www.winlegaladvisors.com/api/public/booking-ics/sample",
+      pdfUrl: "https://www.winlegaladvisors.com/api/public/booking-pdf/sample",
+      statusUrl: "https://www.winlegaladvisors.com/status/sample",
+    };
+    const subject = interpolate(data.subject, sampleData);
+    const inner = interpolate(data.html, sampleData);
+    const html = wrapBrandShell({ preview: subject, contentHtml: inner });
+    return { subject, html };
+  });
+

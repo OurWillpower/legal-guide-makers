@@ -17,6 +17,9 @@ import {
   adminListFaqs,
   saveFaq,
   deleteFaq,
+  adminListEmailTemplates,
+  saveEmailTemplate,
+  previewEmailTemplate,
 } from "@/lib/admin.functions";
 import { getBookingSettings } from "@/lib/content.functions";
 import { Button } from "@/components/ui/button";
@@ -34,7 +37,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Admin — WIN Legal Advisors" }, { name: "robots", content: "noindex" }] }),
 });
 
-type Tab = "bookings" | "messages" | "testimonials" | "services" | "faqs" | "settings";
+type Tab = "bookings" | "messages" | "testimonials" | "services" | "faqs" | "emails" | "settings";
 
 function AdminDashboard() {
   const checkAdmin = useServerFn(isAdmin);
@@ -60,7 +63,7 @@ function AdminDashboard() {
 
       <div className="mx-auto max-w-7xl px-6 py-8">
         <div className="mb-6 flex flex-wrap gap-2 border-b border-navy/10">
-          {(["bookings", "messages", "testimonials", "services", "faqs", "settings"] as Tab[]).map((t) => (
+          {(["bookings", "messages", "testimonials", "services", "faqs", "emails", "settings"] as Tab[]).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -68,7 +71,7 @@ function AdminDashboard() {
                 tab === t ? "border-gold text-navy-deep" : "border-transparent text-muted-foreground hover:text-navy"
               }`}
             >
-              {t === "faqs" ? "FAQ" : t}
+              {t === "faqs" ? "FAQ" : t === "emails" ? "Email templates" : t}
             </button>
           ))}
         </div>
@@ -78,6 +81,7 @@ function AdminDashboard() {
         {tab === "testimonials" && <TestimonialsPanel />}
         {tab === "services" && <ServicesPanel />}
         {tab === "faqs" && <FaqsPanel />}
+        {tab === "emails" && <EmailTemplatesPanel />}
         {tab === "settings" && <SettingsPanel />}
       </div>
     </div>
@@ -449,3 +453,149 @@ function FaqsPanel() {
     </div>
   );
 }
+
+type TemplateRow = {
+  id: string;
+  template_key: string;
+  subject: string;
+  html: string;
+  text: string | null;
+  description: string | null;
+  variables: string[] | null;
+  updated_at: string;
+};
+
+function EmailTemplatesPanel() {
+  const list = useServerFn(adminListEmailTemplates);
+  const save = useServerFn(saveEmailTemplate);
+  const preview = useServerFn(previewEmailTemplate);
+  const qc = useQueryClient();
+  const { data, isLoading } = useQuery({ queryKey: ["admin-templates"], queryFn: () => list() });
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [subject, setSubject] = useState("");
+  const [html, setHtml] = useState("");
+  const [text, setText] = useState("");
+  const [previewHtml, setPreviewHtml] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  const rows = (data ?? []) as TemplateRow[];
+  const current = rows.find((r) => r.id === selectedId) ?? rows[0];
+
+  useEffect(() => {
+    if (current && current.id !== selectedId) {
+      setSelectedId(current.id);
+      setSubject(current.subject);
+      setHtml(current.html);
+      setText(current.text ?? "");
+      setPreviewHtml(null);
+    }
+  }, [current, selectedId]);
+
+  const onSelect = (row: TemplateRow) => {
+    setSelectedId(row.id);
+    setSubject(row.subject);
+    setHtml(row.html);
+    setText(row.text ?? "");
+    setPreviewHtml(null);
+  };
+
+  const onSave = async () => {
+    if (!current) return;
+    setSaving(true);
+    try {
+      await save({ data: { id: current.id, subject, html, text } });
+      toast.success("Template saved");
+      qc.invalidateQueries({ queryKey: ["admin-templates"] });
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const onPreview = async () => {
+    const res = await preview({ data: { subject, html } });
+    setPreviewHtml(res.html);
+  };
+
+  if (isLoading) return <p>Loading…</p>;
+  if (rows.length === 0) return <p className="text-muted-foreground">No templates configured.</p>;
+
+  return (
+    <div className="grid gap-6 md:grid-cols-[240px_1fr]">
+      <aside className="space-y-1">
+        {rows.map((r) => (
+          <button
+            key={r.id}
+            onClick={() => onSelect(r)}
+            className={`block w-full rounded-lg border px-3 py-2 text-left text-sm transition ${
+              current?.id === r.id
+                ? "border-gold bg-cream/50 text-navy-deep"
+                : "border-navy/10 bg-background text-navy-soft hover:border-gold/60"
+            }`}
+          >
+            <div className="font-medium capitalize">{r.template_key.replace(/_/g, " ")}</div>
+            {r.description && <div className="mt-0.5 text-xs text-muted-foreground">{r.description}</div>}
+          </button>
+        ))}
+      </aside>
+
+      {current && (
+        <div className="space-y-4">
+          <div>
+            <Label>Subject</Label>
+            <Input value={subject} onChange={(e) => setSubject(e.target.value)} />
+          </div>
+          <div>
+            <Label>Available tokens</Label>
+            <div className="mt-1 flex flex-wrap gap-1.5">
+              {(current.variables ?? []).map((v) => (
+                <code
+                  key={v}
+                  className="cursor-pointer rounded bg-navy/5 px-2 py-0.5 text-xs text-navy-deep hover:bg-gold/20"
+                  onClick={() => {
+                    navigator.clipboard.writeText(`{{${v}}}`);
+                    toast.success(`Copied {{${v}}}`);
+                  }}
+                >
+                  {`{{${v}}}`}
+                </code>
+              ))}
+              {(current.variables ?? []).length === 0 && (
+                <span className="text-xs text-muted-foreground">No tokens</span>
+              )}
+            </div>
+          </div>
+          <div>
+            <Label>HTML body</Label>
+            <Textarea
+              rows={18}
+              value={html}
+              onChange={(e) => setHtml(e.target.value)}
+              className="font-mono text-xs"
+            />
+          </div>
+          <div>
+            <Label>Plain-text fallback (optional)</Label>
+            <Textarea rows={5} value={text} onChange={(e) => setText(e.target.value)} className="font-mono text-xs" />
+          </div>
+          <div className="flex gap-2">
+            <Button onClick={onSave} disabled={saving} className="bg-gradient-navy">
+              <Save className="mr-2 h-4 w-4" /> {saving ? "Saving…" : "Save template"}
+            </Button>
+            <Button variant="outline" onClick={onPreview}>Preview with sample data</Button>
+          </div>
+          {previewHtml && (
+            <div className="rounded-xl border border-navy/10 bg-background p-2">
+              <div className="mb-2 px-2 text-xs uppercase tracking-widest text-muted-foreground">
+                Preview
+              </div>
+              <iframe title="Email preview" srcDoc={previewHtml} className="h-[560px] w-full rounded" />
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+

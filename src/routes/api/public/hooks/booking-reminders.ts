@@ -1,28 +1,27 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { slotToISO, googleCalendarUrl } from "@/lib/ics";
 
-// Called by pg_cron every 5 minutes. Sends 24h and 2h reminder emails to clients.
+// Called by pg_cron every 5 minutes. Sends 24h and 2h reminders via email + WhatsApp.
 export const Route = createFileRoute("/api/public/hooks/booking-reminders")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        // Simple auth: the anon apikey is enough — this endpoint sits under
-        // /api/public/* which bypasses SSR auth. The apikey header is set by pg_cron.
         const apikey = request.headers.get("apikey");
         if (!apikey || apikey !== process.env.SUPABASE_PUBLISHABLE_KEY) {
           return new Response("Forbidden", { status: 403 });
         }
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { renderDbTemplate } = await import("@/lib/email-render.server");
+        const { sendWhatsappTemplate } = await import("@/lib/whatsapp.server");
         const now = Date.now();
 
-        // Pull upcoming, non-cancelled bookings in the next 30 hours.
         const in30h = new Date(now + 30 * 3600_000).toISOString().slice(0, 10);
         const today = new Date(now).toISOString().slice(0, 10);
         const { data: rows, error } = await supabaseAdmin
           .from("bookings")
           .select(
-            "id, name, email, service, preferred_date, preferred_time, manage_token, reminder_24h_sent_at, reminder_2h_sent_at, cancelled_at",
+            "id, name, email, phone, service, preferred_date, preferred_time, manage_token, reminder_24h_sent_at, reminder_2h_sent_at, whatsapp_24h_sent_at, whatsapp_2h_sent_at, whatsapp_opt_in, cancelled_at",
           )
           .is("cancelled_at", null)
           .gte("preferred_date", today)
@@ -30,16 +29,14 @@ export const Route = createFileRoute("/api/public/hooks/booking-reminders")({
         if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 });
 
         const apiKey = process.env.LOVABLE_API_KEY;
-        if (!apiKey) return new Response(JSON.stringify({ sent: 0, reason: "no LOVABLE_API_KEY" }));
+        const { sendLovableEmail } = apiKey
+          ? await import("@lovable.dev/email-js")
+          : { sendLovableEmail: null as never };
 
-        const [{ sendLovableEmail }, { render }, tpl, React] = await Promise.all([
-          import("@lovable.dev/email-js"),
-          import("@react-email/render"),
-          import("@/lib/email-templates"),
-          import("react").then((m) => m.default),
-        ]);
+        const base = (process.env.APP_URL || process.env.SITE_URL || "https://www.winlegaladvisors.com").replace(/\/$/, "");
 
-        let sent = 0;
+        let sentEmails = 0;
+        let sentWhatsapp = 0;
         for (const b of rows ?? []) {
           let startMs: number;
           try {
@@ -50,12 +47,11 @@ export const Route = createFileRoute("/api/public/hooks/booking-reminders")({
           const diff = startMs - now;
           if (diff <= 0) continue;
 
-          const need24 = diff <= 24 * 3600_000 && diff > 2 * 3600_000 && !b.reminder_24h_sent_at;
-          const need2 = diff <= 2 * 3600_000 && !b.reminder_2h_sent_at;
-          if (!need24 && !need2) continue;
+          const inWindow24 = diff <= 24 * 3600_000 && diff > 2 * 3600_000;
+          const inWindow2 = diff <= 2 * 3600_000;
+          if (!inWindow24 && !inWindow2) continue;
+          const which: "24h" | "2h" = inWindow2 ? "2h" : "24h";
 
-          const which: "24h" | "2h" = need2 ? "2h" : "24h";
-          const base = (process.env.APP_URL || process.env.SITE_URL || "https://www.winlegaladvisors.com").replace(/\/$/, "");
           const gcal = googleCalendarUrl({
             title: `Legal Consultation — WIN Legal Advisors (${b.service})`,
             startISO: new Date(startMs).toISOString(),
@@ -65,63 +61,97 @@ export const Route = createFileRoute("/api/public/hooks/booking-reminders")({
           });
           const icsUrl = b.manage_token
             ? `${base}/api/public/booking-ics/${b.id}?token=${encodeURIComponent(b.manage_token)}`
-            : undefined;
+            : "";
           const pdfUrl = b.manage_token
             ? `${base}/api/public/booking-pdf/${b.id}?token=${encodeURIComponent(b.manage_token)}`
-            : undefined;
-          const manageUrl = b.manage_token ? `${base}/manage-booking/${b.id}` : undefined;
+            : "";
+          const manageUrl = b.manage_token ? `${base}/manage-booking/${b.id}` : "";
+          const statusUrl = b.manage_token
+            ? `${base}/status/${b.id}?token=${encodeURIComponent(b.manage_token)}`
+            : "";
 
-          const element = React.createElement(tpl.BookingReminderEmail, {
-            name: b.name,
-            service: b.service,
-            preferredDate: b.preferred_date,
-            preferredTime: b.preferred_time,
-            when: which,
-            googleCalendarUrl: gcal,
-            icsUrl,
-            manageUrl,
-            pdfUrl,
-          });
-          const html = await render(element);
-          const text = await render(element, { plainText: true });
-          const subject =
-            which === "2h"
-              ? "Reminder: your consultation is in ~2 hours — WIN Legal Advisors"
-              : "Reminder: your consultation is tomorrow — WIN Legal Advisors";
+          const emailFlag = which === "2h" ? b.reminder_2h_sent_at : b.reminder_24h_sent_at;
+          const waFlag = which === "2h" ? b.whatsapp_2h_sent_at : b.whatsapp_24h_sent_at;
 
-          try {
-            await sendLovableEmail(
-              {
-                to: b.email,
-                from: "WIN Legal Advisors <hello@winlegaladvisors.com>",
-                subject,
-                html,
-                text,
-                purpose: "booking_reminder",
-                reply_to: "contact@winlegaladvisors.com",
-              },
-              { apiKey },
-            );
-            if (which === "2h") {
-              await supabaseAdmin
-                .from("bookings")
-                .update({ reminder_2h_sent_at: new Date().toISOString() })
-                .eq("id", b.id);
-            } else {
-              await supabaseAdmin
-                .from("bookings")
-                .update({ reminder_24h_sent_at: new Date().toISOString() })
-                .eq("id", b.id);
+          // Email reminder
+          if (!emailFlag && sendLovableEmail && apiKey) {
+            try {
+              const rendered = await renderDbTemplate(
+                which === "2h" ? "booking_reminder_2h" : "booking_reminder_24h",
+                {
+                  name: b.name,
+                  service: b.service,
+                  preferredDate: b.preferred_date,
+                  preferredTime: b.preferred_time,
+                  manageUrl,
+                  googleCalendarUrl: gcal,
+                  icsUrl,
+                  pdfUrl,
+                  statusUrl,
+                },
+              );
+              if (rendered) {
+                await sendLovableEmail(
+                  {
+                    to: b.email,
+                    from: "WIN Legal Advisors <hello@winlegaladvisors.com>",
+                    subject: rendered.subject,
+                    html: rendered.html,
+                    text: rendered.text,
+                    purpose: "booking_reminder",
+                    reply_to: "contact@winlegaladvisors.com",
+                  },
+                  { apiKey },
+                );
+                const patch = which === "2h"
+                  ? { reminder_2h_sent_at: new Date().toISOString() }
+                  : { reminder_24h_sent_at: new Date().toISOString() };
+                await supabaseAdmin.from("bookings").update(patch).eq("id", b.id);
+                await supabaseAdmin.from("booking_events").insert({
+                  booking_id: b.id,
+                  event_type: `reminder_email_${which}_sent`,
+                  meta: {} as never,
+                });
+                sentEmails += 1;
+              }
+            } catch (err) {
+              console.warn("[reminders] email send failed:", err);
             }
-            sent += 1;
-          } catch (err) {
-            console.warn("[reminders] send failed:", err);
+          }
+
+          // WhatsApp reminder (no-ops if not configured)
+          if (!waFlag && b.whatsapp_opt_in && b.phone) {
+            const res = await sendWhatsappTemplate({
+              to: b.phone,
+              templateName: which === "2h" ? "booking_reminder_2h" : "booking_reminder_24h",
+              languageCode: "en_US",
+              bodyParams: [
+                b.name,
+                b.service,
+                b.preferred_date,
+                b.preferred_time,
+                manageUrl,
+              ],
+            });
+            if (res.sent) {
+              const patch = which === "2h"
+                ? { whatsapp_2h_sent_at: new Date().toISOString() }
+                : { whatsapp_24h_sent_at: new Date().toISOString() };
+              await supabaseAdmin.from("bookings").update(patch).eq("id", b.id);
+              await supabaseAdmin.from("booking_events").insert({
+                booking_id: b.id,
+                event_type: `reminder_whatsapp_${which}_sent`,
+                meta: {} as never,
+              });
+              sentWhatsapp += 1;
+            }
           }
         }
 
-        return new Response(JSON.stringify({ ok: true, sent, scanned: rows?.length ?? 0 }), {
-          headers: { "Content-Type": "application/json" },
-        });
+        return new Response(
+          JSON.stringify({ ok: true, sentEmails, sentWhatsapp, scanned: rows?.length ?? 0 }),
+          { headers: { "Content-Type": "application/json" } },
+        );
       },
     },
   },
