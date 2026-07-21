@@ -1,7 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { buildIcs, slotToISO } from "./ics";
+import { buildIcs, slotToISO, googleCalendarUrl } from "./ics";
+
+function siteBaseUrl(): string {
+  return (
+    process.env.APP_URL ||
+    process.env.SITE_URL ||
+    "https://www.winlegaladvisors.com"
+  ).replace(/\/$/, "");
+}
 
 const bookingSchema = z.object({
   name: z.string().trim().min(1).max(120),
@@ -23,6 +31,7 @@ async function sendBookingEmail(opts: {
   preferredDate: string;
   preferredTime: string;
   bookingId: string;
+  manageToken?: string | null;
   cancelled?: boolean;
   rescheduled?: boolean;
 }) {
@@ -35,6 +44,30 @@ async function sendBookingEmail(opts: {
       import("./email-templates"),
     ]);
     const React = (await import("react")).default;
+
+    // Build calendar helpers (best-effort — if time parsing fails we still send the email).
+    let googleCalUrl: string | undefined;
+    let icsUrl: string | undefined;
+    let manageUrl: string | undefined;
+    try {
+      const startISO = slotToISO(opts.preferredDate, opts.preferredTime);
+      googleCalUrl = googleCalendarUrl({
+        title: `Legal Consultation — WIN Legal Advisors (${opts.service})`,
+        startISO,
+        durationMinutes: 45,
+        description:
+          "Your legal consultation with WIN Legal Advisors. A video call link will be shared before the appointment.",
+        location: "WIN Legal Advisors (Video call)",
+      });
+    } catch (err) {
+      console.warn("[bookings] calendar url skipped:", err);
+    }
+    if (opts.manageToken) {
+      const base = siteBaseUrl();
+      icsUrl = `${base}/api/public/booking-ics/${opts.bookingId}?token=${encodeURIComponent(opts.manageToken)}`;
+      manageUrl = `${base}/manage-booking/${opts.bookingId}`;
+    }
+
     const element = React.createElement(tpl.BookingConfirmationEmail, {
       name: opts.name,
       email: opts.to,
@@ -47,6 +80,9 @@ async function sendBookingEmail(opts: {
       bookingId: opts.bookingId,
       cancelled: opts.cancelled,
       rescheduled: opts.rescheduled,
+      googleCalendarUrl: googleCalUrl,
+      icsUrl,
+      manageUrl,
     });
     const html = await render(element);
     const text = await render(element, { plainText: true });
@@ -126,6 +162,7 @@ export const submitBooking = createServerFn({ method: "POST" })
       preferredDate: data.preferredDate,
       preferredTime: data.preferredTime,
       bookingId: row.id,
+      manageToken: row.manage_token,
     });
 
     return { id: row.id, ok: true };
@@ -172,7 +209,7 @@ export const rescheduleBooking = createServerFn({ method: "POST" })
     // Owner-scoped update via RLS
     const { data: existing, error: readErr } = await context.supabase
       .from("bookings")
-      .select("id, name, email, service, reschedule_count, cancelled_at")
+      .select("id, name, email, service, reschedule_count, cancelled_at, manage_token")
       .eq("id", data.id)
       .maybeSingle();
     if (readErr || !existing) throw new Error("Booking not found");
@@ -217,6 +254,7 @@ export const rescheduleBooking = createServerFn({ method: "POST" })
       preferredDate: data.preferredDate,
       preferredTime: data.preferredTime,
       bookingId: data.id,
+      manageToken: existing.manage_token,
       rescheduled: true,
     });
 

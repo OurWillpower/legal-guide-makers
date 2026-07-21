@@ -183,17 +183,50 @@ export interface BookingEmailProps {
   bookingId?: string;
   cancelled?: boolean;
   rescheduled?: boolean;
+  googleCalendarUrl?: string;
+  icsUrl?: string;
+  manageUrl?: string;
 }
 
+const CalButton: React.FC<{ href: string; children: React.ReactNode; primary?: boolean }> = ({
+  href,
+  children,
+  primary,
+}) => (
+  <a
+    href={href}
+    style={{
+      display: "inline-block",
+      padding: "12px 22px",
+      borderRadius: 999,
+      fontSize: 14,
+      fontWeight: 600,
+      textDecoration: "none",
+      marginRight: 8,
+      marginBottom: 8,
+      color: primary ? NAVY : CREAM,
+      backgroundColor: primary ? GOLD : NAVY,
+      border: primary ? `1px solid ${GOLD}` : `1px solid ${NAVY}`,
+    }}
+  >
+    {children}
+  </a>
+);
 
 export const BookingConfirmationEmail: React.FC<BookingEmailProps> = (props) => (
   <Shell preview={`Your consultation request has been received — ${props.service}`}>
-    <H1>Your consultation request is in.</H1>
+    <H1>
+      {props.cancelled
+        ? "Your consultation has been cancelled"
+        : props.rescheduled
+          ? "Your consultation has been rescheduled"
+          : "Your consultation request is in."}
+    </H1>
     <P>Dear {props.name},</P>
     <P>
-      Thank you for reaching out to WIN Legal Advisors. We've received your
-      request for a legal consultation. Our team will review the details and
-      confirm a time with you within one business day.
+      {props.cancelled
+        ? "We've cancelled your consultation as requested. You can book a new time whenever you're ready."
+        : "Thank you for reaching out to WIN Legal Advisors. We've received your request for a legal consultation. Our team will review the details and confirm a time with you within one business day."}
     </P>
     <table role="presentation" width="100%" cellPadding={0} cellSpacing={0} style={{ margin: "20px 0" }}>
       <tbody>
@@ -204,6 +237,26 @@ export const BookingConfirmationEmail: React.FC<BookingEmailProps> = (props) => 
         {props.phone ? <DetailRow label="Phone" value={props.phone} /> : null}
       </tbody>
     </table>
+    {!props.cancelled && (props.googleCalendarUrl || props.icsUrl) ? (
+      <>
+        <P style={{ marginTop: 8, fontSize: 13, color: MUTED, textTransform: "uppercase", letterSpacing: 1.5 }}>
+          Add to your calendar
+        </P>
+        <div style={{ margin: "8px 0 20px" }}>
+          {props.googleCalendarUrl ? (
+            <CalButton href={props.googleCalendarUrl} primary>
+              Add to Google Calendar
+            </CalButton>
+          ) : null}
+          {props.icsUrl ? <CalButton href={props.icsUrl}>Download .ics (Apple / Outlook)</CalButton> : null}
+        </div>
+      </>
+    ) : null}
+    {props.manageUrl ? (
+      <P style={{ fontSize: 13, color: MUTED }}>
+        Need to change plans? <a href={props.manageUrl} style={{ color: NAVY, fontWeight: 600 }}>Reschedule or cancel</a>.
+      </P>
+    ) : null}
     {props.message ? (
       <>
         <P>
@@ -215,8 +268,9 @@ export const BookingConfirmationEmail: React.FC<BookingEmailProps> = (props) => 
       </>
     ) : null}
     <P>
-      In the meantime, feel free to reply to this email with any additional
-      context that will help us prepare.
+      Before our call, please have these ready if relevant: incorporation documents, key contracts under review,
+      any notices or regulatory correspondence, and a brief summary of what you'd like to discuss. Reply to this
+      email with any documents you'd like us to review in advance.
     </P>
     <P style={{ marginTop: 24 }}>
       Warm regards,

@@ -84,3 +84,36 @@ export function slotToISO(dateYMD: string, timeLabel: string, timezoneOffsetMinu
   const utc = Date.UTC(y, mo - 1, d, hour, min) - timezoneOffsetMinutes * 60_000;
   return new Date(utc).toISOString();
 }
+
+// Google Calendar "add event" URL. Times are UTC in YYYYMMDDTHHMMSSZ format.
+export function googleCalendarUrl(opts: {
+  title: string;
+  startISO: string;
+  durationMinutes: number;
+  description?: string;
+  location?: string;
+}): string {
+  const start = new Date(opts.startISO);
+  const end = new Date(start.getTime() + opts.durationMinutes * 60_000);
+  const fmt = (d: Date) => {
+    const pad = (n: number) => n.toString().padStart(2, "0");
+    return (
+      d.getUTCFullYear() +
+      pad(d.getUTCMonth() + 1) +
+      pad(d.getUTCDate()) +
+      "T" +
+      pad(d.getUTCHours()) +
+      pad(d.getUTCMinutes()) +
+      pad(d.getUTCSeconds()) +
+      "Z"
+    );
+  };
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: opts.title,
+    dates: `${fmt(start)}/${fmt(end)}`,
+  });
+  if (opts.description) params.set("details", opts.description);
+  if (opts.location) params.set("location", opts.location);
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}
