@@ -122,15 +122,16 @@ function Home() {
             <a href="#services" className="hover:text-gold transition-colors">Services</a>
             <a href="#why-us" className="hover:text-gold transition-colors">Why Us</a>
             <a href="#founder" className="hover:text-gold transition-colors">Founder</a>
-            <a href="#contact" className="hover:text-gold transition-colors">Contact</a>
+            <a href="#testimonials" className="hover:text-gold transition-colors">Testimonials</a>
+            <Link to="/contact" className="hover:text-gold transition-colors">Contact</Link>
           </nav>
-          <a
-            href="#contact"
+          <Link
+            to="/booking"
             className="hidden items-center gap-2 rounded-full bg-gradient-gold px-5 py-2.5 text-sm font-semibold text-navy-deep shadow-gold transition-transform hover:scale-[1.03] md:inline-flex"
           >
             <Calendar className="h-4 w-4" />
             Book Consultation
-          </a>
+          </Link>
         </div>
       </header>
 
