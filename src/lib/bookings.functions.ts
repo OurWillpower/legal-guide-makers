@@ -1,7 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { buildIcs, slotToISO } from "./ics";
+import { buildIcs, slotToISO, googleCalendarUrl } from "./ics";
+
+function siteBaseUrl(): string {
+  return (
+    process.env.APP_URL ||
+    process.env.SITE_URL ||
+    "https://www.winlegaladvisors.com"
+  ).replace(/\/$/, "");
+}
 
 const bookingSchema = z.object({
   name: z.string().trim().min(1).max(120),
