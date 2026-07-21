@@ -14,6 +14,9 @@ import {
   adminListBookings,
   adminUpdateBookingStatus,
   adminListMessages,
+  adminListFaqs,
+  saveFaq,
+  deleteFaq,
 } from "@/lib/admin.functions";
 import { getBookingSettings } from "@/lib/content.functions";
 import { Button } from "@/components/ui/button";
@@ -31,7 +34,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Admin — WIN Legal Advisors" }, { name: "robots", content: "noindex" }] }),
 });
 
-type Tab = "bookings" | "messages" | "testimonials" | "services" | "settings";
+type Tab = "bookings" | "messages" | "testimonials" | "services" | "faqs" | "settings";
 
 function AdminDashboard() {
   const checkAdmin = useServerFn(isAdmin);
@@ -57,7 +60,7 @@ function AdminDashboard() {
 
       <div className="mx-auto max-w-7xl px-6 py-8">
         <div className="mb-6 flex flex-wrap gap-2 border-b border-navy/10">
-          {(["bookings", "messages", "testimonials", "services", "settings"] as Tab[]).map((t) => (
+          {(["bookings", "messages", "testimonials", "services", "faqs", "settings"] as Tab[]).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -65,7 +68,7 @@ function AdminDashboard() {
                 tab === t ? "border-gold text-navy-deep" : "border-transparent text-muted-foreground hover:text-navy"
               }`}
             >
-              {t}
+              {t === "faqs" ? "FAQ" : t}
             </button>
           ))}
         </div>
@@ -74,6 +77,7 @@ function AdminDashboard() {
         {tab === "messages" && <MessagesPanel />}
         {tab === "testimonials" && <TestimonialsPanel />}
         {tab === "services" && <ServicesPanel />}
+        {tab === "faqs" && <FaqsPanel />}
         {tab === "settings" && <SettingsPanel />}
       </div>
     </div>
@@ -353,5 +357,95 @@ function SettingsPanel() {
       </div>
       <Button type="submit"><Save className="h-4 w-4 mr-2" /> Save settings</Button>
     </form>
+  );
+}
+
+function FaqsPanel() {
+  const fetchAll = useServerFn(adminListFaqs);
+  const save = useServerFn(saveFaq);
+  const del = useServerFn(deleteFaq);
+  const qc = useQueryClient();
+  const { data, isLoading } = useQuery({ queryKey: ["admin-faqs"], queryFn: () => fetchAll() });
+  const [editing, setEditing] = useState<any | null>(null);
+  const empty = { question: "", answer: "", sort_order: (data?.length ?? 0) * 10 + 10, published: true };
+
+  const submit = async (row: any) => {
+    try {
+      await save({ data: row });
+      toast.success("Saved");
+      setEditing(null);
+      qc.invalidateQueries({ queryKey: ["admin-faqs"] });
+      qc.invalidateQueries({ queryKey: ["public-faqs"] });
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Save failed");
+    }
+  };
+
+  if (isLoading) return <p>Loading…</p>;
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">
+          These FAQs appear on the public <span className="font-medium text-navy">/faq</span> page and in JSON-LD structured data.
+        </p>
+        <Button onClick={() => setEditing(empty)}><Plus className="h-4 w-4 mr-2" /> Add FAQ</Button>
+      </div>
+      {editing && (
+        <form
+          onSubmit={(e) => { e.preventDefault(); submit(editing); }}
+          className="rounded-xl border border-gold/40 bg-background p-5 space-y-3"
+        >
+          <div>
+            <Label>Question</Label>
+            <Input required value={editing.question} onChange={(e) => setEditing({ ...editing, question: e.target.value })} />
+          </div>
+          <div>
+            <Label>Answer</Label>
+            <Textarea required rows={5} value={editing.answer} onChange={(e) => setEditing({ ...editing, answer: e.target.value })} />
+          </div>
+          <div className="grid gap-3 md:grid-cols-2">
+            <div>
+              <Label>Sort order</Label>
+              <Input type="number" value={editing.sort_order} onChange={(e) => setEditing({ ...editing, sort_order: parseInt(e.target.value) || 0 })} />
+            </div>
+            <div className="flex items-center gap-2 pt-6">
+              <Switch checked={editing.published} onCheckedChange={(v) => setEditing({ ...editing, published: v })} />
+              <span className="text-sm">Published</span>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Button type="submit"><Save className="h-4 w-4 mr-2" /> Save</Button>
+            <Button type="button" variant="outline" onClick={() => setEditing(null)}>Cancel</Button>
+          </div>
+        </form>
+      )}
+      <div className="space-y-2">
+        {(data ?? []).map((f: any) => (
+          <div key={f.id} className="rounded-xl border border-navy/10 bg-background p-5">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0 flex-1">
+                <div className="font-serif text-base font-semibold text-navy-deep">{f.question}</div>
+                <p className="mt-1 text-sm text-navy-soft line-clamp-3 whitespace-pre-wrap">{f.answer}</p>
+                <div className="mt-2 text-xs text-muted-foreground">
+                  Order: {f.sort_order} · {f.published ? <span className="text-emerald-700">Published</span> : "Hidden"}
+                </div>
+              </div>
+              <div className="flex shrink-0 gap-2">
+                <Button size="sm" variant="outline" onClick={() => setEditing(f)}>Edit</Button>
+                <Button size="sm" variant="ghost" onClick={async () => {
+                  if (!confirm("Delete this FAQ?")) return;
+                  await del({ data: f.id });
+                  qc.invalidateQueries({ queryKey: ["admin-faqs"] });
+                  qc.invalidateQueries({ queryKey: ["public-faqs"] });
+                }}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        ))}
+        {(data ?? []).length === 0 && <p className="text-muted-foreground">No FAQs yet.</p>}
+      </div>
+    </div>
   );
 }

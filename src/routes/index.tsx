@@ -636,8 +636,14 @@ function Home() {
           </div>
         </div>
         <div className="border-t border-gold/10">
-          <div className="mx-auto max-w-7xl px-6 py-6 text-center text-xs text-cream/50">
-            © {new Date().getFullYear()} WIN Legal Advisors. All rights reserved.
+          <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-6 py-6 text-xs text-cream/50 md:flex-row">
+            <div>© {new Date().getFullYear()} WIN Legal Advisors. All rights reserved.</div>
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+              <Link to="/terms" className="hover:text-gold">Terms of Service</Link>
+              <Link to="/privacy" className="hover:text-gold">Privacy Policy</Link>
+              <Link to="/faq" className="hover:text-gold">FAQ</Link>
+              <Link to="/contact" className="hover:text-gold">Contact</Link>
+            </div>
           </div>
         </div>
       </footer>

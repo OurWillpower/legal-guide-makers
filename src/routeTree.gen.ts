@@ -9,7 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BookingRouteImport } from './routes/booking'
@@ -19,11 +21,23 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedMyBookingsRouteImport } from './routes/_authenticated/my-bookings'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedManageBookingIdRouteImport } from './routes/_authenticated/manage-booking.$id'
+import { Route as ApiPublicHooksBookingRemindersRouteImport } from './routes/api/public/hooks/booking-reminders'
+import { Route as ApiPublicBookingPdfIdRouteImport } from './routes/api/public/booking-pdf.$id'
 import { Route as ApiPublicBookingIcsIdRouteImport } from './routes/api/public/booking-ics.$id'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqRoute = FaqRouteImport.update({
@@ -71,6 +85,17 @@ const AuthenticatedManageBookingIdRoute =
     path: '/manage-booking/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicHooksBookingRemindersRoute =
+  ApiPublicHooksBookingRemindersRouteImport.update({
+    id: '/api/public/hooks/booking-reminders',
+    path: '/api/public/hooks/booking-reminders',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicBookingPdfIdRoute = ApiPublicBookingPdfIdRouteImport.update({
+  id: '/api/public/booking-pdf/$id',
+  path: '/api/public/booking-pdf/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicBookingIcsIdRoute = ApiPublicBookingIcsIdRouteImport.update({
   id: '/api/public/booking-ics/$id',
   path: '/api/public/booking-ics/$id',
@@ -83,11 +108,15 @@ export interface FileRoutesByFullPath {
   '/booking': typeof BookingRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
+  '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/my-bookings': typeof AuthenticatedMyBookingsRoute
   '/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
   '/api/public/booking-ics/$id': typeof ApiPublicBookingIcsIdRoute
+  '/api/public/booking-pdf/$id': typeof ApiPublicBookingPdfIdRoute
+  '/api/public/hooks/booking-reminders': typeof ApiPublicHooksBookingRemindersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -95,11 +124,15 @@ export interface FileRoutesByTo {
   '/booking': typeof BookingRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
+  '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/my-bookings': typeof AuthenticatedMyBookingsRoute
   '/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
   '/api/public/booking-ics/$id': typeof ApiPublicBookingIcsIdRoute
+  '/api/public/booking-pdf/$id': typeof ApiPublicBookingPdfIdRoute
+  '/api/public/hooks/booking-reminders': typeof ApiPublicHooksBookingRemindersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -109,11 +142,15 @@ export interface FileRoutesById {
   '/booking': typeof BookingRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
+  '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/my-bookings': typeof AuthenticatedMyBookingsRoute
   '/_authenticated/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
   '/api/public/booking-ics/$id': typeof ApiPublicBookingIcsIdRoute
+  '/api/public/booking-pdf/$id': typeof ApiPublicBookingPdfIdRoute
+  '/api/public/hooks/booking-reminders': typeof ApiPublicHooksBookingRemindersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -123,11 +160,15 @@ export interface FileRouteTypes {
     | '/booking'
     | '/contact'
     | '/faq'
+    | '/privacy'
     | '/sitemap.xml'
+    | '/terms'
     | '/admin'
     | '/my-bookings'
     | '/manage-booking/$id'
     | '/api/public/booking-ics/$id'
+    | '/api/public/booking-pdf/$id'
+    | '/api/public/hooks/booking-reminders'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -135,11 +176,15 @@ export interface FileRouteTypes {
     | '/booking'
     | '/contact'
     | '/faq'
+    | '/privacy'
     | '/sitemap.xml'
+    | '/terms'
     | '/admin'
     | '/my-bookings'
     | '/manage-booking/$id'
     | '/api/public/booking-ics/$id'
+    | '/api/public/booking-pdf/$id'
+    | '/api/public/hooks/booking-reminders'
   id:
     | '__root__'
     | '/'
@@ -148,11 +193,15 @@ export interface FileRouteTypes {
     | '/booking'
     | '/contact'
     | '/faq'
+    | '/privacy'
     | '/sitemap.xml'
+    | '/terms'
     | '/_authenticated/admin'
     | '/_authenticated/my-bookings'
     | '/_authenticated/manage-booking/$id'
     | '/api/public/booking-ics/$id'
+    | '/api/public/booking-pdf/$id'
+    | '/api/public/hooks/booking-reminders'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -162,17 +211,35 @@ export interface RootRouteChildren {
   BookingRoute: typeof BookingRoute
   ContactRoute: typeof ContactRoute
   FaqRoute: typeof FaqRoute
+  PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TermsRoute: typeof TermsRoute
   ApiPublicBookingIcsIdRoute: typeof ApiPublicBookingIcsIdRoute
+  ApiPublicBookingPdfIdRoute: typeof ApiPublicBookingPdfIdRoute
+  ApiPublicHooksBookingRemindersRoute: typeof ApiPublicHooksBookingRemindersRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faq': {
@@ -238,6 +305,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedManageBookingIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/hooks/booking-reminders': {
+      id: '/api/public/hooks/booking-reminders'
+      path: '/api/public/hooks/booking-reminders'
+      fullPath: '/api/public/hooks/booking-reminders'
+      preLoaderRoute: typeof ApiPublicHooksBookingRemindersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/booking-pdf/$id': {
+      id: '/api/public/booking-pdf/$id'
+      path: '/api/public/booking-pdf/$id'
+      fullPath: '/api/public/booking-pdf/$id'
+      preLoaderRoute: typeof ApiPublicBookingPdfIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/booking-ics/$id': {
       id: '/api/public/booking-ics/$id'
       path: '/api/public/booking-ics/$id'
@@ -270,8 +351,12 @@ const rootRouteChildren: RootRouteChildren = {
   BookingRoute: BookingRoute,
   ContactRoute: ContactRoute,
   FaqRoute: FaqRoute,
+  PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TermsRoute: TermsRoute,
   ApiPublicBookingIcsIdRoute: ApiPublicBookingIcsIdRoute,
+  ApiPublicBookingPdfIdRoute: ApiPublicBookingPdfIdRoute,
+  ApiPublicHooksBookingRemindersRoute: ApiPublicHooksBookingRemindersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

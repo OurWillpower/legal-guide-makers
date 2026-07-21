@@ -69,3 +69,13 @@ export const getBookingSettings = createServerFn({ method: "GET" }).handler(asyn
     }
   );
 });
+
+export const listFaqs = createServerFn({ method: "GET" }).handler(async () => {
+  const supabase = publicClient();
+  const { data } = await supabase
+    .from("faqs")
+    .select("id, question, answer, sort_order")
+    .eq("published", true)
+    .order("sort_order", { ascending: true });
+  return data ?? [];
+});

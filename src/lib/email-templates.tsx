@@ -186,6 +186,7 @@ export interface BookingEmailProps {
   googleCalendarUrl?: string;
   icsUrl?: string;
   manageUrl?: string;
+  pdfUrl?: string;
 }
 
 const CalButton: React.FC<{ href: string; children: React.ReactNode; primary?: boolean }> = ({
@@ -249,6 +250,7 @@ export const BookingConfirmationEmail: React.FC<BookingEmailProps> = (props) => 
             </CalButton>
           ) : null}
           {props.icsUrl ? <CalButton href={props.icsUrl}>Download .ics (Apple / Outlook)</CalButton> : null}
+          {props.pdfUrl ? <CalButton href={props.pdfUrl}>Download PDF summary</CalButton> : null}
         </div>
       </>
     ) : null}
@@ -316,3 +318,73 @@ export const ContactConfirmationEmail: React.FC<ContactEmailProps> = (props) => 
     </P>
   </Shell>
 );
+
+export interface ReminderEmailProps {
+  name: string;
+  service: string;
+  preferredDate: string;
+  preferredTime: string;
+  when: "24h" | "2h";
+  googleCalendarUrl?: string;
+  icsUrl?: string;
+  manageUrl?: string;
+  pdfUrl?: string;
+}
+
+export const BookingReminderEmail: React.FC<ReminderEmailProps> = (props) => {
+  const soonLabel = props.when === "2h" ? "in about 2 hours" : "tomorrow";
+  return (
+    <Shell preview={`Reminder: your consultation is ${soonLabel} — ${props.service}`}>
+      <H1>Your consultation is {soonLabel}.</H1>
+      <P>Dear {props.name},</P>
+      <P>
+        This is a friendly reminder about your upcoming legal consultation with WIN Legal
+        Advisors. We're looking forward to speaking with you.
+      </P>
+      <table role="presentation" width="100%" cellPadding={0} cellSpacing={0} style={{ margin: "20px 0" }}>
+        <tbody>
+          <DetailRow label="Service" value={props.service} />
+          <DetailRow label="Date" value={props.preferredDate} />
+          <DetailRow label="Time" value={props.preferredTime} />
+          <DetailRow label="Format" value="Secure video call" />
+        </tbody>
+      </table>
+      {props.googleCalendarUrl || props.icsUrl || props.pdfUrl ? (
+        <>
+          <P style={{ marginTop: 8, fontSize: 13, color: MUTED, textTransform: "uppercase", letterSpacing: 1.5 }}>
+            Quick links
+          </P>
+          <div style={{ margin: "8px 0 20px" }}>
+            {props.googleCalendarUrl ? (
+              <CalButton href={props.googleCalendarUrl} primary>Add to Google Calendar</CalButton>
+            ) : null}
+            {props.icsUrl ? <CalButton href={props.icsUrl}>Download .ics</CalButton> : null}
+            {props.pdfUrl ? <CalButton href={props.pdfUrl}>Booking PDF</CalButton> : null}
+          </div>
+        </>
+      ) : null}
+      {props.when === "24h" ? (
+        <P>
+          A quick checklist before we speak: incorporation documents, key contracts under review,
+          any notices or regulatory correspondence, and a short one-page summary of what you'd
+          like to discuss. Reply to this email with anything you'd like us to review in advance.
+        </P>
+      ) : (
+        <P>
+          The video call link will be shared shortly. Please join a couple of minutes early to
+          check your audio and camera.
+        </P>
+      )}
+      {props.manageUrl ? (
+        <P style={{ fontSize: 13, color: MUTED }}>
+          Plans changed? <a href={props.manageUrl} style={{ color: NAVY, fontWeight: 600 }}>Reschedule or cancel</a>.
+        </P>
+      ) : null}
+      <P style={{ marginTop: 24 }}>
+        Warm regards,
+        <br />
+        <strong>WIN Legal Advisors</strong>
+      </P>
+    </Shell>
+  );
+};
