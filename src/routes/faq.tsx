@@ -24,10 +24,14 @@ export const Route = createFileRoute("/faq")({
         },
         { property: "og:title", content: "FAQ — WIN Legal Advisors" },
         { property: "og:description", content: "Answers to common questions about WIN Legal Advisors." },
-        { property: "og:url", content: "/faq" },
+        { property: "og:url", content: "https://www.winlegaladvisors.com/faq" },
         { property: "og:type", content: "website" },
+        { property: "og:site_name", content: "WIN Legal Advisors" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: "FAQ — WIN Legal Advisors" },
+        { name: "twitter:description", content: "Answers to common questions about WIN Legal Advisors." },
       ],
-      links: [{ rel: "canonical", href: "/faq" }],
+      links: [{ rel: "canonical", href: "https://www.winlegaladvisors.com/faq" }],
       scripts: items.length
         ? [
             {

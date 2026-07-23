@@ -38,10 +38,17 @@ export const Route = createFileRoute("/booking")({
         content:
           "Corporate, compliance, DPDP, IPR and regulatory advisory. Pick a service and time to meet with Adv. Vrushali Borade.",
       },
-      { property: "og:url", content: "/booking" },
+      { property: "og:url", content: "https://www.winlegaladvisors.com/booking" },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "WIN Legal Advisors" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Book a Free Legal Consultation — WIN Legal Advisors" },
+      {
+        name: "twitter:description",
+        content: "Pick a service and time to meet with Adv. Vrushali Borade.",
+      },
     ],
-    links: [{ rel: "canonical", href: "/booking" }],
+    links: [{ rel: "canonical", href: "https://www.winlegaladvisors.com/booking" }],
   }),
 });
 

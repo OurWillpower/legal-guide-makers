@@ -21,10 +21,17 @@ export const Route = createFileRoute("/contact")({
         content:
           "Speak with WIN Legal Advisors about corporate, compliance, DPDP, IPR and regulatory needs.",
       },
-      { property: "og:url", content: "/contact" },
+      { property: "og:url", content: "https://www.winlegaladvisors.com/contact" },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "WIN Legal Advisors" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Contact WIN Legal Advisors" },
+      {
+        name: "twitter:description",
+        content: "Talk to a corporate lawyer — reply within one business day.",
+      },
     ],
-    links: [{ rel: "canonical", href: "/contact" }],
+    links: [{ rel: "canonical", href: "https://www.winlegaladvisors.com/contact" }],
   }),
 });
 
