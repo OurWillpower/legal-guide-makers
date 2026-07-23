@@ -14,10 +14,14 @@ export const Route = createFileRoute("/terms")({
       },
       { property: "og:title", content: "Terms of Service — WIN Legal Advisors" },
       { property: "og:description", content: "Terms of Service for winlegaladvisors.com." },
+      { property: "og:url", content: "https://www.winlegaladvisors.com/terms" },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "WIN Legal Advisors" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "Terms of Service — WIN Legal Advisors" },
+      { name: "twitter:description", content: "Terms of Service for winlegaladvisors.com." },
     ],
-    links: [{ rel: "canonical", href: "/terms" }],
+    links: [{ rel: "canonical", href: "https://www.winlegaladvisors.com/terms" }],
   }),
 });
 

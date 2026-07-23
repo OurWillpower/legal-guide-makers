@@ -42,9 +42,18 @@ export const Route = createFileRoute("/")({
         content:
           "Building scalable, compliant and investor-ready companies. Trust. Compliance. Growth. Sustainability.",
       },
-      { property: "og:url", content: "/" },
+      { property: "og:url", content: "https://www.winlegaladvisors.com/" },
+      { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "WIN Legal Advisors" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "WIN Legal Advisors — Vision to Victory" },
+      {
+        name: "twitter:description",
+        content:
+          "Corporate legal, compliance, DPDP, IPR and regulatory advisory for scalable, investor-ready companies.",
+      },
     ],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [{ rel: "canonical", href: "https://www.winlegaladvisors.com/" }],
     scripts: [
       {
         type: "application/ld+json",

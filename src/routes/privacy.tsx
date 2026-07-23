@@ -14,10 +14,14 @@ export const Route = createFileRoute("/privacy")({
       },
       { property: "og:title", content: "Privacy Policy — WIN Legal Advisors" },
       { property: "og:description", content: "Privacy Policy for winlegaladvisors.com." },
+      { property: "og:url", content: "https://www.winlegaladvisors.com/privacy" },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "WIN Legal Advisors" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "Privacy Policy — WIN Legal Advisors" },
+      { name: "twitter:description", content: "Privacy Policy for winlegaladvisors.com." },
     ],
-    links: [{ rel: "canonical", href: "/privacy" }],
+    links: [{ rel: "canonical", href: "https://www.winlegaladvisors.com/privacy" }],
   }),
 });
 
