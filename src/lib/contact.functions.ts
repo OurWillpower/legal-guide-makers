@@ -1,15 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
-import { z } from "zod";
+import { contactSchema } from "./contact.schema";
+import type { ContactInput } from "./contact.schema";
 
-const contactSchema = z.object({
-  name: z.string().trim().min(1).max(120),
-  email: z.string().trim().email().max(254),
-  phone: z.string().trim().max(40).optional().or(z.literal("")),
-  subject: z.string().trim().max(200).optional().or(z.literal("")),
-  message: z.string().trim().min(1).max(2000),
-});
-
-export type ContactInput = z.infer<typeof contactSchema>;
+export type { ContactInput };
 
 export const submitContactMessage = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => contactSchema.parse(data))

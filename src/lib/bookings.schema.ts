@@ -25,3 +25,5 @@ export const cancelSchema = z.object({
 });
 
 export const bookingIcsSchema = z.object({ id: z.string().uuid(), token: z.string().min(10) });
+
+export const uuidSchema = z.string().uuid();
