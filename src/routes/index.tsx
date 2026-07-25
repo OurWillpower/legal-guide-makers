@@ -281,6 +281,8 @@ function Home() {
             </div>
           </div>
         </div>
+
+        <HeroServicesSlider slides={services} className="mt-16 md:mt-20" />
       </section>
 
       {/* ABOUT */}
