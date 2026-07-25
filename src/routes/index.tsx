@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import logoAsset from "@/assets/win-logo-mark.png.asset.json";
 import portraitAsset from "@/assets/vrushali-portrait.png.asset.json";
+import { HeroServicesSlider } from "@/components/HeroServicesSlider";
 
 const logo = logoAsset.url;
 const portrait = portraitAsset.url;
@@ -280,6 +281,8 @@ function Home() {
             </div>
           </div>
         </div>
+
+        <HeroServicesSlider slides={services} className="mt-16 md:mt-20" />
       </section>
 
       {/* ABOUT */}
