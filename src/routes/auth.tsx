@@ -2,7 +2,6 @@ import { createFileRoute, useNavigate, useSearch, Link } from "@tanstack/react-r
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -48,6 +47,7 @@ function AuthPage() {
   const google = async () => {
     setBusy(true);
     if (isSafePath(redirect)) sessionStorage.setItem("win_post_signin_redirect", redirect);
+    const { lovable } = await import("@/integrations/lovable/index");
     const res = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin + "/auth" });
     if (res.error) toast.error("Sign in failed. Try again.");
     setBusy(false);
