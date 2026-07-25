@@ -97,41 +97,49 @@ export const Route = createFileRoute("/")({
 
 const services = [
   {
+    id: "corporate-legal",
     icon: Scale,
     title: "Corporate Legal Services",
     desc: "End-to-end legal support for businesses at every stage of growth.",
   },
   {
+    id: "contracts-commercial",
     icon: FileSignature,
     title: "Contracts & Commercial Advisory",
     desc: "Drafting, review and negotiation of contracts that protect your interests.",
   },
   {
+    id: "dpdp-privacy",
     icon: Lock,
     title: "DPDP & Data Privacy Compliance",
     desc: "Helping organizations comply with the DPDP Act and global privacy laws.",
   },
   {
+    id: "tech-ai-cyber",
     icon: Cpu,
     title: "Technology, AI & Cyber Law",
     desc: "Guidance on AI, data protection, cybersecurity and emerging technologies.",
   },
   {
+    id: "ma-jv",
     icon: Handshake,
     title: "Mergers, Acquisitions & JV",
     desc: "Strategic legal support for M&A, joint ventures and restructuring.",
   },
   {
+    id: "ip-innovation",
     icon: Lightbulb,
     title: "Intellectual Property & Innovation",
     desc: "Protecting your ideas, brands, inventions and intellectual assets.",
   },
   {
+    id: "regulatory-compliance",
     icon: Landmark,
     title: "Regulatory & Compliance",
     desc: "Advisory on regulatory frameworks, licenses and industry compliance.",
   },
   {
+    id: "litigation-dispute",
     icon: Users,
     title: "Litigation & Dispute Resolution",
     desc: "Effective representation and dispute resolution across forums.",
@@ -349,7 +357,8 @@ function Home() {
             {services.map((s) => (
               <div
                 key={s.title}
-                className="group relative bg-navy-deep p-8 transition-colors hover:bg-navy"
+                id={`service-${s.id}`}
+                className="group relative scroll-mt-24 bg-navy-deep p-8 transition-colors hover:bg-navy"
               >
                 <div className="grid h-12 w-12 place-items-center rounded-lg border border-gold/40 bg-navy text-gold transition-transform group-hover:scale-110">
                   <s.icon className="h-6 w-6" />
