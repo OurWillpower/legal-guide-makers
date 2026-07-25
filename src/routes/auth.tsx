@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate, useSearch, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,13 +34,24 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: isSafePath(redirect) ? redirect : "/my-bookings", replace: true });
+    let unsubscribe: (() => void) | undefined;
+    let cancelled = false;
+    void import("@/integrations/supabase/client").then(({ supabase }) => {
+      if (cancelled) return;
+      supabase.auth.getSession().then(({ data }) => {
+        if (!cancelled && data.session) {
+          navigate({ to: isSafePath(redirect) ? redirect : "/my-bookings", replace: true });
+        }
+      });
+      const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+        if (session) navigate({ to: isSafePath(redirect) ? redirect : "/my-bookings", replace: true });
+      });
+      unsubscribe = () => data.subscription.unsubscribe();
     });
-    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) navigate({ to: isSafePath(redirect) ? redirect : "/my-bookings", replace: true });
-    });
-    return () => data.subscription.unsubscribe();
+    return () => {
+      cancelled = true;
+      unsubscribe?.();
+    };
   }, [navigate, redirect]);
 
   const google = async () => {
@@ -56,6 +66,7 @@ function AuthPage() {
   const emailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
+    const { supabase } = await import("@/integrations/supabase/client");
     if (mode === "signin") {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) toast.error(error.message);
@@ -74,7 +85,7 @@ function AuthPage() {
   useEffect(() => {
     const saved = sessionStorage.getItem("win_post_signin_redirect");
     if (saved && isSafePath(saved)) {
-      supabase.auth.getSession().then(({ data }) => {
+      void import("@/integrations/supabase/client").then(({ supabase }) => supabase.auth.getSession()).then(({ data }) => {
         if (data.session) {
           sessionStorage.removeItem("win_post_signin_redirect");
           navigate({ to: saved, replace: true });
