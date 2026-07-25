@@ -332,3 +332,133 @@ export const getBookingIcs = createServerFn({ method: "GET" })
     });
     return { ics };
   });
+
+// ============= Public token-gated management (no auth required) =============
+// Clients who booked via the public form receive a manage_token by email.
+// These functions verify the token via the admin client (RLS bypass) so the
+// booking owner can view / reschedule / cancel without creating an account.
+
+export const getBookingByToken = createServerFn({ method: "GET" })
+  .inputValidator((raw: unknown) => publicManageSchema.parse(raw))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row } = await supabaseAdmin
+      .from("bookings")
+      .select(
+        "id, name, email, phone, service, preferred_date, preferred_time, status, cancelled_at, cancellation_reason, reschedule_count, manage_token",
+      )
+      .eq("id", data.id)
+      .maybeSingle();
+    if (!row || row.manage_token !== data.token) return null;
+    // Strip the token before returning to the client.
+    const { manage_token: _t, ...safe } = row;
+    return safe;
+  });
+
+export const rescheduleBookingByToken = createServerFn({ method: "POST" })
+  .inputValidator((raw: unknown) => publicRescheduleSchema.parse(raw))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { logBookingEvent, sendBookingEmail, slotToISO } = await import("./bookings.server");
+
+    const { data: existing } = await supabaseAdmin
+      .from("bookings")
+      .select("id, name, email, service, reschedule_count, cancelled_at, manage_token, google_event_id")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (!existing || existing.manage_token !== data.token) throw new Error("Booking not found");
+    if (existing.cancelled_at) throw new Error("This booking has been cancelled");
+    if (existing.reschedule_count >= 3) throw new Error("Maximum reschedules reached — please contact us.");
+
+    const { error } = await supabaseAdmin
+      .from("bookings")
+      .update({
+        preferred_date: data.preferredDate,
+        preferred_time: data.preferredTime,
+        reschedule_count: existing.reschedule_count + 1,
+        status: "pending",
+      })
+      .eq("id", data.id);
+    if (error) throw error;
+
+    try {
+      if (existing.google_event_id) {
+        const { updateGcalEvent } = await import("./google-calendar.server");
+        await updateGcalEvent(existing.google_event_id, {
+          startISO: slotToISO(data.preferredDate, data.preferredTime),
+          durationMinutes: 45,
+          summary: `Legal Consultation — ${existing.name} (${existing.service})`,
+        });
+      }
+    } catch (err) {
+      console.warn("[bookings] gcal reschedule (public) skipped:", err);
+    }
+
+    await logBookingEvent(data.id, "rescheduled", {
+      date: data.preferredDate,
+      time: data.preferredTime,
+      count: existing.reschedule_count + 1,
+      channel: "public",
+    });
+
+    await sendBookingEmail({
+      to: existing.email,
+      name: existing.name,
+      service: existing.service,
+      preferredDate: data.preferredDate,
+      preferredTime: data.preferredTime,
+      bookingId: data.id,
+      manageToken: existing.manage_token,
+      rescheduled: true,
+    });
+
+    return { ok: true };
+  });
+
+export const cancelBookingByToken = createServerFn({ method: "POST" })
+  .inputValidator((raw: unknown) => publicCancelSchema.parse(raw))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { logBookingEvent, sendBookingEmail } = await import("./bookings.server");
+
+    const { data: existing } = await supabaseAdmin
+      .from("bookings")
+      .select("id, name, email, service, preferred_date, preferred_time, cancelled_at, manage_token, google_event_id")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (!existing || existing.manage_token !== data.token) throw new Error("Booking not found");
+    if (existing.cancelled_at) return { ok: true };
+
+    const { error } = await supabaseAdmin
+      .from("bookings")
+      .update({
+        cancelled_at: new Date().toISOString(),
+        cancellation_reason: data.reason || null,
+        status: "cancelled",
+      })
+      .eq("id", data.id);
+    if (error) throw error;
+
+    try {
+      if (existing.google_event_id) {
+        const { deleteGcalEvent } = await import("./google-calendar.server");
+        await deleteGcalEvent(existing.google_event_id);
+      }
+    } catch (err) {
+      console.warn("[bookings] gcal delete (public) skipped:", err);
+    }
+
+    await logBookingEvent(data.id, "cancelled", { reason: data.reason || null, channel: "public" });
+
+    await sendBookingEmail({
+      to: existing.email,
+      name: existing.name,
+      service: existing.service,
+      preferredDate: existing.preferred_date,
+      preferredTime: existing.preferred_time,
+      bookingId: data.id,
+      cancelled: true,
+    });
+
+    return { ok: true };
+  });
