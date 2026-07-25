@@ -84,7 +84,7 @@ export const Route = createFileRoute("/articles/dpdp/$slug")({
 });
 
 function DpdpArticleDetail() {
-  const { article } = Route.useLoaderData();
+  const { article } = Route.useLoaderData() as { article: DpdpArticle };
   const currentIndex = dpdpArticles.findIndex((a) => a.slug === article.slug);
   const prev = currentIndex > 0 ? dpdpArticles[currentIndex - 1] : null;
   const next =
