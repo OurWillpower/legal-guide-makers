@@ -196,10 +196,39 @@ function Home() {
           </a>
           <nav className="hidden items-center gap-8 text-sm font-medium text-navy md:flex">
             <a href="#about" className="hover:text-gold transition-colors">About</a>
-            <a href="#services" className="hover:text-gold transition-colors">Services</a>
+            <div className="group relative">
+              <a
+                href="#services"
+                aria-haspopup="true"
+                className="inline-flex items-center gap-1 hover:text-gold transition-colors focus-visible:text-gold"
+              >
+                Services
+                <svg className="h-3 w-3 opacity-70" viewBox="0 0 12 12" fill="none" aria-hidden>
+                  <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </a>
+              <div
+                role="menu"
+                aria-label="Services"
+                className="invisible absolute left-1/2 top-full z-50 mt-3 w-72 -translate-x-1/2 rounded-xl border border-navy/10 bg-background p-2 opacity-0 shadow-xl transition-all group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100"
+              >
+                {services.map((s) => (
+                  <a
+                    key={s.id}
+                    role="menuitem"
+                    href={`#service-${s.id}`}
+                    className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-navy hover:bg-navy/5 hover:text-gold focus-visible:bg-navy/5 focus-visible:text-gold focus-visible:outline-none"
+                  >
+                    <s.icon className="h-4 w-4 shrink-0 text-gold" />
+                    <span>{s.title}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
             <a href="#why-us" className="hover:text-gold transition-colors">Why Us</a>
             <a href="#founder" className="hover:text-gold transition-colors">Founder</a>
             <a href="#testimonials" className="hover:text-gold transition-colors">Testimonials</a>
+            <Link to="/articles/dpdp" className="hover:text-gold transition-colors">Articles</Link>
             <a href="#faq" className="hover:text-gold transition-colors">FAQ</a>
             <Link to="/contact" className="hover:text-gold transition-colors">Contact</Link>
           </nav>
