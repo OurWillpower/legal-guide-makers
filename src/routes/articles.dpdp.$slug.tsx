@@ -1,9 +1,30 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, Calendar, Clock, ShieldCheck, ChevronRight, List } from "lucide-react";
+import { useEffect, useState } from "react";
 import logoAsset from "@/assets/win-logo-mark.png.asset.json";
 import { getDpdpArticle, dpdpArticles, type DpdpArticle } from "@/lib/dpdp-articles";
 
 const logo = logoAsset.url;
+
+function useReadingProgress() {
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    const update = () => {
+      const doc = document.documentElement;
+      const scrollTop = window.scrollY || doc.scrollTop;
+      const height = doc.scrollHeight - doc.clientHeight;
+      setProgress(height > 0 ? Math.min(100, Math.max(0, (scrollTop / height) * 100)) : 0);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+  return progress;
+}
 
 export const Route = createFileRoute("/articles/dpdp/$slug")({
   loader: ({ params }) => {
@@ -92,6 +113,8 @@ function DpdpArticleDetail() {
       ? dpdpArticles[currentIndex + 1]
       : null;
 
+  const progress = useReadingProgress();
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-50 border-b border-navy/10 bg-background/85 backdrop-blur-md">
@@ -106,6 +129,19 @@ function DpdpArticleDetail() {
             <Calendar className="h-4 w-4" />
             Book Consultation
           </Link>
+        </div>
+        <div
+          className="h-1 bg-navy/10"
+          role="progressbar"
+          aria-label="Reading progress"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={Math.round(progress)}
+        >
+          <div
+            className="h-full bg-gradient-gold transition-[width] duration-150 ease-out"
+            style={{ width: `${progress}%` }}
+          />
         </div>
       </header>
 
