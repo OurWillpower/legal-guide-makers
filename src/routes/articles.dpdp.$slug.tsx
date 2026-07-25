@@ -1,9 +1,30 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, Calendar, Clock, ShieldCheck, ChevronRight, List } from "lucide-react";
+import { useEffect, useState } from "react";
 import logoAsset from "@/assets/win-logo-mark.png.asset.json";
 import { getDpdpArticle, dpdpArticles, type DpdpArticle } from "@/lib/dpdp-articles";
 
 const logo = logoAsset.url;
+
+function useReadingProgress() {
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    const update = () => {
+      const doc = document.documentElement;
+      const scrollTop = window.scrollY || doc.scrollTop;
+      const height = doc.scrollHeight - doc.clientHeight;
+      setProgress(height > 0 ? Math.min(100, Math.max(0, (scrollTop / height) * 100)) : 0);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+  return progress;
+}
 
 export const Route = createFileRoute("/articles/dpdp/$slug")({
   loader: ({ params }) => {
