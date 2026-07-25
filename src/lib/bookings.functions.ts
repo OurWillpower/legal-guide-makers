@@ -2,7 +2,6 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { bookingIcsSchema, bookingSchema, cancelSchema, rescheduleSchema, uuidSchema } from "./bookings.schema";
 import type { BookingInput } from "./bookings.schema";
-import { buildIcs, logBookingEvent, sendBookingEmail, slotToISO } from "./bookings.server";
 
 export type { BookingInput };
 
@@ -13,6 +12,7 @@ export const submitBooking = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { createGcalEvent } = await import("./google-calendar.server");
+    const { logBookingEvent, sendBookingEmail, slotToISO } = await import("./bookings.server");
 
     const { data: row, error } = await supabaseAdmin
       .from("bookings")
@@ -82,6 +82,7 @@ export const submitBookingPublic = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { createGcalEvent } = await import("./google-calendar.server");
+    const { logBookingEvent, sendBookingEmail, slotToISO } = await import("./bookings.server");
 
     const { data: row, error } = await supabaseAdmin
       .from("bookings")
@@ -175,6 +176,8 @@ export const rescheduleBooking = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => rescheduleSchema.parse(data))
   .handler(async ({ data, context }) => {
+    const { logBookingEvent, sendBookingEmail, slotToISO } = await import("./bookings.server");
+
     // Owner-scoped update via RLS
     const { data: existing, error: readErr } = await context.supabase
       .from("bookings")
@@ -240,6 +243,8 @@ export const cancelBooking = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => cancelSchema.parse(data))
   .handler(async ({ data, context }) => {
+    const { logBookingEvent, sendBookingEmail } = await import("./bookings.server");
+
     const { data: existing, error: readErr } = await context.supabase
       .from("bookings")
       .select("id, name, email, service, preferred_date, preferred_time, cancelled_at")
@@ -293,6 +298,7 @@ export const getBookingIcs = createServerFn({ method: "GET" })
   .inputValidator((raw: unknown) => bookingIcsSchema.parse(raw))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { buildIcs, slotToISO } = await import("./bookings.server");
     const { data: row } = await supabaseAdmin
       .from("bookings")
       .select("id, name, email, service, preferred_date, preferred_time, cancelled_at, manage_token")
