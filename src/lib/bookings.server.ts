@@ -63,7 +63,9 @@ export async function sendBookingEmail(opts: {
     const pdfUrl = opts.manageToken
       ? `${base}/api/public/booking-pdf/${opts.bookingId}?token=${encodeURIComponent(opts.manageToken)}`
       : "";
-    const manageUrl = opts.manageToken ? `${base}/manage-booking/${opts.bookingId}` : "";
+    const manageUrl = opts.manageToken
+      ? `${base}/manage/${opts.bookingId}?token=${encodeURIComponent(opts.manageToken)}`
+      : "";
     const statusUrl = opts.manageToken
       ? `${base}/status/${opts.bookingId}?token=${encodeURIComponent(opts.manageToken)}`
       : "";
