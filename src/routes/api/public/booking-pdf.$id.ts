@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { generateBookingPdf } from "@/lib/booking-pdf";
 
 export const Route = createFileRoute("/api/public/booking-pdf/$id")({
   server: {
@@ -21,6 +20,7 @@ export const Route = createFileRoute("/api/public/booking-pdf/$id")({
         if (error || !data) return new Response("Not found", { status: 404 });
         if (data.manage_token !== token) return new Response("Forbidden", { status: 403 });
 
+        const { generateBookingPdf } = await import("@/lib/booking-pdf");
         const pdf = await generateBookingPdf({
           bookingId: data.id,
           name: data.name,
