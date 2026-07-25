@@ -20,6 +20,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StatusIdRouteImport } from './routes/status.$id'
 import { Route as ManageIdRouteImport } from './routes/manage.$id'
+import { Route as ArticlesDpdpRouteImport } from './routes/articles.dpdp'
 import { Route as AuthenticatedMyBookingsRouteImport } from './routes/_authenticated/my-bookings'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedManageBookingIdRouteImport } from './routes/_authenticated/manage-booking.$id'
@@ -81,6 +82,11 @@ const ManageIdRoute = ManageIdRouteImport.update({
   path: '/manage/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArticlesDpdpRoute = ArticlesDpdpRouteImport.update({
+  id: '/articles/dpdp',
+  path: '/articles/dpdp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedMyBookingsRoute = AuthenticatedMyBookingsRouteImport.update({
   id: '/my-bookings',
   path: '/my-bookings',
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/my-bookings': typeof AuthenticatedMyBookingsRoute
+  '/articles/dpdp': typeof ArticlesDpdpRoute
   '/manage/$id': typeof ManageIdRoute
   '/status/$id': typeof StatusIdRoute
   '/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
@@ -143,6 +150,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/my-bookings': typeof AuthenticatedMyBookingsRoute
+  '/articles/dpdp': typeof ArticlesDpdpRoute
   '/manage/$id': typeof ManageIdRoute
   '/status/$id': typeof StatusIdRoute
   '/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
@@ -163,6 +171,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/my-bookings': typeof AuthenticatedMyBookingsRoute
+  '/articles/dpdp': typeof ArticlesDpdpRoute
   '/manage/$id': typeof ManageIdRoute
   '/status/$id': typeof StatusIdRoute
   '/_authenticated/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
@@ -183,6 +192,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin'
     | '/my-bookings'
+    | '/articles/dpdp'
     | '/manage/$id'
     | '/status/$id'
     | '/manage-booking/$id'
@@ -201,6 +211,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin'
     | '/my-bookings'
+    | '/articles/dpdp'
     | '/manage/$id'
     | '/status/$id'
     | '/manage-booking/$id'
@@ -220,6 +231,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/_authenticated/admin'
     | '/_authenticated/my-bookings'
+    | '/articles/dpdp'
     | '/manage/$id'
     | '/status/$id'
     | '/_authenticated/manage-booking/$id'
@@ -238,6 +250,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
+  ArticlesDpdpRoute: typeof ArticlesDpdpRoute
   ManageIdRoute: typeof ManageIdRoute
   StatusIdRoute: typeof StatusIdRoute
   ApiPublicBookingIcsIdRoute: typeof ApiPublicBookingIcsIdRoute
@@ -324,6 +337,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManageIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/articles/dpdp': {
+      id: '/articles/dpdp'
+      path: '/articles/dpdp'
+      fullPath: '/articles/dpdp'
+      preLoaderRoute: typeof ArticlesDpdpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/my-bookings': {
       id: '/_authenticated/my-bookings'
       path: '/my-bookings'
@@ -394,6 +414,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
+  ArticlesDpdpRoute: ArticlesDpdpRoute,
   ManageIdRoute: ManageIdRoute,
   StatusIdRoute: StatusIdRoute,
   ApiPublicBookingIcsIdRoute: ApiPublicBookingIcsIdRoute,
