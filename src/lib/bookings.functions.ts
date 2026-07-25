@@ -1,132 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
-import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { buildIcs, slotToISO, googleCalendarUrl } from "./ics";
+import { bookingIcsSchema, bookingSchema, cancelSchema, rescheduleSchema, uuidSchema } from "./bookings.schema";
+import type { BookingInput } from "./bookings.schema";
+import { buildIcs, logBookingEvent, sendBookingEmail, slotToISO } from "./bookings.server";
 
-function siteBaseUrl(): string {
-  return (
-    process.env.APP_URL ||
-    process.env.SITE_URL ||
-    "https://www.winlegaladvisors.com"
-  ).replace(/\/$/, "");
-}
-
-const bookingSchema = z.object({
-  name: z.string().trim().min(1).max(120),
-  email: z.string().trim().email().max(254),
-  phone: z.string().trim().max(40).optional().or(z.literal("")),
-  company: z.string().trim().max(160).optional().or(z.literal("")),
-  service: z.string().trim().min(1).max(120),
-  preferredDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  preferredTime: z.string().trim().min(1).max(20),
-  message: z.string().trim().max(2000).optional().or(z.literal("")),
-});
-
-export type BookingInput = z.infer<typeof bookingSchema>;
-
-async function logBookingEvent(
-  bookingId: string,
-  eventType: string,
-  meta: Record<string, unknown> = {},
-  actor?: string,
-) {
-  try {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    await supabaseAdmin.from("booking_events").insert({
-      booking_id: bookingId,
-      event_type: eventType,
-      meta: meta as never,
-      actor: actor ?? null,
-    });
-  } catch (err) {
-    console.warn("[bookings] event log skipped:", err);
-  }
-}
-
-async function sendBookingEmail(opts: {
-  to: string;
-  name: string;
-  phone?: string | null;
-  service: string;
-  preferredDate: string;
-  preferredTime: string;
-  bookingId: string;
-  manageToken?: string | null;
-  cancelled?: boolean;
-  rescheduled?: boolean;
-}) {
-  const apiKey = process.env.LOVABLE_API_KEY;
-  if (!apiKey) return;
-  try {
-    const [{ sendLovableEmail }, { renderDbTemplate }] = await Promise.all([
-      import("@lovable.dev/email-js"),
-      import("./email-render.server"),
-    ]);
-
-    let googleCalUrl = "";
-    try {
-      const startISO = slotToISO(opts.preferredDate, opts.preferredTime);
-      googleCalUrl = googleCalendarUrl({
-        title: `Legal Consultation — WIN Legal Advisors (${opts.service})`,
-        startISO,
-        durationMinutes: 45,
-        description: "Your legal consultation with WIN Legal Advisors.",
-        location: "WIN Legal Advisors (Video call)",
-      });
-    } catch (err) {
-      console.warn("[bookings] calendar url skipped:", err);
-    }
-    const base = siteBaseUrl();
-    const icsUrl = opts.manageToken
-      ? `${base}/api/public/booking-ics/${opts.bookingId}?token=${encodeURIComponent(opts.manageToken)}`
-      : "";
-    const pdfUrl = opts.manageToken
-      ? `${base}/api/public/booking-pdf/${opts.bookingId}?token=${encodeURIComponent(opts.manageToken)}`
-      : "";
-    const manageUrl = opts.manageToken ? `${base}/manage-booking/${opts.bookingId}` : "";
-    const statusUrl = opts.manageToken
-      ? `${base}/status/${opts.bookingId}?token=${encodeURIComponent(opts.manageToken)}`
-      : "";
-
-    const key = opts.cancelled
-      ? "booking_cancelled"
-      : opts.rescheduled
-        ? "booking_rescheduled"
-        : "booking_confirmation";
-
-    const data = {
-      name: opts.name,
-      service: opts.service,
-      preferredDate: opts.preferredDate,
-      preferredTime: opts.preferredTime,
-      manageUrl,
-      googleCalendarUrl: googleCalUrl,
-      icsUrl,
-      pdfUrl,
-      statusUrl,
-    };
-    const rendered = await renderDbTemplate(key, data);
-    if (!rendered) {
-      console.warn(`[bookings] template ${key} not found`);
-      return;
-    }
-
-    await sendLovableEmail(
-      {
-        to: opts.to,
-        from: "WIN Legal Advisors <hello@winlegaladvisors.com>",
-        subject: rendered.subject,
-        html: rendered.html,
-        text: rendered.text,
-        purpose: "booking_confirmation",
-        reply_to: "contact@winlegaladvisors.com",
-      },
-      { apiKey },
-    );
-  } catch (err) {
-    console.warn("[bookings] email skipped:", err);
-  }
-}
+export type { BookingInput };
 
 
 export const submitBooking = createServerFn({ method: "POST" })
@@ -280,7 +158,7 @@ export const getMyBookings = createServerFn({ method: "GET" })
 
 export const getMyBooking = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((id: string) => z.string().uuid().parse(id))
+  .inputValidator((id: string) => uuidSchema.parse(id))
   .handler(async ({ data: id, context }) => {
     const { data, error } = await context.supabase
       .from("bookings")
@@ -292,12 +170,6 @@ export const getMyBooking = createServerFn({ method: "GET" })
     if (error) throw error;
     return data;
   });
-
-const rescheduleSchema = z.object({
-  id: z.string().uuid(),
-  preferredDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  preferredTime: z.string().trim().min(1).max(20),
-});
 
 export const rescheduleBooking = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -364,11 +236,6 @@ export const rescheduleBooking = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-const cancelSchema = z.object({
-  id: z.string().uuid(),
-  reason: z.string().trim().max(500).optional().or(z.literal("")),
-});
-
 export const cancelBooking = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => cancelSchema.parse(data))
@@ -423,9 +290,7 @@ export const cancelBooking = createServerFn({ method: "POST" })
 
 // Public server route helper: build an ICS for a booking, gated by manage_token.
 export const getBookingIcs = createServerFn({ method: "GET" })
-  .inputValidator((raw: unknown) =>
-    z.object({ id: z.string().uuid(), token: z.string().min(10) }).parse(raw),
-  )
+  .inputValidator((raw: unknown) => bookingIcsSchema.parse(raw))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: row } = await supabaseAdmin

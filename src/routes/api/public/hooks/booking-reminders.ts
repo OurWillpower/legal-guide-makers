@@ -22,8 +22,9 @@ export const Route = createFileRoute("/api/public/hooks/booking-reminders")({
           return new Response("Server not configured", { status: 500 });
         }
 
-        const a = Buffer.from(provided);
-        const b = Buffer.from(secretRow.value);
+        const textEncoder = new TextEncoder();
+        const a = textEncoder.encode(provided);
+        const b = textEncoder.encode(secretRow.value);
         if (a.length !== b.length) {
           return new Response("Forbidden", { status: 403 });
         }
