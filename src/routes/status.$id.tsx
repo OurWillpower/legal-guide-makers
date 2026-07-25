@@ -211,9 +211,19 @@ function PublicStatus() {
 
             <div className="mt-10 rounded-2xl border border-gold/30 bg-navy p-6 text-center text-cream">
               <p className="text-sm">
-                To reschedule or cancel, please <Link to="/auth" className="font-semibold text-gold underline">sign in</Link> or reply to your confirmation email.
+                Need to change plans?{" "}
+                <Link
+                  to="/manage/$id"
+                  params={{ id: data.booking.id }}
+                  search={{ token }}
+                  className="font-semibold text-gold underline"
+                >
+                  Reschedule or cancel
+                </Link>
+                {" "}using your secure link.
               </p>
             </div>
+
           </>
         )}
       </main>
