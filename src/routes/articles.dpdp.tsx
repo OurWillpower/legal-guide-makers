@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Calendar, Clock, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, ShieldCheck, Search, ArrowRight } from "lucide-react";
+import { useMemo, useState } from "react";
 import logoAsset from "@/assets/win-logo-mark.png.asset.json";
+import { dpdpArticles, dpdpCategories } from "@/lib/dpdp-articles";
 
 const logo = logoAsset.url;
 
@@ -33,91 +35,47 @@ export const Route = createFileRoute("/articles/dpdp")({
     links: [
       { rel: "canonical", href: "https://www.winlegaladvisors.com/articles/dpdp" },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Blog",
+          name: "DPDP Act Articles & Insights",
+          url: "https://www.winlegaladvisors.com/articles/dpdp",
+          publisher: { "@type": "Organization", name: "WIN Legal Advisors" },
+          blogPost: dpdpArticles.map((a) => ({
+            "@type": "BlogPosting",
+            headline: a.title,
+            url: `https://www.winlegaladvisors.com/articles/dpdp/${a.slug}`,
+            datePublished: a.date,
+            description: a.excerpt,
+            author: { "@type": "Person", name: "Adv. Vrushali Borade" },
+          })),
+        }),
+      },
+    ],
   }),
 });
 
-const articles = [
-  {
-    slug: "dpdp-act-overview",
-    title: "The DPDP Act 2023: A Founder's Overview",
-    date: "March 12, 2025",
-    readTime: "6 min read",
-    excerpt:
-      "A plain-English walkthrough of India's Digital Personal Data Protection Act — who it applies to, what changes, and what founders must do first.",
-    body: [
-      "The Digital Personal Data Protection Act, 2023 (DPDP Act) is India's first comprehensive data protection law. It applies to any business — Indian or foreign — that processes the digital personal data of individuals in India.",
-      "At its core, the Act introduces a consent-first regime. Businesses (called 'Data Fiduciaries') must obtain clear, informed and specific consent before processing personal data, and must give individuals ('Data Principals') the ability to access, correct, erase and grievance-redress their data.",
-      "For founders, the immediate priorities are: (1) mapping what personal data you collect and why, (2) refreshing your privacy notice and consent flows, (3) appointing a grievance officer, and (4) putting a breach-response playbook in place. Penalties can reach ₹250 crore per instance — compliance is a board-level concern, not an IT ticket.",
-    ],
-  },
-  {
-    slug: "consent-notice-checklist",
-    title: "DPDP Consent & Notice: A Practical Checklist",
-    date: "March 18, 2025",
-    readTime: "5 min read",
-    excerpt:
-      "How to draft a DPDP-compliant notice and consent flow — with the seven elements every notice must contain.",
-    body: [
-      "Under Section 5 of the DPDP Act, every notice served to a Data Principal must be clear, in plain language, and available in English plus any of the 22 languages listed in the Eighth Schedule.",
-      "A compliant notice must state: the personal data being collected, the specific purpose, the manner of exercising rights, the grievance redressal mechanism, and the way to withdraw consent. Consent must be free, specific, informed, unconditional and unambiguous — bundled consents and pre-ticked boxes are non-starters.",
-      "Practical tip: separate marketing consent from service consent, and log the exact notice version each user consented to. Regulators will ask for this trail.",
-    ],
-  },
-  {
-    slug: "data-principal-rights",
-    title: "Rights of Data Principals — And How to Honour Them",
-    date: "March 25, 2025",
-    readTime: "4 min read",
-    excerpt:
-      "Access, correction, erasure, grievance redressal and nomination — what each right means and the SLAs you should design for.",
-    body: [
-      "The DPDP Act grants Data Principals five key rights: right to information about processing, right to correction and erasure, right to grievance redressal, right to nominate, and the right to withdraw consent as easily as it was given.",
-      "Operationally, you need a user-facing rights portal (or email intake) with acknowledged turnaround times. We recommend an internal SLA of 7 days for access requests and 30 days for erasure requests, with an audit log for every action.",
-      "Remember: if you refuse a request, you must give reasons in writing, and the Data Principal can escalate to the Data Protection Board of India.",
-    ],
-  },
-  {
-    slug: "cross-border-transfers",
-    title: "Cross-Border Data Transfers Under the DPDP Act",
-    date: "April 2, 2025",
-    readTime: "5 min read",
-    excerpt:
-      "The DPDP Act flips the model — transfers are allowed by default, except to notified 'negative-list' countries. Here's how to prepare.",
-    body: [
-      "Unlike the GDPR, the DPDP Act adopts a negative-list approach: cross-border transfers are permitted unless the Central Government notifies a specific country as restricted.",
-      "That said, sectoral regulators (RBI, IRDAI, SEBI) continue to impose data localisation on regulated entities. Your inter-company data-sharing agreements, standard contractual clauses and vendor DPAs should reference both the DPDP Act and applicable sectoral rules.",
-      "Action item: maintain a live 'data transfer register' showing every third-party processor, its location, the categories of data shared, and the safeguards in place.",
-    ],
-  },
-  {
-    slug: "breach-response",
-    title: "Personal Data Breaches: A 72-Hour Playbook",
-    date: "April 9, 2025",
-    readTime: "6 min read",
-    excerpt:
-      "Every Data Fiduciary must notify the Data Protection Board and affected Data Principals of a breach. Here's the workflow to build now.",
-    body: [
-      "The DPDP Act requires prompt notification of personal data breaches to both the Data Protection Board of India and each affected Data Principal — regardless of severity.",
-      "Build a breach-response playbook that covers detection, containment, forensic assessment, regulator notification, user communication and post-incident review. Assign named owners and rehearse it at least twice a year.",
-      "Notification content should include the nature of the breach, categories and approximate number of records affected, likely consequences, mitigation measures taken, and the point of contact for further information.",
-    ],
-  },
-  {
-    slug: "significant-data-fiduciary",
-    title: "Are You a Significant Data Fiduciary?",
-    date: "April 16, 2025",
-    readTime: "4 min read",
-    excerpt:
-      "The government can designate companies as SDFs based on volume, sensitivity and risk — triggering additional obligations. Understand the threshold.",
-    body: [
-      "A Significant Data Fiduciary (SDF) faces heightened obligations: appointment of a Data Protection Officer based in India, an independent data auditor, periodic Data Protection Impact Assessments, and independent audits.",
-      "Designation is based on factors including the volume and sensitivity of data processed, risk to Data Principal rights, potential impact on India's sovereignty and public order, and risk to electoral democracy.",
-      "Even if you aren't formally designated, adopting SDF-grade governance early is a strong signal to investors, enterprise buyers and regulators. It's also cheaper than retrofitting later.",
-    ],
-  },
-];
-
 function DpdpArticles() {
+  const [query, setQuery] = useState("");
+  const [activeTag, setActiveTag] = useState<string | null>(null);
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return dpdpArticles.filter((a) => {
+      const matchesTag = !activeTag || a.tags.includes(activeTag);
+      if (!matchesTag) return false;
+      if (!q) return true;
+      return (
+        a.title.toLowerCase().includes(q) ||
+        a.excerpt.toLowerCase().includes(q) ||
+        a.tags.some((t) => t.toLowerCase().includes(q))
+      );
+    });
+  }, [query, activeTag]);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-50 border-b border-navy/10 bg-background/85 backdrop-blur-md">
@@ -157,39 +115,112 @@ function DpdpArticles() {
         </div>
       </section>
 
-      <main className="mx-auto max-w-4xl px-6 py-16 md:py-20">
-        <div className="space-y-10">
-          {articles.map((a) => (
-            <article
-              key={a.slug}
-              id={a.slug}
-              className="scroll-mt-24 rounded-2xl border border-navy/10 bg-background p-6 shadow-sm md:p-8"
+      <main className="mx-auto max-w-5xl px-6 py-14 md:py-20">
+        {/* Search + filters */}
+        <div className="rounded-2xl border border-navy/10 bg-cream/40 p-5 md:p-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center">
+            <label className="relative flex-1">
+              <span className="sr-only">Search articles</span>
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-navy/50" />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search DPDP articles…"
+                className="w-full rounded-full border border-navy/15 bg-background py-2.5 pl-10 pr-4 text-sm text-navy-deep placeholder:text-navy/40 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30"
+              />
+            </label>
+            <div className="text-xs font-semibold uppercase tracking-wider text-navy/60">
+              {filtered.length} article{filtered.length === 1 ? "" : "s"}
+            </div>
+          </div>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setActiveTag(null)}
+              className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+                activeTag === null
+                  ? "border-gold bg-gold/15 text-navy-deep"
+                  : "border-navy/15 bg-background text-navy/70 hover:border-gold/60"
+              }`}
             >
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs uppercase tracking-wider text-navy/60">
-                <span className="inline-flex items-center gap-1.5 text-gold">
-                  <ShieldCheck className="h-3.5 w-3.5" />
-                  DPDP Act
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <Calendar className="h-3.5 w-3.5" />
-                  {a.date}
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <Clock className="h-3.5 w-3.5" />
-                  {a.readTime}
-                </span>
-              </div>
-              <h2 className="mt-3 font-serif text-2xl font-bold text-navy-deep md:text-3xl">
-                {a.title}
-              </h2>
-              <p className="mt-3 text-navy/70">{a.excerpt}</p>
-              <div className="mt-5 space-y-4 text-navy/80 leading-relaxed">
-                {a.body.map((p, i) => (
-                  <p key={i}>{p}</p>
-                ))}
-              </div>
-            </article>
-          ))}
+              All topics
+            </button>
+            {dpdpCategories.map((tag) => (
+              <button
+                key={tag}
+                type="button"
+                onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+                className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+                  activeTag === tag
+                    ? "border-gold bg-gold/15 text-navy-deep"
+                    : "border-navy/15 bg-background text-navy/70 hover:border-gold/60"
+                }`}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Articles list */}
+        <div className="mt-10 space-y-6">
+          {filtered.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-navy/20 p-10 text-center text-navy/60">
+              No articles match your search. Try clearing the filter.
+            </div>
+          ) : (
+            filtered.map((a) => (
+              <article
+                key={a.slug}
+                className="group rounded-2xl border border-navy/10 bg-background p-6 shadow-sm transition-shadow hover:shadow-md md:p-8"
+              >
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs uppercase tracking-wider text-navy/60">
+                  <span className="inline-flex items-center gap-1.5 text-gold">
+                    <ShieldCheck className="h-3.5 w-3.5" />
+                    {a.category}
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <Calendar className="h-3.5 w-3.5" />
+                    {a.date}
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <Clock className="h-3.5 w-3.5" />
+                    {a.readTime}
+                  </span>
+                </div>
+                <h2 className="mt-3 font-serif text-2xl font-bold text-navy-deep md:text-3xl">
+                  <Link
+                    to="/articles/dpdp/$slug"
+                    params={{ slug: a.slug }}
+                    className="transition-colors hover:text-gold"
+                  >
+                    {a.title}
+                  </Link>
+                </h2>
+                <p className="mt-3 text-navy/70">{a.excerpt}</p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {a.tags.map((t) => (
+                    <span
+                      key={t}
+                      className="rounded-full border border-navy/15 bg-cream/40 px-2.5 py-0.5 text-[11px] font-medium text-navy/70"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+                <Link
+                  to="/articles/dpdp/$slug"
+                  params={{ slug: a.slug }}
+                  className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-navy-deep transition-colors hover:text-gold"
+                >
+                  Read article
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                </Link>
+              </article>
+            ))
+          )}
         </div>
 
         <div className="mt-16 rounded-2xl bg-navy-deep p-8 text-center text-cream md:p-12">
