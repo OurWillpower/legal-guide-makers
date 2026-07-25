@@ -27,3 +27,18 @@ export const cancelSchema = z.object({
 export const bookingIcsSchema = z.object({ id: z.string().uuid(), token: z.string().min(10) });
 
 export const uuidSchema = z.string().uuid();
+
+export const publicManageSchema = z.object({ id: z.string().uuid(), token: z.string().min(10) });
+
+export const publicRescheduleSchema = z.object({
+  id: z.string().uuid(),
+  token: z.string().min(10),
+  preferredDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  preferredTime: z.string().trim().min(1).max(20),
+});
+
+export const publicCancelSchema = z.object({
+  id: z.string().uuid(),
+  token: z.string().min(10),
+  reason: z.string().trim().max(500).optional().or(z.literal("")),
+});
