@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, Calendar, Clock, ShieldCheck, ChevronRight, List } from "lucide-react";
 import logoAsset from "@/assets/win-logo-mark.png.asset.json";
-import { getDpdpArticle, dpdpArticles } from "@/lib/dpdp-articles";
+import { getDpdpArticle, dpdpArticles, type DpdpArticle } from "@/lib/dpdp-articles";
 
 const logo = logoAsset.url;
 
