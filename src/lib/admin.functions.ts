@@ -1,7 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { assertAdmin } from "./admin.server";
 import { emailTemplateSchema, faqSchema, serviceSchema, settingsSchema, testimonialSchema } from "./admin.schemas";
 
 export const isAdmin = createServerFn({ method: "GET" })
@@ -14,6 +13,7 @@ export const isAdmin = createServerFn({ method: "GET" })
 export const adminListTestimonials = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase, context.userId);
     const { data, error } = await context.supabase
       .from("testimonials")
@@ -27,6 +27,7 @@ export const saveTestimonial = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) => testimonialSchema.parse(raw))
   .handler(async ({ data, context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase, context.userId);
     const row = {
       quote: data.quote,
@@ -51,6 +52,7 @@ export const deleteTestimonial = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((id: string) => z.string().uuid().parse(id))
   .handler(async ({ data: id, context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase, context.userId);
     const { error } = await context.supabase.from("testimonials").delete().eq("id", id);
     if (error) throw error;
@@ -60,6 +62,7 @@ export const deleteTestimonial = createServerFn({ method: "POST" })
 export const adminListServices = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase, context.userId);
     const { data, error } = await context.supabase
       .from("services")
@@ -73,6 +76,7 @@ export const saveService = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) => serviceSchema.parse(raw))
   .handler(async ({ data, context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase, context.userId);
     const row = {
       slug: data.slug,
@@ -97,6 +101,7 @@ export const deleteService = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((id: string) => z.string().uuid().parse(id))
   .handler(async ({ data: id, context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase, context.userId);
     const { error } = await context.supabase.from("services").delete().eq("id", id);
     if (error) throw error;
@@ -107,6 +112,7 @@ export const saveBookingSettings = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) => settingsSchema.parse(raw))
   .handler(async ({ data, context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase, context.userId);
     const { data: existing } = await context.supabase.from("booking_settings").select("id").limit(1).maybeSingle();
     if (existing) {
@@ -126,6 +132,7 @@ export const saveBookingSettings = createServerFn({ method: "POST" })
 export const adminListBookings = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase, context.userId);
     const { data, error } = await context.supabase
       .from("bookings")
@@ -142,6 +149,7 @@ export const adminUpdateBookingStatus = createServerFn({ method: "POST" })
     z.object({ id: z.string().uuid(), status: z.enum(["pending", "confirmed", "completed", "cancelled"]) }).parse(raw),
   )
   .handler(async ({ data, context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase, context.userId);
     const { error } = await context.supabase.from("bookings").update({ status: data.status }).eq("id", data.id);
     if (error) throw error;
@@ -151,6 +159,7 @@ export const adminUpdateBookingStatus = createServerFn({ method: "POST" })
 export const adminListMessages = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase, context.userId);
     const { data, error } = await context.supabase
       .from("contact_messages")
@@ -164,6 +173,7 @@ export const adminListMessages = createServerFn({ method: "GET" })
 export const adminListFaqs = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase, context.userId);
     const { data, error } = await context.supabase
       .from("faqs")
@@ -177,6 +187,7 @@ export const saveFaq = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) => faqSchema.parse(raw))
   .handler(async ({ data, context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase, context.userId);
     const row = {
       question: data.question,
@@ -199,6 +210,7 @@ export const deleteFaq = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((id: string) => z.string().uuid().parse(id))
   .handler(async ({ data: id, context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase, context.userId);
     const { error } = await context.supabase.from("faqs").delete().eq("id", id);
     if (error) throw error;
@@ -208,6 +220,7 @@ export const deleteFaq = createServerFn({ method: "POST" })
 export const adminListEmailTemplates = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase, context.userId);
     const { data, error } = await context.supabase
       .from("email_templates")
@@ -221,6 +234,7 @@ export const saveEmailTemplate = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) => emailTemplateSchema.parse(raw))
   .handler(async ({ data, context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase, context.userId);
     const { error } = await context.supabase
       .from("email_templates")
@@ -246,6 +260,7 @@ export const previewEmailTemplate = createServerFn({ method: "POST" })
       .parse(raw),
   )
   .handler(async ({ data, context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase, context.userId);
     const { interpolate, wrapBrandShell } = await import("@/lib/email-render.server");
     const sampleData: Record<string, string> = {

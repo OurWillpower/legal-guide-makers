@@ -1,29 +1,39 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import {
-  getBookingSettingsData,
-  getPublicBookingStatusData,
-  getServiceBySlugData,
-  listFaqsData,
-  listServicesData,
-  listTestimonialsData,
-} from "./content.server";
 
-export const listServices = createServerFn({ method: "GET" }).handler(() => listServicesData());
+export const listServices = createServerFn({ method: "GET" }).handler(async () => {
+  const { listServicesData } = await import("./content.server");
+  return listServicesData();
+});
 
 export const getServiceBySlug = createServerFn({ method: "GET" })
   .inputValidator((slug: string) => String(slug))
-  .handler(({ data: slug }) => getServiceBySlugData(slug));
+  .handler(async ({ data: slug }) => {
+    const { getServiceBySlugData } = await import("./content.server");
+    return getServiceBySlugData(slug);
+  });
 
-export const listTestimonials = createServerFn({ method: "GET" }).handler(() => listTestimonialsData());
+export const listTestimonials = createServerFn({ method: "GET" }).handler(async () => {
+  const { listTestimonialsData } = await import("./content.server");
+  return listTestimonialsData();
+});
 
-export const getBookingSettings = createServerFn({ method: "GET" }).handler(() => getBookingSettingsData());
+export const getBookingSettings = createServerFn({ method: "GET" }).handler(async () => {
+  const { getBookingSettingsData } = await import("./content.server");
+  return getBookingSettingsData();
+});
 
-export const listFaqs = createServerFn({ method: "GET" }).handler(() => listFaqsData());
+export const listFaqs = createServerFn({ method: "GET" }).handler(async () => {
+  const { listFaqsData } = await import("./content.server");
+  return listFaqsData();
+});
 
 export const getPublicBookingStatus = createServerFn({ method: "GET" })
   .inputValidator((raw: unknown) =>
     z.object({ id: z.string().min(1), token: z.string().min(10) }).parse(raw),
   )
-  .handler(({ data }) => getPublicBookingStatusData(data));
+  .handler(async ({ data }) => {
+    const { getPublicBookingStatusData } = await import("./content.server");
+    return getPublicBookingStatusData(data);
+  });
 
