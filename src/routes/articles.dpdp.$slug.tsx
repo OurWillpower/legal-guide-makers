@@ -113,6 +113,8 @@ function DpdpArticleDetail() {
       ? dpdpArticles[currentIndex + 1]
       : null;
 
+  const progress = useReadingProgress();
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-50 border-b border-navy/10 bg-background/85 backdrop-blur-md">
