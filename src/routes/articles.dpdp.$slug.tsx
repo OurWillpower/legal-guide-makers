@@ -130,6 +130,19 @@ function DpdpArticleDetail() {
             Book Consultation
           </Link>
         </div>
+        <div
+          className="h-1 bg-navy/10"
+          role="progressbar"
+          aria-label="Reading progress"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={Math.round(progress)}
+        >
+          <div
+            className="h-full bg-gradient-gold transition-[width] duration-150 ease-out"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
       </header>
 
       <section className="bg-gradient-navy text-cream">
