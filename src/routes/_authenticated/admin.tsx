@@ -28,7 +28,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 import { LogOut, Plus, Trash2, Save } from "lucide-react";
 import logoAsset from "@/assets/win-logo-mark.png.asset.json";
 
@@ -55,7 +54,7 @@ function AdminDashboard() {
             <img src={logoAsset.url} alt="WIN Legal Advisors" className="h-10 w-auto" />
             <span className="font-serif text-lg font-semibold text-navy-deep">Admin</span>
           </Link>
-          <Button variant="ghost" size="sm" onClick={async () => { await supabase.auth.signOut(); window.location.href = "/"; }}>
+          <Button variant="ghost" size="sm" onClick={async () => { const { supabase } = await import("@/integrations/supabase/client"); await supabase.auth.signOut(); window.location.href = "/"; }}>
             <LogOut className="h-4 w-4 mr-2" /> Sign out
           </Button>
         </div>

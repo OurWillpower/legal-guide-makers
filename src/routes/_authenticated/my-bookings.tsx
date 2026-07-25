@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useState, useMemo } from "react";
 import { getMyBookings } from "@/lib/bookings.functions";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
 import { Calendar, Clock, ArrowRight, LogOut } from "lucide-react";
 import logoAsset from "@/assets/win-logo-mark.png.asset.json";
 
@@ -48,6 +47,7 @@ function MyBookings() {
   const [filter, setFilter] = useState<Filter>("upcoming");
 
   const signOut = async () => {
+    const { supabase } = await import("@/integrations/supabase/client");
     await supabase.auth.signOut();
     window.location.href = "/";
   };
