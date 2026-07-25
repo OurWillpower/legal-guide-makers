@@ -1,7 +1,17 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { bookingIcsSchema, bookingSchema, cancelSchema, rescheduleSchema, uuidSchema } from "./bookings.schema";
+import {
+  bookingIcsSchema,
+  bookingSchema,
+  cancelSchema,
+  rescheduleSchema,
+  uuidSchema,
+  publicManageSchema,
+  publicRescheduleSchema,
+  publicCancelSchema,
+} from "./bookings.schema";
 import type { BookingInput } from "./bookings.schema";
+
 
 export type { BookingInput };
 
