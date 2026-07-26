@@ -244,8 +244,40 @@ function ServicePageView() {
           </div>
         </section>
 
+        <section aria-labelledby="related">
+          <h2 id="related" className="font-serif text-2xl font-bold text-navy-deep">Related services</h2>
+          <p className="mt-2 text-sm text-navy-soft">
+            Explore adjacent workstreams we handle under the same single-window engagement.
+          </p>
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            {Object.values(SERVICE_PAGES)
+              .filter((s) => s.slug !== page.slug)
+              .map((s) => (
+                <Link
+                  key={s.slug}
+                  to="/services/$slug"
+                  params={{ slug: s.slug }}
+                  className="group flex flex-col justify-between rounded-xl border border-navy/10 bg-cream/40 p-5 transition hover:border-gold hover:bg-cream"
+                >
+                  <div>
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-gold">
+                      {s.eyebrow}
+                    </span>
+                    <h3 className="mt-2 font-serif text-lg font-semibold text-navy-deep group-hover:text-navy">
+                      {s.title}
+                    </h3>
+                    <p className="mt-2 text-sm text-navy-soft line-clamp-2">{s.tagline}</p>
+                  </div>
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-gold">
+                    Learn more <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+                  </span>
+                </Link>
+              ))}
+          </div>
+        </section>
+
         <section className="rounded-2xl border border-gold/40 bg-navy p-8 text-cream md:p-10">
-          <h2 className="font-serif text-2xl font-bold">Ready to get started?</h2>
+
           <p className="mt-2 text-cream/80">
             Book a consultation with Adv. Vrushali Borade to discuss your requirements and get a fixed-scope proposal.
           </p>
