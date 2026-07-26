@@ -6,7 +6,7 @@ import { dpdpArticles, dpdpCategories } from "@/lib/dpdp-articles";
 
 const logo = logoAsset.url;
 
-export const Route = createFileRoute("/articles/dpdp")({
+export const Route = createFileRoute("/articles/dpdp/")({
   component: DpdpArticles,
   head: () => ({
     meta: [
