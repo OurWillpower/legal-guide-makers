@@ -20,6 +20,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StatusIdRouteImport } from './routes/status.$id'
 import { Route as ManageIdRouteImport } from './routes/manage.$id'
+import { Route as ArticlesDpdpRouteImport } from './routes/articles.dpdp'
 import { Route as AuthenticatedMyBookingsRouteImport } from './routes/_authenticated/my-bookings'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as ArticlesDpdpIndexRouteImport } from './routes/articles.dpdp.index'
@@ -83,6 +84,11 @@ const ManageIdRoute = ManageIdRouteImport.update({
   path: '/manage/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArticlesDpdpRoute = ArticlesDpdpRouteImport.update({
+  id: '/articles/dpdp',
+  path: '/articles/dpdp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedMyBookingsRoute = AuthenticatedMyBookingsRouteImport.update({
   id: '/my-bookings',
   path: '/my-bookings',
@@ -94,14 +100,14 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const ArticlesDpdpIndexRoute = ArticlesDpdpIndexRouteImport.update({
-  id: '/articles/dpdp/',
-  path: '/articles/dpdp/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => ArticlesDpdpRoute,
 } as any)
 const ArticlesDpdpSlugRoute = ArticlesDpdpSlugRouteImport.update({
-  id: '/articles/dpdp/$slug',
-  path: '/articles/dpdp/$slug',
-  getParentRoute: () => rootRouteImport,
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ArticlesDpdpRoute,
 } as any)
 const AuthenticatedManageBookingIdRoute =
   AuthenticatedManageBookingIdRouteImport.update({
@@ -137,6 +143,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/my-bookings': typeof AuthenticatedMyBookingsRoute
+  '/articles/dpdp': typeof ArticlesDpdpRouteWithChildren
   '/manage/$id': typeof ManageIdRoute
   '/status/$id': typeof StatusIdRoute
   '/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
@@ -179,6 +186,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/my-bookings': typeof AuthenticatedMyBookingsRoute
+  '/articles/dpdp': typeof ArticlesDpdpRouteWithChildren
   '/manage/$id': typeof ManageIdRoute
   '/status/$id': typeof StatusIdRoute
   '/_authenticated/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
@@ -201,6 +209,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin'
     | '/my-bookings'
+    | '/articles/dpdp'
     | '/manage/$id'
     | '/status/$id'
     | '/manage-booking/$id'
@@ -242,6 +251,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/_authenticated/admin'
     | '/_authenticated/my-bookings'
+    | '/articles/dpdp'
     | '/manage/$id'
     | '/status/$id'
     | '/_authenticated/manage-booking/$id'
@@ -262,10 +272,9 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
+  ArticlesDpdpRoute: typeof ArticlesDpdpRouteWithChildren
   ManageIdRoute: typeof ManageIdRoute
   StatusIdRoute: typeof StatusIdRoute
-  ArticlesDpdpSlugRoute: typeof ArticlesDpdpSlugRoute
-  ArticlesDpdpIndexRoute: typeof ArticlesDpdpIndexRoute
   ApiPublicBookingIcsIdRoute: typeof ApiPublicBookingIcsIdRoute
   ApiPublicBookingPdfIdRoute: typeof ApiPublicBookingPdfIdRoute
   ApiPublicHooksBookingRemindersRoute: typeof ApiPublicHooksBookingRemindersRoute
@@ -350,6 +359,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManageIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/articles/dpdp': {
+      id: '/articles/dpdp'
+      path: '/articles/dpdp'
+      fullPath: '/articles/dpdp'
+      preLoaderRoute: typeof ArticlesDpdpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/my-bookings': {
       id: '/_authenticated/my-bookings'
       path: '/my-bookings'
@@ -366,17 +382,17 @@ declare module '@tanstack/react-router' {
     }
     '/articles/dpdp/': {
       id: '/articles/dpdp/'
-      path: '/articles/dpdp'
+      path: '/'
       fullPath: '/articles/dpdp/'
       preLoaderRoute: typeof ArticlesDpdpIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ArticlesDpdpRoute
     }
     '/articles/dpdp/$slug': {
       id: '/articles/dpdp/$slug'
-      path: '/articles/dpdp/$slug'
+      path: '/$slug'
       fullPath: '/articles/dpdp/$slug'
       preLoaderRoute: typeof ArticlesDpdpSlugRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ArticlesDpdpRoute
     }
     '/_authenticated/manage-booking/$id': {
       id: '/_authenticated/manage-booking/$id'
@@ -424,6 +440,20 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface ArticlesDpdpRouteChildren {
+  ArticlesDpdpSlugRoute: typeof ArticlesDpdpSlugRoute
+  ArticlesDpdpIndexRoute: typeof ArticlesDpdpIndexRoute
+}
+
+const ArticlesDpdpRouteChildren: ArticlesDpdpRouteChildren = {
+  ArticlesDpdpSlugRoute: ArticlesDpdpSlugRoute,
+  ArticlesDpdpIndexRoute: ArticlesDpdpIndexRoute,
+}
+
+const ArticlesDpdpRouteWithChildren = ArticlesDpdpRoute._addFileChildren(
+  ArticlesDpdpRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -434,10 +464,9 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
+  ArticlesDpdpRoute: ArticlesDpdpRouteWithChildren,
   ManageIdRoute: ManageIdRoute,
   StatusIdRoute: StatusIdRoute,
-  ArticlesDpdpSlugRoute: ArticlesDpdpSlugRoute,
-  ArticlesDpdpIndexRoute: ArticlesDpdpIndexRoute,
   ApiPublicBookingIcsIdRoute: ApiPublicBookingIcsIdRoute,
   ApiPublicBookingPdfIdRoute: ApiPublicBookingPdfIdRoute,
   ApiPublicHooksBookingRemindersRoute: ApiPublicHooksBookingRemindersRoute,
