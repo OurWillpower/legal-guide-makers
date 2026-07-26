@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface SocialLink {
@@ -89,8 +88,6 @@ const socialLinks: SocialLink[] = [
 ];
 
 export function SocialBubble() {
-  const [open, setOpen] = useState(true);
-
   return (
     <div
       className="fixed right-4 top-1/2 z-40 -translate-y-1/2 hidden flex-col items-end gap-2.5 md:flex"
@@ -117,7 +114,7 @@ export function SocialBubble() {
               animationDelay: `${index * 0.25}s`,
             }}
           >
-            <Icon className={cn("", isWhatsApp ? "h-7 w-7" : "h-5 w-5")} />
+            <Icon className={cn(isWhatsApp ? "h-7 w-7" : "h-5 w-5")} />
             {/* Tooltip */}
             <span className="absolute right-full mr-3 whitespace-nowrap rounded-full bg-navy-deep px-3 py-1 text-xs font-medium text-cream opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
               {link.label}
@@ -128,23 +125,15 @@ export function SocialBubble() {
                 "absolute inset-0 rounded-full opacity-0",
                 isWhatsApp ? "bg-green-400/20" : "bg-gold/20"
               )}
-              style={{ animation: "social-pulse 2s ease-in-out infinite" }}
+              style={{
+                animation: "social-pulse 2s ease-in-out infinite",
+                animationDelay: `${index * 0.25 + 0.5}s`,
+              }}
               aria-hidden="true"
             />
           </a>
         );
       })}
-
-      {/* Close / reopen mini button */}
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        aria-label={open ? "Hide social links" : "Show social links"}
-        className="flex h-6 w-6 items-center justify-center rounded-full border border-navy/10 bg-card text-navy/60 text-xs transition-colors hover:bg-navy/5 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-      >
-        {open ? "−" : "+"}
-        <span className="sr-only">{open ? "Hide social links" : "Show social links"}</span>
-      </button>
     </div>
   );
 }
