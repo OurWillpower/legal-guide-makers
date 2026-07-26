@@ -253,9 +253,10 @@ function ServicePageView() {
           <p className="mt-2 text-sm text-navy-soft">
             Explore adjacent workstreams we handle under the same single-window engagement.
           </p>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
             {Object.values(SERVICE_PAGES)
               .filter((s) => s.slug !== page.slug)
+              .slice(0, 3)
               .map((s) => (
                 <Link
                   key={s.slug}
