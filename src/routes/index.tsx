@@ -270,7 +270,7 @@ function Home() {
               </div>
             </div>
             <a href="#why-us" className="hover:text-gold transition-colors">Why Us</a>
-            <a href="#team" className="hover:text-gold transition-colors">Our Core Team</a>
+            <a href="/#team" className="hover:text-gold transition-colors">Our Core Team</a>
             <a href="#testimonials" className="hover:text-gold transition-colors">Testimonials</a>
             <Link to="/articles/dpdp" className="hover:text-gold transition-colors">Articles</Link>
             <a href="#faq" className="hover:text-gold transition-colors">FAQ</a>
@@ -499,6 +499,12 @@ function Home() {
             <p className="mt-4 text-lg text-muted-foreground">
               Lawyers, technologists and business mentors — working shoulder to shoulder with you.
             </p>
+            <Link
+              to="/team"
+              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-gold hover:underline"
+            >
+              View full core team page <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
 
           {/* Founder — featured */}
@@ -774,7 +780,7 @@ function Home() {
               <li><a href="#about" className="hover:text-gold">About</a></li>
               <li><a href="#services" className="hover:text-gold">Services</a></li>
               <li><a href="#why-us" className="hover:text-gold">Why Us</a></li>
-              <li><a href="#team" className="hover:text-gold">Our Core Team</a></li>
+              <li><Link to="/team" className="hover:text-gold">Our Core Team</Link></li>
               <li><a href="#testimonials" className="hover:text-gold">Testimonials</a></li>
               <li><Link to="/faq" className="hover:text-gold">FAQ</Link></li>
               <li><Link to="/booking" className="hover:text-gold">Book Consultation</Link></li>
