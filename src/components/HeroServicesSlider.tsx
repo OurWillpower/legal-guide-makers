@@ -44,7 +44,9 @@ const SPEED_OPTIONS = [
 
 export function HeroServicesSlider({ slides, className }: HeroServicesSliderProps) {
   const loop = useMemo(() => [...slides, ...slides], [slides]);
-  const reducedMotion = usePrefersReducedMotion();
+  const prefersReduced = usePrefersReducedMotion();
+  const [reducedOverride, setReducedOverride] = useState(false);
+  const reducedMotion = prefersReduced && !reducedOverride;
   const [speedIdx, setSpeedIdx] = useState(1); // Normal = 5s/card
   const [paused, setPaused] = useState(false);
 
@@ -82,33 +84,52 @@ export function HeroServicesSlider({ slides, className }: HeroServicesSliderProp
       aria-label="Our legal services"
     >
       {reducedMotion ? (
-        <div
-          className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-          aria-label="Legal services (static grid, reduced motion)"
-        >
-          {slides.map((slide, idx) => (
-            <div
-              key={slide.id}
-              className="group flex h-full w-full flex-col rounded-2xl border border-gold/30 bg-navy/50 p-5 backdrop-blur-sm transition-colors hover:bg-navy/80"
-            >
-              <div className="grid h-10 w-10 place-items-center rounded-lg border border-gold/40 bg-navy text-gold">
-                <slide.icon className="h-5 w-5" />
-              </div>
-              <h3 className="mt-4 font-serif text-lg font-semibold text-cream">{slide.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-cream/65 line-clamp-3">{slide.desc}</p>
-              <button
-                type="button"
-                onClick={() => scrollToService(slide.id)}
-                aria-label={`Learn more about ${slide.title}`}
-                className="mt-4 inline-flex items-center gap-1.5 self-start rounded-full border border-gold/40 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-gold transition-colors hover:bg-gold/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-              >
-                Learn more
-                <ArrowRight className="h-3.5 w-3.5" />
-              </button>
+        <div className="space-y-4">
+          <div
+            role="note"
+            className="flex flex-col gap-2 rounded-2xl border border-gold/30 bg-navy/40 p-4 text-sm text-cream/80 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div>
+              <div className="font-semibold text-cream">Motion reduced</div>
+              <p className="mt-0.5 text-xs text-cream/70">
+                Animation is off because your system prefers reduced motion. All {slides.length} services are shown as a static grid below.
+              </p>
             </div>
-          ))}
-          {/* idx unused suppression */}
-          <span className="sr-only">{slides.length} services</span>
+            <button
+              type="button"
+              onClick={() => setReducedOverride(true)}
+              className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-full border border-gold/40 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-gold transition-colors hover:bg-gold/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:self-auto"
+            >
+              <Play className="h-3.5 w-3.5" />
+              Enable animation
+            </button>
+          </div>
+          <div
+            className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+            aria-label="Legal services (static grid, reduced motion)"
+          >
+            {slides.map((slide) => (
+              <div
+                key={slide.id}
+                className="group flex h-full w-full flex-col rounded-2xl border border-gold/30 bg-navy/50 p-5 backdrop-blur-sm transition-colors hover:bg-navy/80"
+              >
+                <div className="grid h-10 w-10 place-items-center rounded-lg border border-gold/40 bg-navy text-gold">
+                  <slide.icon className="h-5 w-5" />
+                </div>
+                <h3 className="mt-4 font-serif text-lg font-semibold text-cream">{slide.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-cream/65 line-clamp-3">{slide.desc}</p>
+                <button
+                  type="button"
+                  onClick={() => scrollToService(slide.id)}
+                  aria-label={`Learn more about ${slide.title}`}
+                  className="mt-4 inline-flex items-center gap-1.5 self-start rounded-full border border-gold/40 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-gold transition-colors hover:bg-gold/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                >
+                  Learn more
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       ) : (
         <>

@@ -23,6 +23,7 @@ import { Route as ManageIdRouteImport } from './routes/manage.$id'
 import { Route as ArticlesDpdpRouteImport } from './routes/articles.dpdp'
 import { Route as AuthenticatedMyBookingsRouteImport } from './routes/_authenticated/my-bookings'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as ArticlesDpdpIndexRouteImport } from './routes/articles.dpdp.index'
 import { Route as ArticlesDpdpSlugRouteImport } from './routes/articles.dpdp.$slug'
 import { Route as AuthenticatedManageBookingIdRouteImport } from './routes/_authenticated/manage-booking.$id'
 import { Route as ApiPublicHooksBookingRemindersRouteImport } from './routes/api/public/hooks/booking-reminders'
@@ -98,6 +99,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ArticlesDpdpIndexRoute = ArticlesDpdpIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ArticlesDpdpRoute,
+} as any)
 const ArticlesDpdpSlugRoute = ArticlesDpdpSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -142,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/status/$id': typeof StatusIdRoute
   '/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
   '/articles/dpdp/$slug': typeof ArticlesDpdpSlugRoute
+  '/articles/dpdp/': typeof ArticlesDpdpIndexRoute
   '/api/public/booking-ics/$id': typeof ApiPublicBookingIcsIdRoute
   '/api/public/booking-pdf/$id': typeof ApiPublicBookingPdfIdRoute
   '/api/public/hooks/booking-reminders': typeof ApiPublicHooksBookingRemindersRoute
@@ -157,11 +164,11 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/my-bookings': typeof AuthenticatedMyBookingsRoute
-  '/articles/dpdp': typeof ArticlesDpdpRouteWithChildren
   '/manage/$id': typeof ManageIdRoute
   '/status/$id': typeof StatusIdRoute
   '/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
   '/articles/dpdp/$slug': typeof ArticlesDpdpSlugRoute
+  '/articles/dpdp': typeof ArticlesDpdpIndexRoute
   '/api/public/booking-ics/$id': typeof ApiPublicBookingIcsIdRoute
   '/api/public/booking-pdf/$id': typeof ApiPublicBookingPdfIdRoute
   '/api/public/hooks/booking-reminders': typeof ApiPublicHooksBookingRemindersRoute
@@ -184,6 +191,7 @@ export interface FileRoutesById {
   '/status/$id': typeof StatusIdRoute
   '/_authenticated/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
   '/articles/dpdp/$slug': typeof ArticlesDpdpSlugRoute
+  '/articles/dpdp/': typeof ArticlesDpdpIndexRoute
   '/api/public/booking-ics/$id': typeof ApiPublicBookingIcsIdRoute
   '/api/public/booking-pdf/$id': typeof ApiPublicBookingPdfIdRoute
   '/api/public/hooks/booking-reminders': typeof ApiPublicHooksBookingRemindersRoute
@@ -206,6 +214,7 @@ export interface FileRouteTypes {
     | '/status/$id'
     | '/manage-booking/$id'
     | '/articles/dpdp/$slug'
+    | '/articles/dpdp/'
     | '/api/public/booking-ics/$id'
     | '/api/public/booking-pdf/$id'
     | '/api/public/hooks/booking-reminders'
@@ -221,11 +230,11 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin'
     | '/my-bookings'
-    | '/articles/dpdp'
     | '/manage/$id'
     | '/status/$id'
     | '/manage-booking/$id'
     | '/articles/dpdp/$slug'
+    | '/articles/dpdp'
     | '/api/public/booking-ics/$id'
     | '/api/public/booking-pdf/$id'
     | '/api/public/hooks/booking-reminders'
@@ -247,6 +256,7 @@ export interface FileRouteTypes {
     | '/status/$id'
     | '/_authenticated/manage-booking/$id'
     | '/articles/dpdp/$slug'
+    | '/articles/dpdp/'
     | '/api/public/booking-ics/$id'
     | '/api/public/booking-pdf/$id'
     | '/api/public/hooks/booking-reminders'
@@ -370,6 +380,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/articles/dpdp/': {
+      id: '/articles/dpdp/'
+      path: '/'
+      fullPath: '/articles/dpdp/'
+      preLoaderRoute: typeof ArticlesDpdpIndexRouteImport
+      parentRoute: typeof ArticlesDpdpRoute
+    }
     '/articles/dpdp/$slug': {
       id: '/articles/dpdp/$slug'
       path: '/$slug'
@@ -425,10 +442,12 @@ const AuthenticatedRouteRouteWithChildren =
 
 interface ArticlesDpdpRouteChildren {
   ArticlesDpdpSlugRoute: typeof ArticlesDpdpSlugRoute
+  ArticlesDpdpIndexRoute: typeof ArticlesDpdpIndexRoute
 }
 
 const ArticlesDpdpRouteChildren: ArticlesDpdpRouteChildren = {
   ArticlesDpdpSlugRoute: ArticlesDpdpSlugRoute,
+  ArticlesDpdpIndexRoute: ArticlesDpdpIndexRoute,
 }
 
 const ArticlesDpdpRouteWithChildren = ArticlesDpdpRoute._addFileChildren(
