@@ -122,6 +122,13 @@ function ServicePageView() {
             <a
               href={page.checklist.url}
               download={page.checklist.filename}
+              onClick={() =>
+                trackEvent("checklist_download", {
+                  service: page.slug,
+                  location: "hero",
+                  filename: page.checklist.filename,
+                })
+              }
               className="inline-flex items-center gap-2 rounded-lg border border-gold/60 bg-gold/10 px-6 py-3 text-sm font-semibold text-navy-deep transition hover:bg-gold hover:text-navy-deep"
             >
               <Download className="h-4 w-4" /> Download checklist
