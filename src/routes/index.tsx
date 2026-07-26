@@ -499,6 +499,12 @@ function Home() {
             <p className="mt-4 text-lg text-muted-foreground">
               Lawyers, technologists and business mentors — working shoulder to shoulder with you.
             </p>
+            <Link
+              to="/team"
+              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-gold hover:underline"
+            >
+              View full core team page <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
 
           {/* Founder — featured */}
