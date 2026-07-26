@@ -85,7 +85,22 @@ function ServicePageView() {
       </header>
 
       <section className="border-b border-navy/10 bg-gradient-to-b from-cream/60 to-background">
-        <div className="mx-auto max-w-4xl px-6 py-16 md:py-20">
+        <div className="mx-auto max-w-4xl px-6 pt-8 md:pt-10">
+          <nav aria-label="Breadcrumb">
+            <ol className="flex flex-wrap items-center gap-1.5 text-xs text-navy-soft">
+              <li>
+                <Link to="/" className="hover:text-gold">Home</Link>
+              </li>
+              <li aria-hidden="true"><ChevronRight className="h-3.5 w-3.5 text-navy/40" /></li>
+              <li>
+                <Link to="/" hash="services" className="hover:text-gold">Services</Link>
+              </li>
+              <li aria-hidden="true"><ChevronRight className="h-3.5 w-3.5 text-navy/40" /></li>
+              <li aria-current="page" className="font-semibold text-navy-deep">{page.title}</li>
+            </ol>
+          </nav>
+        </div>
+        <div className="mx-auto max-w-4xl px-6 pb-16 pt-8 md:pb-20">
           <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">{page.eyebrow}</span>
           <h1 className="mt-4 font-serif text-4xl font-bold text-navy-deep md:text-5xl">{page.title}</h1>
           <p className="mt-4 text-lg text-navy-soft">{page.tagline}</p>
@@ -103,9 +118,17 @@ function ServicePageView() {
             >
               Request a scoping call
             </Link>
+            <a
+              href={page.checklist.url}
+              download={page.checklist.filename}
+              className="inline-flex items-center gap-2 rounded-lg border border-gold/60 bg-gold/10 px-6 py-3 text-sm font-semibold text-navy-deep transition hover:bg-gold hover:text-navy-deep"
+            >
+              <Download className="h-4 w-4" /> Download checklist
+            </a>
           </div>
         </div>
       </section>
+
 
       <main className="mx-auto max-w-4xl px-6 py-16 space-y-16">
         <section aria-labelledby="scope">
