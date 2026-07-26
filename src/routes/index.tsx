@@ -19,6 +19,10 @@ import {
   Quote,
   Star,
   HelpCircle,
+  Rocket,
+  BadgeCheck,
+  ClipboardList,
+  Building2,
 } from "lucide-react";
 import logoAsset from "@/assets/win-logo-mark.png.asset.json";
 import portraitAsset from "@/assets/vrushali-portrait.png.asset.json";
