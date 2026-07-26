@@ -1,7 +1,8 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import logoAsset from "@/assets/win-logo-mark.png.asset.json";
-import { ArrowLeft, CheckCircle2, ChevronRight, Clock, Download, FileText, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, ChevronRight, Clock, Download, FileText, Sparkles } from "lucide-react";
 import { SERVICE_PAGES, type ServicePage } from "@/lib/service-pages";
+import { trackEvent } from "@/lib/analytics";
 
 export const Route = createFileRoute("/services/$slug")({
   loader: ({ params }) => {

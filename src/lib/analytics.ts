@@ -12,7 +12,7 @@ export function trackEvent(eventName: string, properties: AnalyticsProperties = 
     const payload = {
       event_name: eventName,
       path: window.location.pathname + window.location.search,
-      properties: properties as Record<string, unknown>,
+      properties: properties as unknown as never,
       user_agent: navigator.userAgent?.slice(0, 500) ?? null,
       referrer: document.referrer?.slice(0, 500) || null,
     };
