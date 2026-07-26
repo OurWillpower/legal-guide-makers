@@ -89,63 +89,62 @@ const socialLinks: SocialLink[] = [
 ];
 
 export function SocialBubble() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   return (
     <div
-      className="fixed right-4 top-1/2 z-40 -translate-y-1/2 flex flex-col items-end gap-2"
+      className="fixed right-4 top-1/2 z-40 -translate-y-1/2 hidden flex-col items-end gap-2.5 md:flex"
       aria-label="Social media links"
     >
-      {/* Floating toggle button */}
+      {socialLinks.map((link, index) => {
+        const Icon = link.icon;
+        const isWhatsApp = link.id === "whatsapp";
+        return (
+          <a
+            key={link.id}
+            href={link.href}
+            target={isWhatsApp ? "_blank" : undefined}
+            rel={isWhatsApp ? "noopener noreferrer" : undefined}
+            aria-label={link.label}
+            className={cn(
+              "group relative flex items-center justify-center rounded-full border shadow-lg transition-all duration-300 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold",
+              isWhatsApp
+                ? "h-14 w-14 border-green-500/40 bg-green-600 text-white hover:bg-green-500 shadow-green-500/30"
+                : "h-11 w-11 border-navy/15 bg-card text-navy hover:border-gold hover:text-gold"
+            )}
+            style={{
+              animation: "social-simmer 3s ease-in-out infinite",
+              animationDelay: `${index * 0.25}s`,
+            }}
+          >
+            <Icon className={cn("", isWhatsApp ? "h-7 w-7" : "h-5 w-5")} />
+            {/* Tooltip */}
+            <span className="absolute right-full mr-3 whitespace-nowrap rounded-full bg-navy-deep px-3 py-1 text-xs font-medium text-cream opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
+              {link.label}
+            </span>
+            {/* Simmering pulse ring */}
+            <span
+              className={cn(
+                "absolute inset-0 rounded-full opacity-0",
+                isWhatsApp ? "bg-green-400/20" : "bg-gold/20"
+              )}
+              style={{ animation: "social-pulse 2s ease-in-out infinite" }}
+              aria-hidden="true"
+            />
+          </a>
+        );
+      })}
+
+      {/* Close / reopen mini button */}
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-        aria-controls="social-bubble-menu"
-        className={cn(
-          "group relative flex h-12 w-12 items-center justify-center rounded-full border border-gold/40 bg-gradient-navy text-gold shadow-elegant transition-all duration-300 hover:scale-110 hover:shadow-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold",
-          open && "rotate-90"
-        )}
+        aria-label={open ? "Hide social links" : "Show social links"}
+        className="flex h-6 w-6 items-center justify-center rounded-full border border-navy/10 bg-card text-navy/60 text-xs transition-colors hover:bg-navy/5 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
       >
-        <span className="absolute inset-0 rounded-full bg-gold/20 animate-ping" aria-hidden="true" />
-        <span className="font-serif text-xl font-bold">+</span>
-        <span className="sr-only">Toggle social links</span>
+        {open ? "−" : "+"}
+        <span className="sr-only">{open ? "Hide social links" : "Show social links"}</span>
       </button>
-
-      {/* Social links stack */}
-      <div
-        id="social-bubble-menu"
-        className={cn(
-          "flex flex-col items-end gap-2 overflow-hidden transition-all duration-300",
-          open ? "max-h-96 opacity-100 translate-x-0" : "max-h-0 opacity-0 translate-x-4 pointer-events-none"
-        )}
-      >
-        {socialLinks.map((link) => {
-          const Icon = link.icon;
-          const isWhatsApp = link.id === "whatsapp";
-          return (
-            <a
-              key={link.id}
-              href={link.href}
-              target={isWhatsApp ? "_blank" : undefined}
-              rel={isWhatsApp ? "noopener noreferrer" : undefined}
-              aria-label={link.label}
-              className={cn(
-                "group relative flex h-11 w-11 items-center justify-center rounded-full border shadow-lg transition-all duration-300 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold",
-                isWhatsApp
-                  ? "border-green-500/40 bg-green-600 text-white hover:bg-green-500"
-                  : "border-navy/15 bg-card text-navy hover:border-gold hover:text-gold"
-              )}
-            >
-              <Icon className="h-5 w-5" />
-              {/* Tooltip */}
-              <span className="absolute right-full mr-3 whitespace-nowrap rounded-full bg-navy-deep px-3 py-1 text-xs font-medium text-cream opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                {link.label}
-              </span>
-            </a>
-          );
-        })}
-      </div>
     </div>
   );
 }
