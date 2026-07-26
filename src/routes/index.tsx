@@ -401,12 +401,15 @@ function Home() {
               What We Do
             </span>
             <h2 className="mt-4 font-serif text-4xl font-bold md:text-5xl">
-              Full-spectrum legal advisory
+              A single-window legal partner
             </h2>
             <div className="divider-gold mx-auto my-6 max-w-xs" />
             <p className="text-cream/70">
-              From day-one incorporation to boardroom disputes — one trusted team
-              across every legal need your business will face.
+              From incorporation and trademark to vendor contracts, licensing,
+              DPDP and disputes — startups and established enterprises get every
+              legal need served under one roof, by one accountable team.
+            </p>
+          </div>
             </p>
           </div>
 
