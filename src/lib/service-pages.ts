@@ -1,3 +1,7 @@
+import incorporationPdf from "@/assets/checklists/incorporation-checklist.pdf.asset.json";
+import trademarkPdf from "@/assets/checklists/trademark-checklist.pdf.asset.json";
+import vendorPdf from "@/assets/checklists/vendor-contracts-checklist.pdf.asset.json";
+
 export type ServicePage = {
   slug: "incorporation" | "trademark" | "vendor-contracts";
   eyebrow: string;
@@ -9,6 +13,7 @@ export type ServicePage = {
   timeline: { phase: string; duration: string; detail: string }[];
   faqs: { q: string; a: string }[];
   seo: { title: string; description: string };
+  checklist: { label: string; filename: string; url: string };
 };
 
 export const SERVICE_PAGES: Record<ServicePage["slug"], ServicePage> = {
