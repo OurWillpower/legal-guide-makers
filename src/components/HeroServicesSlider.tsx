@@ -44,7 +44,9 @@ const SPEED_OPTIONS = [
 
 export function HeroServicesSlider({ slides, className }: HeroServicesSliderProps) {
   const loop = useMemo(() => [...slides, ...slides], [slides]);
-  const reducedMotion = usePrefersReducedMotion();
+  const prefersReduced = usePrefersReducedMotion();
+  const [reducedOverride, setReducedOverride] = useState(false);
+  const reducedMotion = prefersReduced && !reducedOverride;
   const [speedIdx, setSpeedIdx] = useState(1); // Normal = 5s/card
   const [paused, setPaused] = useState(false);
 
