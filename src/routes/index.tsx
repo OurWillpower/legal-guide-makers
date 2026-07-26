@@ -105,6 +105,7 @@ const services = [
     icon: Rocket,
     title: "Startup Incorporation & Setup",
     desc: "Private Limited, LLP, OPC and Section 8 incorporation — MoA, AoA, DPIIT recognition and founder agreements, done end-to-end.",
+    slug: "incorporation",
   },
   {
     id: "corporate-legal",
@@ -123,12 +124,14 @@ const services = [
     icon: ClipboardList,
     title: "Vendor & Supplier Contracts",
     desc: "Vendor onboarding, supply, distribution, service-level and procurement contracts with airtight risk allocation.",
+    slug: "vendor-contracts",
   },
   {
     id: "trademark-brand",
     icon: BadgeCheck,
     title: "Trademark & Brand Protection",
     desc: "Trademark search, filing, prosecution, opposition and renewals — plus copyright and design registration across classes.",
+    slug: "trademark",
   },
   {
     id: "ip-innovation",
@@ -426,6 +429,15 @@ function Home() {
                   {s.title}
                 </h3>
                 <p className="mt-3 text-sm leading-relaxed text-cream/65">{s.desc}</p>
+                {"slug" in s && s.slug ? (
+                  <Link
+                    to="/services/$slug"
+                    params={{ slug: s.slug as string }}
+                    className="mt-4 inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-gold hover:text-cream"
+                  >
+                    Learn more →
+                  </Link>
+                ) : null}
               </div>
             ))}
           </div>
