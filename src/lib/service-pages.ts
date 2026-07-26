@@ -1,3 +1,7 @@
+import incorporationPdf from "@/assets/checklists/incorporation-checklist.pdf.asset.json";
+import trademarkPdf from "@/assets/checklists/trademark-checklist.pdf.asset.json";
+import vendorPdf from "@/assets/checklists/vendor-contracts-checklist.pdf.asset.json";
+
 export type ServicePage = {
   slug: "incorporation" | "trademark" | "vendor-contracts";
   eyebrow: string;
@@ -9,6 +13,7 @@ export type ServicePage = {
   timeline: { phase: string; duration: string; detail: string }[];
   faqs: { q: string; a: string }[];
   seo: { title: string; description: string };
+  checklist: { label: string; filename: string; url: string };
 };
 
 export const SERVICE_PAGES: Record<ServicePage["slug"], ServicePage> = {
@@ -55,6 +60,7 @@ export const SERVICE_PAGES: Record<ServicePage["slug"], ServicePage> = {
       title: "Company Incorporation Services in India | WIN Legal Advisors",
       description: "End-to-end company incorporation — Private Limited, LLP, OPC — with MoA/AoA, PAN, TAN, GST, and founder agreements. Fixed timelines, transparent scope.",
     },
+    checklist: { label: "Incorporation Checklist (PDF)", filename: "incorporation-checklist.pdf", url: incorporationPdf.url },
   },
   trademark: {
     slug: "trademark",
@@ -98,6 +104,7 @@ export const SERVICE_PAGES: Record<ServicePage["slug"], ServicePage> = {
       title: "Trademark Registration in India | WIN Legal Advisors",
       description: "Trademark search, filing, examination response, opposition defence, and international Madrid Protocol filings. Protect your brand end-to-end.",
     },
+    checklist: { label: "Trademark Filing Checklist (PDF)", filename: "trademark-checklist.pdf", url: trademarkPdf.url },
   },
   "vendor-contracts": {
     slug: "vendor-contracts",
@@ -140,5 +147,6 @@ export const SERVICE_PAGES: Record<ServicePage["slug"], ServicePage> = {
       title: "Vendor & Supplier Contract Advisory | WIN Legal Advisors",
       description: "Drafting, review, and negotiation of MSAs, SOWs, SaaS, and vendor contracts with DPDP-compliant DPAs and enforceable SLAs.",
     },
+    checklist: { label: "Vendor Contract Review Checklist (PDF)", filename: "vendor-contracts-checklist.pdf", url: vendorPdf.url },
   },
 };

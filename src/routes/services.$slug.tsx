@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import logoAsset from "@/assets/win-logo-mark.png.asset.json";
-import { ArrowLeft, CheckCircle2, Clock, FileText, Sparkles } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ChevronRight, Clock, Download, FileText, Sparkles } from "lucide-react";
 import { SERVICE_PAGES, type ServicePage } from "@/lib/service-pages";
 
 export const Route = createFileRoute("/services/$slug")({
@@ -41,6 +41,18 @@ export const Route = createFileRoute("/services/$slug")({
             })),
           }),
         },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: "https://www.winlegaladvisors.com/" },
+              { "@type": "ListItem", position: 2, name: "Services", item: "https://www.winlegaladvisors.com/#services" },
+              { "@type": "ListItem", position: 3, name: loaderData.title, item: url },
+            ],
+          }),
+        },
       ],
     };
   },
@@ -73,7 +85,22 @@ function ServicePageView() {
       </header>
 
       <section className="border-b border-navy/10 bg-gradient-to-b from-cream/60 to-background">
-        <div className="mx-auto max-w-4xl px-6 py-16 md:py-20">
+        <div className="mx-auto max-w-4xl px-6 pt-8 md:pt-10">
+          <nav aria-label="Breadcrumb">
+            <ol className="flex flex-wrap items-center gap-1.5 text-xs text-navy-soft">
+              <li>
+                <Link to="/" className="hover:text-gold">Home</Link>
+              </li>
+              <li aria-hidden="true"><ChevronRight className="h-3.5 w-3.5 text-navy/40" /></li>
+              <li>
+                <Link to="/" hash="services" className="hover:text-gold">Services</Link>
+              </li>
+              <li aria-hidden="true"><ChevronRight className="h-3.5 w-3.5 text-navy/40" /></li>
+              <li aria-current="page" className="font-semibold text-navy-deep">{page.title}</li>
+            </ol>
+          </nav>
+        </div>
+        <div className="mx-auto max-w-4xl px-6 pb-16 pt-8 md:pb-20">
           <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">{page.eyebrow}</span>
           <h1 className="mt-4 font-serif text-4xl font-bold text-navy-deep md:text-5xl">{page.title}</h1>
           <p className="mt-4 text-lg text-navy-soft">{page.tagline}</p>
@@ -91,9 +118,17 @@ function ServicePageView() {
             >
               Request a scoping call
             </Link>
+            <a
+              href={page.checklist.url}
+              download={page.checklist.filename}
+              className="inline-flex items-center gap-2 rounded-lg border border-gold/60 bg-gold/10 px-6 py-3 text-sm font-semibold text-navy-deep transition hover:bg-gold hover:text-navy-deep"
+            >
+              <Download className="h-4 w-4" /> Download checklist
+            </a>
           </div>
         </div>
       </section>
+
 
       <main className="mx-auto max-w-4xl px-6 py-16 space-y-16">
         <section aria-labelledby="scope">
@@ -147,6 +182,35 @@ function ServicePageView() {
             Timelines are indicative. Regulatory processing times and third-party responses may vary.
           </p>
         </section>
+
+        <section
+          aria-labelledby="download"
+          className="rounded-2xl border border-gold/40 bg-cream/50 p-6 md:p-8"
+        >
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-start gap-4">
+              <div className="grid h-12 w-12 flex-shrink-0 place-items-center rounded-lg bg-gold/20 text-gold">
+                <FileText className="h-6 w-6" />
+              </div>
+              <div>
+                <h2 id="download" className="font-serif text-xl font-bold text-navy-deep">
+                  {page.checklist.label}
+                </h2>
+                <p className="mt-1 text-sm text-navy-soft">
+                  A printable scope and checklist you can share internally before we start.
+                </p>
+              </div>
+            </div>
+            <a
+              href={page.checklist.url}
+              download={page.checklist.filename}
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-navy px-5 py-3 text-sm font-semibold text-cream transition hover:bg-navy-deep"
+            >
+              <Download className="h-4 w-4" /> Download PDF
+            </a>
+          </div>
+        </section>
+
 
         <section aria-labelledby="faqs">
           <h2 id="faqs" className="font-serif text-2xl font-bold text-navy-deep">Frequently asked questions</h2>
