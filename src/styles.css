@@ -122,3 +122,12 @@
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--gold) 20%, var(--gold) 80%, transparent);
 }
+
+@keyframes hero-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+@utility animate-hero-marquee {
+  animation: hero-marquee var(--hero-marquee-duration, 40s) linear infinite;
+  will-change: transform;
+}
