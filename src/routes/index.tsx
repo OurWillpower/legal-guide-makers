@@ -26,10 +26,14 @@ import {
 } from "lucide-react";
 import logoAsset from "@/assets/win-logo-mark.png.asset.json";
 import portraitAsset from "@/assets/vrushali-portrait.png.asset.json";
+import sonaliAsset from "@/assets/sonali-deshmukh.jpg.asset.json";
+import jayantAsset from "@/assets/jayant-bhat.jpg.asset.json";
 import { HeroServicesSlider } from "@/components/HeroServicesSlider";
 
 const logo = logoAsset.url;
 const portrait = portraitAsset.url;
+const sonaliPortrait = sonaliAsset.url;
+const jayantPortrait = jayantAsset.url;
 
 export const Route = createFileRoute("/")({
   component: Home,
