@@ -193,40 +193,42 @@ function ServicePageView() {
           </p>
         </section>
 
-        <section
-          aria-labelledby="download"
-          className="rounded-2xl border border-gold/40 bg-cream/50 p-6 md:p-8"
-        >
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-start gap-4">
-              <div className="grid h-12 w-12 flex-shrink-0 place-items-center rounded-lg bg-gold/20 text-gold">
-                <FileText className="h-6 w-6" />
+        {page.checklist ? (
+          <section
+            aria-labelledby="download"
+            className="rounded-2xl border border-gold/40 bg-cream/50 p-6 md:p-8"
+          >
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div className="flex items-start gap-4">
+                <div className="grid h-12 w-12 flex-shrink-0 place-items-center rounded-lg bg-gold/20 text-gold">
+                  <FileText className="h-6 w-6" />
+                </div>
+                <div>
+                  <h2 id="download" className="font-serif text-xl font-bold text-navy-deep">
+                    {page.checklist.label}
+                  </h2>
+                  <p className="mt-1 text-sm text-navy-soft">
+                    A printable scope and checklist you can share internally before we start.
+                  </p>
+                </div>
               </div>
-              <div>
-                <h2 id="download" className="font-serif text-xl font-bold text-navy-deep">
-                  {page.checklist.label}
-                </h2>
-                <p className="mt-1 text-sm text-navy-soft">
-                  A printable scope and checklist you can share internally before we start.
-                </p>
-              </div>
+              <a
+                href={page.checklist.url}
+                download={page.checklist.filename}
+                onClick={() =>
+                  trackEvent("checklist_download", {
+                    service: page.slug,
+                    location: "download_card",
+                    filename: page.checklist!.filename,
+                  })
+                }
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-navy px-5 py-3 text-sm font-semibold text-cream transition hover:bg-navy-deep"
+              >
+                <Download className="h-4 w-4" /> Download PDF
+              </a>
             </div>
-            <a
-              href={page.checklist.url}
-              download={page.checklist.filename}
-              onClick={() =>
-                trackEvent("checklist_download", {
-                  service: page.slug,
-                  location: "download_card",
-                  filename: page.checklist.filename,
-                })
-              }
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-navy px-5 py-3 text-sm font-semibold text-cream transition hover:bg-navy-deep"
-            >
-              <Download className="h-4 w-4" /> Download PDF
-            </a>
-          </div>
-        </section>
+          </section>
+        ) : null}
 
 
         <section aria-labelledby="faqs">
