@@ -119,20 +119,22 @@ function ServicePageView() {
             >
               Request a scoping call
             </Link>
-            <a
-              href={page.checklist.url}
-              download={page.checklist.filename}
-              onClick={() =>
-                trackEvent("checklist_download", {
-                  service: page.slug,
-                  location: "hero",
-                  filename: page.checklist.filename,
-                })
-              }
-              className="inline-flex items-center gap-2 rounded-lg border border-gold/60 bg-gold/10 px-6 py-3 text-sm font-semibold text-navy-deep transition hover:bg-gold hover:text-navy-deep"
-            >
-              <Download className="h-4 w-4" /> Download checklist
-            </a>
+            {page.checklist ? (
+              <a
+                href={page.checklist.url}
+                download={page.checklist.filename}
+                onClick={() =>
+                  trackEvent("checklist_download", {
+                    service: page.slug,
+                    location: "hero",
+                    filename: page.checklist!.filename,
+                  })
+                }
+                className="inline-flex items-center gap-2 rounded-lg border border-gold/60 bg-gold/10 px-6 py-3 text-sm font-semibold text-navy-deep transition hover:bg-gold hover:text-navy-deep"
+              >
+                <Download className="h-4 w-4" /> Download checklist
+              </a>
+            ) : null}
           </div>
         </div>
       </section>
@@ -191,40 +193,42 @@ function ServicePageView() {
           </p>
         </section>
 
-        <section
-          aria-labelledby="download"
-          className="rounded-2xl border border-gold/40 bg-cream/50 p-6 md:p-8"
-        >
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-start gap-4">
-              <div className="grid h-12 w-12 flex-shrink-0 place-items-center rounded-lg bg-gold/20 text-gold">
-                <FileText className="h-6 w-6" />
+        {page.checklist ? (
+          <section
+            aria-labelledby="download"
+            className="rounded-2xl border border-gold/40 bg-cream/50 p-6 md:p-8"
+          >
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div className="flex items-start gap-4">
+                <div className="grid h-12 w-12 flex-shrink-0 place-items-center rounded-lg bg-gold/20 text-gold">
+                  <FileText className="h-6 w-6" />
+                </div>
+                <div>
+                  <h2 id="download" className="font-serif text-xl font-bold text-navy-deep">
+                    {page.checklist.label}
+                  </h2>
+                  <p className="mt-1 text-sm text-navy-soft">
+                    A printable scope and checklist you can share internally before we start.
+                  </p>
+                </div>
               </div>
-              <div>
-                <h2 id="download" className="font-serif text-xl font-bold text-navy-deep">
-                  {page.checklist.label}
-                </h2>
-                <p className="mt-1 text-sm text-navy-soft">
-                  A printable scope and checklist you can share internally before we start.
-                </p>
-              </div>
+              <a
+                href={page.checklist.url}
+                download={page.checklist.filename}
+                onClick={() =>
+                  trackEvent("checklist_download", {
+                    service: page.slug,
+                    location: "download_card",
+                    filename: page.checklist!.filename,
+                  })
+                }
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-navy px-5 py-3 text-sm font-semibold text-cream transition hover:bg-navy-deep"
+              >
+                <Download className="h-4 w-4" /> Download PDF
+              </a>
             </div>
-            <a
-              href={page.checklist.url}
-              download={page.checklist.filename}
-              onClick={() =>
-                trackEvent("checklist_download", {
-                  service: page.slug,
-                  location: "download_card",
-                  filename: page.checklist.filename,
-                })
-              }
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-navy px-5 py-3 text-sm font-semibold text-cream transition hover:bg-navy-deep"
-            >
-              <Download className="h-4 w-4" /> Download PDF
-            </a>
-          </div>
-        </section>
+          </section>
+        ) : null}
 
 
         <section aria-labelledby="faqs">
@@ -249,9 +253,10 @@ function ServicePageView() {
           <p className="mt-2 text-sm text-navy-soft">
             Explore adjacent workstreams we handle under the same single-window engagement.
           </p>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
             {Object.values(SERVICE_PAGES)
               .filter((s) => s.slug !== page.slug)
+              .slice(0, 3)
               .map((s) => (
                 <Link
                   key={s.slug}
