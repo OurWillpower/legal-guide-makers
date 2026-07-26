@@ -410,8 +410,7 @@ function Home() {
               legal need served under one roof, by one accountable team.
             </p>
           </div>
-            </p>
-          </div>
+
 
           <div className="mt-16 grid gap-px overflow-hidden rounded-3xl bg-gold/20 md:grid-cols-2 lg:grid-cols-4">
             {services.map((s) => (
