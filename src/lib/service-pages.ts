@@ -104,6 +104,7 @@ export const SERVICE_PAGES: Record<ServicePage["slug"], ServicePage> = {
       title: "Trademark Registration in India | WIN Legal Advisors",
       description: "Trademark search, filing, examination response, opposition defence, and international Madrid Protocol filings. Protect your brand end-to-end.",
     },
+    checklist: { label: "Trademark Filing Checklist (PDF)", filename: "trademark-checklist.pdf", url: trademarkPdf.url },
   },
   "vendor-contracts": {
     slug: "vendor-contracts",
@@ -146,5 +147,6 @@ export const SERVICE_PAGES: Record<ServicePage["slug"], ServicePage> = {
       title: "Vendor & Supplier Contract Advisory | WIN Legal Advisors",
       description: "Drafting, review, and negotiation of MSAs, SOWs, SaaS, and vendor contracts with DPDP-compliant DPAs and enforceable SLAs.",
     },
+    checklist: { label: "Vendor Contract Review Checklist (PDF)", filename: "vendor-contracts-checklist.pdf", url: vendorPdf.url },
   },
 };
