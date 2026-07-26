@@ -171,55 +171,92 @@ function DpdpArticles() {
               No articles match your search. Try clearing the filter.
             </div>
           ) : (
-            filtered.map((a) => (
-              <article
-                key={a.slug}
-                className="group rounded-2xl border border-navy/10 bg-background p-6 shadow-sm transition-shadow hover:shadow-md md:p-8"
-              >
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs uppercase tracking-wider text-navy/60">
-                  <span className="inline-flex items-center gap-1.5 text-gold">
-                    <ShieldCheck className="h-3.5 w-3.5" />
-                    {a.category}
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <Calendar className="h-3.5 w-3.5" />
-                    {a.date}
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <Clock className="h-3.5 w-3.5" />
-                    {a.readTime}
-                  </span>
-                </div>
-                <h2 className="mt-3 font-serif text-2xl font-bold text-navy-deep md:text-3xl">
+            filtered.map((a) => {
+              const sectionCount = a.sections.length;
+              const initials = a.title
+                .replace(/[^A-Za-z0-9 ]/g, "")
+                .split(" ")
+                .filter(Boolean)
+                .slice(0, 2)
+                .map((w) => w[0]?.toUpperCase())
+                .join("");
+              return (
+                <article
+                  key={a.slug}
+                  className="group grid gap-6 rounded-2xl border border-navy/10 bg-background p-6 shadow-sm transition-shadow hover:shadow-md md:grid-cols-[180px_1fr] md:p-8"
+                >
                   <Link
                     to="/articles/dpdp/$slug"
                     params={{ slug: a.slug }}
-                    className="transition-colors hover:text-gold"
+                    aria-hidden="true"
+                    tabIndex={-1}
+                    className="relative hidden overflow-hidden rounded-xl bg-gradient-navy md:block"
                   >
-                    {a.title}
+                    <div className="absolute inset-0 opacity-20 [background:radial-gradient(circle_at_30%_20%,theme(colors.gold)_0%,transparent_55%)]" />
+                    <div className="relative flex h-full min-h-[160px] flex-col items-center justify-center p-4 text-cream">
+                      <ShieldCheck className="h-8 w-8 text-gold" />
+                      <div className="mt-2 font-serif text-3xl font-bold text-gold-gradient">
+                        {initials || "DPDP"}
+                      </div>
+                      <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.28em] text-cream/60">
+                        {a.category}
+                      </div>
+                    </div>
                   </Link>
-                </h2>
-                <p className="mt-3 text-navy/70">{a.excerpt}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {a.tags.map((t) => (
-                    <span
-                      key={t}
-                      className="rounded-full border border-navy/15 bg-cream/40 px-2.5 py-0.5 text-[11px] font-medium text-navy/70"
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs uppercase tracking-wider text-navy/60">
+                      <span className="inline-flex items-center gap-1.5 text-gold md:hidden">
+                        <ShieldCheck className="h-3.5 w-3.5" />
+                        {a.category}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5">
+                        <Calendar className="h-3.5 w-3.5" />
+                        {a.date}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5">
+                        <Clock className="h-3.5 w-3.5" />
+                        {a.readTime}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5">
+                        {sectionCount} sections
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold tracking-wider text-emerald-800">
+                        Published
+                      </span>
+                    </div>
+                    <h2 className="mt-3 font-serif text-2xl font-bold text-navy-deep md:text-3xl">
+                      <Link
+                        to="/articles/dpdp/$slug"
+                        params={{ slug: a.slug }}
+                        className="transition-colors hover:text-gold"
+                      >
+                        {a.title}
+                      </Link>
+                    </h2>
+                    <p className="mt-3 text-navy/70">{a.excerpt}</p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {a.tags.map((t) => (
+                        <span
+                          key={t}
+                          className="rounded-full border border-navy/15 bg-cream/40 px-2.5 py-0.5 text-[11px] font-medium text-navy/70"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                    <Link
+                      to="/articles/dpdp/$slug"
+                      params={{ slug: a.slug }}
+                      className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-navy-deep transition-colors hover:text-gold"
+                      aria-label={`Read more: ${a.title}`}
                     >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-                <Link
-                  to="/articles/dpdp/$slug"
-                  params={{ slug: a.slug }}
-                  className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-navy-deep transition-colors hover:text-gold"
-                >
-                  Read article
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                </Link>
-              </article>
-            ))
+                      Read more
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                    </Link>
+                  </div>
+                </article>
+              );
+            })
           )}
         </div>
 
