@@ -19,6 +19,10 @@ import {
   Quote,
   Star,
   HelpCircle,
+  Rocket,
+  BadgeCheck,
+  ClipboardList,
+  Building2,
 } from "lucide-react";
 import logoAsset from "@/assets/win-logo-mark.png.asset.json";
 import portraitAsset from "@/assets/vrushali-portrait.png.asset.json";
@@ -97,52 +101,76 @@ export const Route = createFileRoute("/")({
 
 const services = [
   {
+    id: "startup-incorporation",
+    icon: Rocket,
+    title: "Startup Incorporation & Setup",
+    desc: "Private Limited, LLP, OPC and Section 8 incorporation — MoA, AoA, DPIIT recognition and founder agreements, done end-to-end.",
+  },
+  {
     id: "corporate-legal",
     icon: Scale,
     title: "Corporate Legal Services",
-    desc: "End-to-end legal support for businesses at every stage of growth.",
+    desc: "End-to-end legal support for businesses at every stage of growth — from day-one setup to boardroom governance.",
   },
   {
     id: "contracts-commercial",
     icon: FileSignature,
     title: "Contracts & Commercial Advisory",
-    desc: "Drafting, review and negotiation of contracts that protect your interests.",
+    desc: "Drafting, review and negotiation of MSAs, SaaS, NDAs, founder and shareholder agreements that protect your interests.",
   },
   {
-    id: "dpdp-privacy",
-    icon: Lock,
-    title: "DPDP & Data Privacy Compliance",
-    desc: "Helping organizations comply with the DPDP Act and global privacy laws.",
+    id: "vendor-supplier",
+    icon: ClipboardList,
+    title: "Vendor & Supplier Contracts",
+    desc: "Vendor onboarding, supply, distribution, service-level and procurement contracts with airtight risk allocation.",
   },
   {
-    id: "tech-ai-cyber",
-    icon: Cpu,
-    title: "Technology, AI & Cyber Law",
-    desc: "Guidance on AI, data protection, cybersecurity and emerging technologies.",
-  },
-  {
-    id: "ma-jv",
-    icon: Handshake,
-    title: "Mergers, Acquisitions & JV",
-    desc: "Strategic legal support for M&A, joint ventures and restructuring.",
+    id: "trademark-brand",
+    icon: BadgeCheck,
+    title: "Trademark & Brand Protection",
+    desc: "Trademark search, filing, prosecution, opposition and renewals — plus copyright and design registration across classes.",
   },
   {
     id: "ip-innovation",
     icon: Lightbulb,
     title: "Intellectual Property & Innovation",
-    desc: "Protecting your ideas, brands, inventions and intellectual assets.",
+    desc: "Protecting your ideas, brands, inventions and intellectual assets across patents, copyrights, designs and trade secrets.",
+  },
+  {
+    id: "licensing-registrations",
+    icon: Building2,
+    title: "Licensing & Registrations",
+    desc: "GST, MSME/Udyam, Shops & Establishment, FSSAI, IEC, professional tax and industry-specific licenses under one roof.",
+  },
+  {
+    id: "dpdp-privacy",
+    icon: Lock,
+    title: "DPDP & Data Privacy Compliance",
+    desc: "Helping organizations comply with the DPDP Act 2023 and global privacy laws — notices, consent, DPIAs and breach response.",
+  },
+  {
+    id: "tech-ai-cyber",
+    icon: Cpu,
+    title: "Technology, AI & Cyber Law",
+    desc: "Guidance on AI, SaaS, cybersecurity, IT Act and emerging technologies — from product terms to incident response.",
+  },
+  {
+    id: "ma-jv",
+    icon: Handshake,
+    title: "Mergers, Acquisitions & JV",
+    desc: "Strategic legal support for M&A, joint ventures, fundraising and restructuring — from term sheet to closing.",
   },
   {
     id: "regulatory-compliance",
     icon: Landmark,
     title: "Regulatory & Compliance",
-    desc: "Advisory on regulatory frameworks, licenses and industry compliance.",
+    desc: "Advisory on regulatory frameworks, sectoral licenses, FEMA, RBI and ongoing corporate compliance calendars.",
   },
   {
     id: "litigation-dispute",
     icon: Users,
     title: "Litigation & Dispute Resolution",
-    desc: "Effective representation and dispute resolution across forums.",
+    desc: "Effective representation across commercial courts, tribunals, arbitration and mediation — with a commercial lens.",
   },
 ];
 
@@ -373,14 +401,16 @@ function Home() {
               What We Do
             </span>
             <h2 className="mt-4 font-serif text-4xl font-bold md:text-5xl">
-              Full-spectrum legal advisory
+              A single-window legal partner
             </h2>
             <div className="divider-gold mx-auto my-6 max-w-xs" />
             <p className="text-cream/70">
-              From day-one incorporation to boardroom disputes — one trusted team
-              across every legal need your business will face.
+              From incorporation and trademark to vendor contracts, licensing,
+              DPDP and disputes — startups and established enterprises get every
+              legal need served under one roof, by one accountable team.
             </p>
           </div>
+
 
           <div className="mt-16 grid gap-px overflow-hidden rounded-3xl bg-gold/20 md:grid-cols-2 lg:grid-cols-4">
             {services.map((s) => (
