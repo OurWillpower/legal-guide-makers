@@ -1,5 +1,5 @@
-import { useMemo, type CSSProperties } from "react";
-import { ArrowRight, type LucideIcon } from "lucide-react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { ArrowRight, Pause, Play, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ServiceSlide {
@@ -23,11 +23,56 @@ function scrollToService(id: string) {
   (el as HTMLElement).focus({ preventScroll: true });
 }
 
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduced(mq.matches);
+    update();
+    mq.addEventListener?.("change", update);
+    return () => mq.removeEventListener?.("change", update);
+  }, []);
+  return reduced;
+}
+
+const SPEED_OPTIONS = [
+  { label: "Slow", secPerCard: 8 },
+  { label: "Normal", secPerCard: 5 },
+  { label: "Fast", secPerCard: 3 },
+] as const;
+
 export function HeroServicesSlider({ slides, className }: HeroServicesSliderProps) {
-  // Duplicate the track so the marquee can loop seamlessly.
   const loop = useMemo(() => [...slides, ...slides], [slides]);
-  // 5 seconds per slide — total duration scales with slide count.
-  const durationSec = Math.max(slides.length, 1) * 5;
+  const reducedMotion = usePrefersReducedMotion();
+  const [speedIdx, setSpeedIdx] = useState(1); // Normal = 5s/card
+  const [paused, setPaused] = useState(false);
+
+  const durationSec = Math.max(slides.length, 1) * SPEED_OPTIONS[speedIdx].secPerCard;
+
+  const renderCard = (slide: ServiceSlide, idx: number, isClone: boolean) => (
+    <div
+      key={`${slide.id}-${idx}-${isClone ? "c" : "o"}`}
+      aria-hidden={isClone ? true : undefined}
+      className="group flex h-full w-[78vw] max-w-[320px] shrink-0 flex-col rounded-2xl border border-gold/30 bg-navy/50 p-5 backdrop-blur-sm transition-colors hover:bg-navy/80 sm:w-[300px] lg:w-[300px]"
+    >
+      <div className="grid h-10 w-10 place-items-center rounded-lg border border-gold/40 bg-navy text-gold transition-transform group-hover:scale-110">
+        <slide.icon className="h-5 w-5" />
+      </div>
+      <h3 className="mt-4 font-serif text-lg font-semibold text-cream">{slide.title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-cream/65 line-clamp-3">{slide.desc}</p>
+      <button
+        type="button"
+        onClick={() => scrollToService(slide.id)}
+        tabIndex={isClone ? -1 : 0}
+        aria-label={`Learn more about ${slide.title}`}
+        className="mt-4 inline-flex items-center gap-1.5 self-start rounded-full border border-gold/40 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-gold transition-colors hover:bg-gold/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+      >
+        Learn more
+        <ArrowRight className="h-3.5 w-3.5" />
+      </button>
+    </div>
+  );
 
   return (
     <div
@@ -36,31 +81,24 @@ export function HeroServicesSlider({ slides, className }: HeroServicesSliderProp
       aria-roledescription="carousel"
       aria-label="Our legal services"
     >
-      <div
-        className="group/marquee overflow-hidden rounded-2xl [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
-        aria-live="off"
-      >
+      {reducedMotion ? (
         <div
-          className="flex w-max gap-3 sm:gap-4 animate-hero-marquee group-hover/marquee:[animation-play-state:paused] focus-within:[animation-play-state:paused] motion-reduce:animate-none"
-          style={{ "--hero-marquee-duration": `${durationSec}s` } as CSSProperties}
+          className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          aria-label="Legal services (static grid, reduced motion)"
         >
-          {loop.map((slide, idx) => (
+          {slides.map((slide, idx) => (
             <div
-              key={`${slide.id}-${idx}`}
-              aria-hidden={idx >= slides.length ? true : undefined}
-              className="group flex h-full w-[85vw] shrink-0 flex-col rounded-2xl border border-gold/30 bg-navy/50 p-5 backdrop-blur-sm transition-colors hover:bg-navy/80 sm:w-[340px] lg:w-[300px]"
+              key={slide.id}
+              className="group flex h-full w-full flex-col rounded-2xl border border-gold/30 bg-navy/50 p-5 backdrop-blur-sm transition-colors hover:bg-navy/80"
             >
-              <div className="grid h-10 w-10 place-items-center rounded-lg border border-gold/40 bg-navy text-gold transition-transform group-hover:scale-110">
+              <div className="grid h-10 w-10 place-items-center rounded-lg border border-gold/40 bg-navy text-gold">
                 <slide.icon className="h-5 w-5" />
               </div>
               <h3 className="mt-4 font-serif text-lg font-semibold text-cream">{slide.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-cream/65 line-clamp-3">
-                {slide.desc}
-              </p>
+              <p className="mt-2 text-sm leading-relaxed text-cream/65 line-clamp-3">{slide.desc}</p>
               <button
                 type="button"
                 onClick={() => scrollToService(slide.id)}
-                tabIndex={idx >= slides.length ? -1 : 0}
                 aria-label={`Learn more about ${slide.title}`}
                 className="mt-4 inline-flex items-center gap-1.5 self-start rounded-full border border-gold/40 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-gold transition-colors hover:bg-gold/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
               >
@@ -69,8 +107,69 @@ export function HeroServicesSlider({ slides, className }: HeroServicesSliderProp
               </button>
             </div>
           ))}
+          {/* idx unused suppression */}
+          <span className="sr-only">{slides.length} services</span>
         </div>
-      </div>
+      ) : (
+        <>
+          <div
+            className="group/marquee overflow-hidden rounded-2xl [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
+            aria-live="off"
+          >
+            <div
+              className={cn(
+                "flex w-max gap-3 sm:gap-4 animate-hero-marquee group-hover/marquee:[animation-play-state:paused] focus-within:[animation-play-state:paused]",
+                paused && "[animation-play-state:paused]"
+              )}
+              style={{ "--hero-marquee-duration": `${durationSec}s` } as CSSProperties}
+            >
+              {loop.map((slide, idx) => renderCard(slide, idx, idx >= slides.length))}
+            </div>
+          </div>
+
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-xs text-cream/70">
+            <button
+              type="button"
+              onClick={() => setPaused((p) => !p)}
+              aria-pressed={paused}
+              aria-label={paused ? "Resume scrolling" : "Pause scrolling"}
+              className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 px-3 py-1.5 font-semibold uppercase tracking-wider text-gold transition-colors hover:bg-gold/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+            >
+              {paused ? <Play className="h-3.5 w-3.5" /> : <Pause className="h-3.5 w-3.5" />}
+              {paused ? "Play" : "Pause"}
+            </button>
+
+            <div
+              role="radiogroup"
+              aria-label="Marquee speed"
+              className="inline-flex items-center gap-1 rounded-full border border-gold/30 bg-navy/40 p-1"
+            >
+              {SPEED_OPTIONS.map((opt, i) => {
+                const active = i === speedIdx;
+                return (
+                  <button
+                    key={opt.label}
+                    type="button"
+                    role="radio"
+                    aria-checked={active}
+                    aria-label={`${opt.label} speed (${opt.secPerCard} seconds per card)`}
+                    onClick={() => setSpeedIdx(i)}
+                    className={cn(
+                      "rounded-full px-3 py-1 font-semibold uppercase tracking-wider transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold",
+                      active ? "bg-gold text-navy" : "text-cream/70 hover:text-gold"
+                    )}
+                  >
+                    {opt.label}
+                  </button>
+                );
+              })}
+            </div>
+            <span className="text-cream/50" aria-hidden="true">
+              {SPEED_OPTIONS[speedIdx].secPerCard}s / card
+            </span>
+          </div>
+        </>
+      )}
     </div>
   );
 }
