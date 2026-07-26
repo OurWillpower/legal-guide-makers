@@ -270,7 +270,7 @@ function Home() {
               </div>
             </div>
             <a href="#why-us" className="hover:text-gold transition-colors">Why Us</a>
-            <a href="#team" className="hover:text-gold transition-colors">Our Core Team</a>
+            <a href="/#team" className="hover:text-gold transition-colors">Our Core Team</a>
             <a href="#testimonials" className="hover:text-gold transition-colors">Testimonials</a>
             <Link to="/articles/dpdp" className="hover:text-gold transition-colors">Articles</Link>
             <a href="#faq" className="hover:text-gold transition-colors">FAQ</a>
