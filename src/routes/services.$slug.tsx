@@ -277,6 +277,7 @@ function ServicePageView() {
         </section>
 
         <section className="rounded-2xl border border-gold/40 bg-navy p-8 text-cream md:p-10">
+          <h2 className="font-serif text-2xl font-bold">Ready to get started?</h2>
 
           <p className="mt-2 text-cream/80">
             Book a consultation with Adv. Vrushali Borade to discuss your requirements and get a fixed-scope proposal.
