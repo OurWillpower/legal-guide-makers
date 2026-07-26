@@ -26,10 +26,14 @@ import {
 } from "lucide-react";
 import logoAsset from "@/assets/win-logo-mark.png.asset.json";
 import portraitAsset from "@/assets/vrushali-portrait.png.asset.json";
+import sonaliAsset from "@/assets/sonali-deshmukh.jpg.asset.json";
+import jayantAsset from "@/assets/jayant-bhat.jpg.asset.json";
 import { HeroServicesSlider } from "@/components/HeroServicesSlider";
 
 const logo = logoAsset.url;
 const portrait = portraitAsset.url;
+const sonaliPortrait = sonaliAsset.url;
+const jayantPortrait = jayantAsset.url;
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -266,7 +270,7 @@ function Home() {
               </div>
             </div>
             <a href="#why-us" className="hover:text-gold transition-colors">Why Us</a>
-            <a href="#founder" className="hover:text-gold transition-colors">Founder</a>
+            <a href="#team" className="hover:text-gold transition-colors">Our Core Team</a>
             <a href="#testimonials" className="hover:text-gold transition-colors">Testimonials</a>
             <Link to="/articles/dpdp" className="hover:text-gold transition-colors">Articles</Link>
             <a href="#faq" className="hover:text-gold transition-colors">FAQ</a>
@@ -482,54 +486,111 @@ function Home() {
         </div>
       </section>
 
-      {/* FOUNDER */}
-      <section id="founder" className="bg-muted">
-        <div className="mx-auto grid max-w-7xl gap-12 px-6 py-24 md:grid-cols-[1fr_1.2fr] md:items-center">
-          <div className="relative">
-            <div className="absolute -inset-4 rounded-3xl bg-gradient-gold opacity-20 blur-2xl" />
-            <div className="relative overflow-hidden rounded-3xl border border-gold/30 shadow-elegant">
-              <img
-                src={portrait}
-                alt="Adv. Vrushali Borade"
-                className="h-full w-full object-cover"
-                loading="lazy"
-                width={1024}
-                height={1280}
-              />
-            </div>
-          </div>
-          <div>
+      {/* OUR CORE TEAM */}
+      <section id="team" className="bg-muted">
+        <div className="mx-auto max-w-7xl px-6 py-24">
+          <div className="mx-auto max-w-2xl text-center">
             <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
-              Meet the Founder
+              Our Core Team
             </span>
             <h2 className="mt-4 font-serif text-4xl font-bold text-navy-deep md:text-5xl">
-              Adv. Vrushali Borade
+              The people behind WIN
             </h2>
-            <p className="mt-3 text-lg text-gold">
-              Corporate Legal Expert · Compliance Strategist · Business Enabler
+            <p className="mt-4 text-lg text-muted-foreground">
+              Lawyers, technologists and business mentors — working shoulder to shoulder with you.
             </p>
-            <div className="divider-gold my-8 max-w-xs" />
-            <p className="text-lg leading-relaxed text-muted-foreground">
-              Vrushali advises founders and boards on the legal decisions that
-              matter most — structuring for growth, closing rounds, building
-              compliance into the DNA of the company, and resolving disputes
-              when they arise. She blends UK-trained legal rigour with
-              on-the-ground understanding of Indian business.
-            </p>
-            <ul className="mt-8 grid gap-3 text-sm text-navy">
-              {[
-                "LLM (United Kingdom)",
-                "LLB — Symbiosis Law School, Pune",
-                "QLTT Certified — England & Wales",
-                "Enrolled Advocate — Bar Council of Maharashtra & Goa",
-                "10+ years advising startups, SMEs and enterprises",
-              ].map((q) => (
-                <li key={q} className="flex items-center gap-3">
-                  <ShieldCheck className="h-5 w-5 shrink-0 text-gold" aria-hidden />
-                  <span>{q}</span>
-                </li>
-              ))}
-            </ul>
+          </div>
+
+          {/* Founder — featured */}
+          <div className="mt-16 grid gap-12 md:grid-cols-[1fr_1.2fr] md:items-center">
+            <div className="relative">
+              <div className="absolute -inset-4 rounded-3xl bg-gradient-gold opacity-20 blur-2xl" />
+              <div className="relative overflow-hidden rounded-3xl border border-gold/30 shadow-elegant">
+                <img
+                  src={portrait}
+                  alt="Adv. Vrushali Borade"
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                  width={1024}
+                  height={1280}
+                />
+              </div>
+            </div>
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
+                Meet the Founder
+              </span>
+              <h3 className="mt-4 font-serif text-4xl font-bold text-navy-deep md:text-5xl">
+                Adv. Vrushali Borade
+              </h3>
+              <p className="mt-3 text-lg text-gold">
+                Corporate Legal Expert · Compliance Strategist · Business Enabler
+              </p>
+              <div className="divider-gold my-8 max-w-xs" />
+              <p className="text-lg leading-relaxed text-muted-foreground">
+                Vrushali advises founders and boards on the legal decisions that
+                matter most — structuring for growth, closing rounds, building
+                compliance into the DNA of the company, and resolving disputes
+                when they arise. She blends UK-trained legal rigour with
+                on-the-ground understanding of Indian business.
+              </p>
+              <ul className="mt-8 grid gap-3 text-sm text-navy">
+                {[
+                  "LLM (United Kingdom)",
+                  "LLB — Symbiosis Law School, Pune",
+                  "QLTT Certified — England & Wales",
+                  "Enrolled Advocate — Bar Council of Maharashtra & Goa",
+                  "10+ years advising conglomerates, enterprises and startups",
+                ].map((q) => (
+                  <li key={q} className="flex items-center gap-3">
+                    <ShieldCheck className="h-5 w-5 shrink-0 text-gold" aria-hidden />
+                    <span>{q}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Advisors */}
+          <div className="mt-20 grid gap-8 md:grid-cols-2">
+            {[
+              {
+                name: "Sonali Deshmukh",
+                role: "Senior IT Consultant",
+                img: sonaliPortrait,
+                bio: "15+ years of experience in the world of IT, having held senior coding and technical leadership roles. Advises on technology architecture, product engineering and digital delivery for modern legal-tech and enterprise workflows.",
+              },
+              {
+                name: "Jayant Bhat",
+                role: "Business Mentor, Trainer & Consultant",
+                img: jayantPortrait,
+                bio: "25+ years of work experience, having held senior decisive positions in MNCs. Has offered mentoring to founders and management consultancy to organizations for over 14 years.",
+              },
+            ].map((m) => (
+              <article
+                key={m.name}
+                className="group overflow-hidden rounded-3xl border border-gold/20 bg-background shadow-elegant"
+              >
+                <div className="aspect-[4/5] overflow-hidden bg-navy-deep">
+                  <img
+                    src={m.img}
+                    alt={m.name}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                    width={1024}
+                    height={1280}
+                  />
+                </div>
+                <div className="p-8">
+                  <h3 className="font-serif text-2xl font-bold text-navy-deep">{m.name}</h3>
+                  <p className="mt-1 text-sm font-semibold uppercase tracking-[0.2em] text-gold">
+                    {m.role}
+                  </p>
+                  <div className="divider-gold my-5 max-w-[3rem]" />
+                  <p className="text-base leading-relaxed text-muted-foreground">{m.bio}</p>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </section>
@@ -713,7 +774,7 @@ function Home() {
               <li><a href="#about" className="hover:text-gold">About</a></li>
               <li><a href="#services" className="hover:text-gold">Services</a></li>
               <li><a href="#why-us" className="hover:text-gold">Why Us</a></li>
-              <li><a href="#founder" className="hover:text-gold">Founder</a></li>
+              <li><a href="#team" className="hover:text-gold">Our Core Team</a></li>
               <li><a href="#testimonials" className="hover:text-gold">Testimonials</a></li>
               <li><Link to="/faq" className="hover:text-gold">FAQ</Link></li>
               <li><Link to="/booking" className="hover:text-gold">Book Consultation</Link></li>
