@@ -60,6 +60,7 @@ export const SERVICE_PAGES: Record<ServicePage["slug"], ServicePage> = {
       title: "Company Incorporation Services in India | WIN Legal Advisors",
       description: "End-to-end company incorporation — Private Limited, LLP, OPC — with MoA/AoA, PAN, TAN, GST, and founder agreements. Fixed timelines, transparent scope.",
     },
+    checklist: { label: "Incorporation Checklist (PDF)", filename: "incorporation-checklist.pdf", url: incorporationPdf.url },
   },
   trademark: {
     slug: "trademark",
