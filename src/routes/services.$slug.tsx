@@ -59,7 +59,7 @@ function ServiceNotFound() {
 }
 
 function ServicePageView() {
-  const page = Route.useLoaderData();
+  const page = Route.useLoaderData() as ServicePage;
 
   return (
     <div className="min-h-screen bg-background">

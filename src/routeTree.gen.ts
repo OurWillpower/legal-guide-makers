@@ -19,6 +19,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StatusIdRouteImport } from './routes/status.$id'
+import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
 import { Route as ManageIdRouteImport } from './routes/manage.$id'
 import { Route as ArticlesDpdpRouteImport } from './routes/articles.dpdp'
 import { Route as AuthenticatedMyBookingsRouteImport } from './routes/_authenticated/my-bookings'
@@ -77,6 +78,11 @@ const IndexRoute = IndexRouteImport.update({
 const StatusIdRoute = StatusIdRouteImport.update({
   id: '/status/$id',
   path: '/status/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesSlugRoute = ServicesSlugRouteImport.update({
+  id: '/services/$slug',
+  path: '/services/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ManageIdRoute = ManageIdRouteImport.update({
@@ -145,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/my-bookings': typeof AuthenticatedMyBookingsRoute
   '/articles/dpdp': typeof ArticlesDpdpRouteWithChildren
   '/manage/$id': typeof ManageIdRoute
+  '/services/$slug': typeof ServicesSlugRoute
   '/status/$id': typeof StatusIdRoute
   '/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
   '/articles/dpdp/$slug': typeof ArticlesDpdpSlugRoute
@@ -165,6 +172,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRoute
   '/my-bookings': typeof AuthenticatedMyBookingsRoute
   '/manage/$id': typeof ManageIdRoute
+  '/services/$slug': typeof ServicesSlugRoute
   '/status/$id': typeof StatusIdRoute
   '/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
   '/articles/dpdp/$slug': typeof ArticlesDpdpSlugRoute
@@ -188,6 +196,7 @@ export interface FileRoutesById {
   '/_authenticated/my-bookings': typeof AuthenticatedMyBookingsRoute
   '/articles/dpdp': typeof ArticlesDpdpRouteWithChildren
   '/manage/$id': typeof ManageIdRoute
+  '/services/$slug': typeof ServicesSlugRoute
   '/status/$id': typeof StatusIdRoute
   '/_authenticated/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
   '/articles/dpdp/$slug': typeof ArticlesDpdpSlugRoute
@@ -211,6 +220,7 @@ export interface FileRouteTypes {
     | '/my-bookings'
     | '/articles/dpdp'
     | '/manage/$id'
+    | '/services/$slug'
     | '/status/$id'
     | '/manage-booking/$id'
     | '/articles/dpdp/$slug'
@@ -231,6 +241,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/my-bookings'
     | '/manage/$id'
+    | '/services/$slug'
     | '/status/$id'
     | '/manage-booking/$id'
     | '/articles/dpdp/$slug'
@@ -253,6 +264,7 @@ export interface FileRouteTypes {
     | '/_authenticated/my-bookings'
     | '/articles/dpdp'
     | '/manage/$id'
+    | '/services/$slug'
     | '/status/$id'
     | '/_authenticated/manage-booking/$id'
     | '/articles/dpdp/$slug'
@@ -274,6 +286,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   ArticlesDpdpRoute: typeof ArticlesDpdpRouteWithChildren
   ManageIdRoute: typeof ManageIdRoute
+  ServicesSlugRoute: typeof ServicesSlugRoute
   StatusIdRoute: typeof StatusIdRoute
   ApiPublicBookingIcsIdRoute: typeof ApiPublicBookingIcsIdRoute
   ApiPublicBookingPdfIdRoute: typeof ApiPublicBookingPdfIdRoute
@@ -350,6 +363,13 @@ declare module '@tanstack/react-router' {
       path: '/status/$id'
       fullPath: '/status/$id'
       preLoaderRoute: typeof StatusIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/$slug': {
+      id: '/services/$slug'
+      path: '/services/$slug'
+      fullPath: '/services/$slug'
+      preLoaderRoute: typeof ServicesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/manage/$id': {
@@ -466,6 +486,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   ArticlesDpdpRoute: ArticlesDpdpRouteWithChildren,
   ManageIdRoute: ManageIdRoute,
+  ServicesSlugRoute: ServicesSlugRoute,
   StatusIdRoute: StatusIdRoute,
   ApiPublicBookingIcsIdRoute: ApiPublicBookingIcsIdRoute,
   ApiPublicBookingPdfIdRoute: ApiPublicBookingPdfIdRoute,
