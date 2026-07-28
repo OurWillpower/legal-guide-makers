@@ -119,8 +119,9 @@ export const Route = createFileRoute("/api/public/hooks/booking-reminders")({
                     subject: rendered.subject,
                     html: rendered.html,
                     text: rendered.text,
-                    purpose: "booking_reminder",
+                    purpose: "transactional",
                     reply_to: "contact@winlegaladvisors.com",
+                    idempotency_key: `booking-${b.id}-reminder-${which}`,
                   },
                   { apiKey },
                 );
