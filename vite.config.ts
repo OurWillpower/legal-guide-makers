@@ -10,9 +10,13 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 import { mcpPlugin } from "@lovable.dev/mcp-js/stacks/tanstack/vite";
 
 // Pin the project root to this config file's directory so plugins that resolve
-// paths relative to the Vite root (e.g. the MCP route generator) work regardless
-// of the working directory the build is invoked from.
+// paths relative to the working directory (e.g. the MCP route generator, which
+// asserts at construction time) work regardless of where the build is invoked from.
 const projectRoot = dirname(fileURLToPath(import.meta.url));
+if (process.cwd() !== projectRoot) {
+  process.chdir(projectRoot);
+}
+
 
 export default defineConfig({
   tanstackStart: {
