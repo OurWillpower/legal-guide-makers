@@ -486,117 +486,138 @@ function Home() {
         </div>
       </section>
 
-      {/* OUR CORE TEAM */}
+      {/* LEADERSHIP TEAM */}
       <section id="team" className="bg-muted">
-        <div className="mx-auto max-w-7xl px-6 py-24">
-          <div className="mx-auto max-w-2xl text-center">
+        <div className="mx-auto max-w-7xl px-6 py-28">
+          {/* Section header */}
+          <div className="mx-auto max-w-3xl text-center">
             <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
-              Our Core Team
+              Leadership Team
             </span>
-            <h2 className="mt-4 font-serif text-4xl font-bold text-navy-deep md:text-5xl">
-              The people behind WIN
+            <h2 className="mt-5 font-serif text-4xl font-bold leading-tight text-navy-deep md:text-5xl">
+              Strategic Legal, Technology &amp; Business Advisors{" "}
+              <span className="text-gold-gradient">Driving Client Success</span>
             </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              Lawyers, technologists and business mentors — working shoulder to shoulder with you.
-            </p>
-            <Link
-              to="/team"
-              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-gold hover:underline"
-            >
-              View full core team page <ArrowRight className="h-4 w-4" />
-            </Link>
+            <div className="divider-gold mx-auto mt-8 max-w-xs" />
           </div>
 
-          {/* Founder — featured */}
-          <div className="mt-16 grid gap-12 md:grid-cols-[1fr_1.2fr] md:items-center">
-            <div className="relative">
-              <div className="absolute -inset-4 rounded-3xl bg-gradient-gold opacity-20 blur-2xl" />
-              <div className="relative overflow-hidden rounded-3xl border border-gold/30 shadow-elegant">
-                <img
-                  src={portrait}
-                  alt="Adv. Vrushali Borade"
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                  width={1024}
-                  height={1280}
-                />
-              </div>
-            </div>
-            <div>
-              <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
-                Meet the Founder
-              </span>
-              <h3 className="mt-4 font-serif text-4xl font-bold text-navy-deep md:text-5xl">
-                Adv. Vrushali Borade
-              </h3>
-              <p className="mt-3 text-lg text-gold">
-                Corporate Legal Expert · Compliance Strategist · Business Enabler
-              </p>
-              <div className="divider-gold my-8 max-w-xs" />
-              <p className="text-lg leading-relaxed text-muted-foreground">
-                Vrushali advises founders and boards on the legal decisions that
-                matter most — structuring for growth, closing rounds, building
-                compliance into the DNA of the company, and resolving disputes
-                when they arise. She blends UK-trained legal rigour with
-                on-the-ground understanding of Indian business.
-              </p>
-              <ul className="mt-8 grid gap-3 text-sm text-navy">
-                {[
-                  "LLM (United Kingdom)",
-                  "LLB — Symbiosis Law School, Pune",
-                  "QLTT Certified — England & Wales",
-                  "Enrolled Advocate — Bar Council of Maharashtra & Goa",
-                  "10+ years advising conglomerates, enterprises and startups",
-                ].map((q) => (
-                  <li key={q} className="flex items-center gap-3">
-                    <ShieldCheck className="h-5 w-5 shrink-0 text-gold" aria-hidden />
-                    <span>{q}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Advisors */}
-          <div className="mt-20 grid gap-8 md:grid-cols-2">
-            {[
-              {
-                name: "Sonali Deshmukh",
-                role: "Senior IT Consultant",
-                img: sonaliPortrait,
-                bio: "15+ years of experience in the world of IT, having held senior coding and technical leadership roles. Advises on technology architecture, product engineering and digital delivery for modern legal-tech and enterprise workflows.",
-              },
-              {
-                name: "Jayant Bhat",
-                role: "Business Mentor, Trainer & Consultant",
-                img: jayantPortrait,
-                bio: "25+ years of work experience, having held senior decisive positions in MNCs. Has offered mentoring to founders and management consultancy to organizations for over 14 years.",
-              },
-            ].map((m) => (
-              <article
-                key={m.name}
-                className="group overflow-hidden rounded-3xl border border-gold/20 bg-background shadow-elegant"
-              >
-                <div className="aspect-[4/5] overflow-hidden bg-navy-deep">
+          {/* Leadership grid — Founder (60%) + stacked advisors (40%) */}
+          <div className="mt-16 grid gap-8 lg:grid-cols-[1.5fr_1fr] lg:items-stretch">
+            {/* Founder — primary focus */}
+            <article className="group relative flex flex-col overflow-hidden rounded-[1.75rem] border border-gold/25 bg-background shadow-elegant transition-all duration-500 hover:-translate-y-1 hover:shadow-gold">
+              <div className="grid gap-0 sm:grid-cols-[0.9fr_1.1fr] sm:items-stretch">
+                {/* Image */}
+                <div className="relative overflow-hidden bg-navy-deep">
+                  <div className="absolute -inset-6 rounded-full bg-gradient-gold opacity-20 blur-3xl" />
                   <img
-                    src={m.img}
-                    alt={m.name}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    src={portrait}
+                    alt="Adv. Vrushali Borade — Founder & Managing Partner, WIN Legal Advisors"
+                    className="relative h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                     loading="lazy"
                     width={1024}
                     height={1280}
                   />
                 </div>
-                <div className="p-8">
-                  <h3 className="font-serif text-2xl font-bold text-navy-deep">{m.name}</h3>
-                  <p className="mt-1 text-sm font-semibold uppercase tracking-[0.2em] text-gold">
-                    {m.role}
+                {/* Details */}
+                <div className="flex flex-col justify-center p-8 md:p-10">
+                  <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
+                    Meet the Founder
+                  </span>
+                  <h3 className="mt-4 font-serif text-3xl font-bold text-navy-deep md:text-4xl">
+                    Adv. Vrushali Borade
+                  </h3>
+                  <p className="mt-3 text-base font-semibold text-navy-soft">
+                    Founder &amp; Managing Partner
                   </p>
-                  <div className="divider-gold my-5 max-w-[3rem]" />
-                  <p className="text-base leading-relaxed text-muted-foreground">{m.bio}</p>
+                  <div className="divider-gold my-7 max-w-[4rem]" />
+                  <p className="text-base leading-relaxed text-muted-foreground">
+                    Vrushali advises founders and boards on the legal decisions
+                    that matter most — structuring for growth, closing rounds,
+                    building compliance into the DNA of the company, and
+                    resolving disputes when they arise. She blends UK-trained
+                    legal rigour with on-the-ground understanding of Indian
+                    business.
+                  </p>
+
+                  {/* Expertise tags */}
+                  <div className="mt-7 flex flex-wrap gap-2.5">
+                    {["Corporate Law", "Governance", "DPDP", "Regulatory Advisory", "Technology Law"].map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full border border-gold/50 px-3.5 py-1.5 text-xs font-semibold tracking-wide text-navy-deep transition-colors group-hover:border-gold"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  <Link
+                    to="/team"
+                    className="mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-gradient-gold px-6 py-3 text-sm font-semibold text-navy-deep shadow-gold transition-transform hover:scale-[1.03]"
+                  >
+                    View Full Profile <ArrowRight className="h-4 w-4" />
+                  </Link>
                 </div>
-              </article>
-            ))}
+              </div>
+            </article>
+
+            {/* Advisors — two stacked cards */}
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-1">
+              {[
+                {
+                  name: "Sonali Deshmukh",
+                  role: "Director – Technology & Digital Compliance",
+                  img: sonaliPortrait,
+                  bio: "Leads technology advisory for digital transformation, AI governance, cybersecurity, software contracts and digital compliance, helping businesses navigate emerging technology risks.",
+                  tags: ["AI", "Cyber Security", "Digital Compliance", "IT Strategy"],
+                },
+                {
+                  name: "Jayant Bhat",
+                  role: "Strategic Business Advisor",
+                  img: jayantPortrait,
+                  bio: "Advises founders and business leaders on business growth, investor readiness, strategy, market expansion and corporate transformation.",
+                  tags: ["Business Strategy", "Growth", "Leadership", "Investor Readiness"],
+                },
+              ].map((m) => (
+                <article
+                  key={m.name}
+                  className="group flex flex-col overflow-hidden rounded-[1.5rem] border border-gold/20 bg-background shadow-elegant transition-all duration-500 hover:-translate-y-1 hover:shadow-gold lg:flex-1"
+                >
+                  <div className="flex gap-5 p-6 md:flex-1 md:items-center">
+                    <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-2xl border border-gold/20 bg-navy-deep">
+                      <img
+                        src={m.img}
+                        alt={`${m.name} — ${m.role}`}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy"
+                        width={320}
+                        height={320}
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="font-serif text-xl font-bold text-navy-deep">{m.name}</h3>
+                      <p className="mt-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-gold">
+                        {m.role}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="px-6 pb-6">
+                    <div className="divider-gold mb-5 max-w-[3rem]" />
+                    <p className="text-sm leading-relaxed text-muted-foreground">{m.bio}</p>
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      {m.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-full border border-gold/50 px-3 py-1 text-[0.7rem] font-semibold tracking-wide text-navy-deep transition-colors group-hover:border-gold"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </div>
       </section>
