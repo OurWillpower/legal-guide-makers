@@ -1,0 +1,161 @@
+{
+  "version": 1,
+  "sdk_version": "0.25.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://ijckloegicantircqblo.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "win-legal-advisors-hub",
+      "version": "0.1.0",
+      "title": "Win Legal Advisors Hub"
+    },
+    "tools": [
+      {
+        "name": "list_services",
+        "title": "List legal services",
+        "description": "List every legal service WIN Legal Advisors offers, with its slug, title and one-line summary.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_service",
+        "title": "Get service details",
+        "description": "Get the full scope, deliverables, timeline and FAQs for one WIN Legal Advisors service by its slug.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "description": "Service slug, e.g. 'incorporation' or 'trademark'."
+            }
+          },
+          "required": [
+            "slug"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_bookings",
+        "title": "List my consultations",
+        "description": "List the signed-in user's consultation bookings with WIN Legal Advisors.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_booking",
+        "title": "Book a consultation",
+        "description": "Create a consultation booking for the signed-in user. Date must be YYYY-MM-DD and time HH:MM (24h, IST).",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Full name of the client."
+            },
+            "email": {
+              "type": "string",
+              "description": "Contact email address."
+            },
+            "phone": {
+              "description": "Contact phone number.",
+              "type": "string"
+            },
+            "company": {
+              "description": "Company or organisation name.",
+              "type": "string"
+            },
+            "service": {
+              "type": "string",
+              "description": "Service required, e.g. 'Company Incorporation'."
+            },
+            "preferred_date": {
+              "type": "string",
+              "description": "Preferred date, YYYY-MM-DD."
+            },
+            "preferred_time": {
+              "type": "string",
+              "description": "Preferred time, HH:MM in 24h IST."
+            },
+            "message": {
+              "description": "Short description of the legal matter.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "email",
+            "service",
+            "preferred_date",
+            "preferred_time"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "cancel_booking",
+        "title": "Cancel a consultation",
+        "description": "Cancel one of the signed-in user's consultation bookings by its id.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "booking_id": {
+              "type": "string",
+              "description": "The booking id to cancel."
+            },
+            "reason": {
+              "description": "Optional cancellation reason.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "booking_id"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
