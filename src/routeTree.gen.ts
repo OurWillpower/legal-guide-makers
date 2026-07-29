@@ -13,6 +13,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TeamRouteImport } from './routes/team'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BookingRouteImport } from './routes/booking'
@@ -25,9 +26,13 @@ import { Route as ManageIdRouteImport } from './routes/manage.$id'
 import { Route as ArticlesDpdpRouteImport } from './routes/articles.dpdp'
 import { Route as AuthenticatedMyBookingsRouteImport } from './routes/_authenticated/my-bookings'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as ArticlesDpdpIndexRouteImport } from './routes/articles.dpdp.index'
 import { Route as ArticlesDpdpSlugRouteImport } from './routes/articles.dpdp.$slug'
 import { Route as AuthenticatedManageBookingIdRouteImport } from './routes/_authenticated/manage-booking.$id'
+import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as ApiPublicHooksBookingRemindersRouteImport } from './routes/api/public/hooks/booking-reminders'
 import { Route as ApiPublicBookingPdfIdRouteImport } from './routes/api/public/booking-pdf.$id'
 import { Route as ApiPublicBookingIcsIdRouteImport } from './routes/api/public/booking-ics.$id'
@@ -50,6 +55,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqRoute = FaqRouteImport.update({
@@ -111,6 +121,18 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char91DotmcpChar93ListToolsRoute =
+  Char91DotmcpChar93ListToolsRouteImport.update({
+    id: '/.mcp/list-tools',
+    path: '/.mcp/list-tools',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ArticlesDpdpIndexRoute = ArticlesDpdpIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -127,6 +149,17 @@ const AuthenticatedManageBookingIdRoute =
     path: '/manage-booking/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const Char91DotmcpChar93InvokeToolToolRoute =
+  Char91DotmcpChar93InvokeToolToolRouteImport.update({
+    id: '/.mcp/invoke-tool/$tool',
+    path: '/.mcp/invoke-tool/$tool',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicHooksBookingRemindersRoute =
   ApiPublicHooksBookingRemindersRouteImport.update({
     id: '/api/public/hooks/booking-reminders',
@@ -150,16 +183,21 @@ export interface FileRoutesByFullPath {
   '/booking': typeof BookingRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
+  '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/terms': typeof TermsRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/my-bookings': typeof AuthenticatedMyBookingsRoute
   '/articles/dpdp': typeof ArticlesDpdpRouteWithChildren
   '/manage/$id': typeof ManageIdRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/status/$id': typeof StatusIdRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
   '/articles/dpdp/$slug': typeof ArticlesDpdpSlugRoute
   '/articles/dpdp/': typeof ArticlesDpdpIndexRoute
@@ -173,15 +211,20 @@ export interface FileRoutesByTo {
   '/booking': typeof BookingRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
+  '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/terms': typeof TermsRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/my-bookings': typeof AuthenticatedMyBookingsRoute
   '/manage/$id': typeof ManageIdRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/status/$id': typeof StatusIdRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
   '/articles/dpdp/$slug': typeof ArticlesDpdpSlugRoute
   '/articles/dpdp': typeof ArticlesDpdpIndexRoute
@@ -197,16 +240,21 @@ export interface FileRoutesById {
   '/booking': typeof BookingRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
+  '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/terms': typeof TermsRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/my-bookings': typeof AuthenticatedMyBookingsRoute
   '/articles/dpdp': typeof ArticlesDpdpRouteWithChildren
   '/manage/$id': typeof ManageIdRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/status/$id': typeof StatusIdRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/manage-booking/$id': typeof AuthenticatedManageBookingIdRoute
   '/articles/dpdp/$slug': typeof ArticlesDpdpSlugRoute
   '/articles/dpdp/': typeof ArticlesDpdpIndexRoute
@@ -222,16 +270,21 @@ export interface FileRouteTypes {
     | '/booking'
     | '/contact'
     | '/faq'
+    | '/mcp'
     | '/privacy'
     | '/sitemap.xml'
     | '/team'
     | '/terms'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/admin'
     | '/my-bookings'
     | '/articles/dpdp'
     | '/manage/$id'
     | '/services/$slug'
     | '/status/$id'
+    | '/.lovable/oauth/consent'
+    | '/.mcp/invoke-tool/$tool'
     | '/manage-booking/$id'
     | '/articles/dpdp/$slug'
     | '/articles/dpdp/'
@@ -245,15 +298,20 @@ export interface FileRouteTypes {
     | '/booking'
     | '/contact'
     | '/faq'
+    | '/mcp'
     | '/privacy'
     | '/sitemap.xml'
     | '/team'
     | '/terms'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/admin'
     | '/my-bookings'
     | '/manage/$id'
     | '/services/$slug'
     | '/status/$id'
+    | '/.lovable/oauth/consent'
+    | '/.mcp/invoke-tool/$tool'
     | '/manage-booking/$id'
     | '/articles/dpdp/$slug'
     | '/articles/dpdp'
@@ -268,16 +326,21 @@ export interface FileRouteTypes {
     | '/booking'
     | '/contact'
     | '/faq'
+    | '/mcp'
     | '/privacy'
     | '/sitemap.xml'
     | '/team'
     | '/terms'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/_authenticated/admin'
     | '/_authenticated/my-bookings'
     | '/articles/dpdp'
     | '/manage/$id'
     | '/services/$slug'
     | '/status/$id'
+    | '/.lovable/oauth/consent'
+    | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/manage-booking/$id'
     | '/articles/dpdp/$slug'
     | '/articles/dpdp/'
@@ -293,14 +356,19 @@ export interface RootRouteChildren {
   BookingRoute: typeof BookingRoute
   ContactRoute: typeof ContactRoute
   FaqRoute: typeof FaqRoute
+  McpRoute: typeof McpRoute
   PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeamRoute: typeof TeamRoute
   TermsRoute: typeof TermsRoute
+  Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   ArticlesDpdpRoute: typeof ArticlesDpdpRouteWithChildren
   ManageIdRoute: typeof ManageIdRoute
   ServicesSlugRoute: typeof ServicesSlugRoute
   StatusIdRoute: typeof StatusIdRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
+  Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiPublicBookingIcsIdRoute: typeof ApiPublicBookingIcsIdRoute
   ApiPublicBookingPdfIdRoute: typeof ApiPublicBookingPdfIdRoute
   ApiPublicHooksBookingRemindersRoute: typeof ApiPublicHooksBookingRemindersRoute
@@ -334,6 +402,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faq': {
@@ -420,6 +495,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.mcp/list-tools': {
+      id: '/.mcp/list-tools'
+      path: '/.mcp/list-tools'
+      fullPath: '/.mcp/list-tools'
+      preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/articles/dpdp/': {
       id: '/articles/dpdp/'
       path: '/'
@@ -440,6 +529,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/manage-booking/$id'
       preLoaderRoute: typeof AuthenticatedManageBookingIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/.mcp/invoke-tool/$tool': {
+      id: '/.mcp/invoke-tool/$tool'
+      path: '/.mcp/invoke-tool/$tool'
+      fullPath: '/.mcp/invoke-tool/$tool'
+      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/public/hooks/booking-reminders': {
       id: '/api/public/hooks/booking-reminders'
@@ -501,14 +604,20 @@ const rootRouteChildren: RootRouteChildren = {
   BookingRoute: BookingRoute,
   ContactRoute: ContactRoute,
   FaqRoute: FaqRoute,
+  McpRoute: McpRoute,
   PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeamRoute: TeamRoute,
   TermsRoute: TermsRoute,
+  Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
   ArticlesDpdpRoute: ArticlesDpdpRouteWithChildren,
   ManageIdRoute: ManageIdRoute,
   ServicesSlugRoute: ServicesSlugRoute,
   StatusIdRoute: StatusIdRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
+  Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiPublicBookingIcsIdRoute: ApiPublicBookingIcsIdRoute,
   ApiPublicBookingPdfIdRoute: ApiPublicBookingPdfIdRoute,
   ApiPublicHooksBookingRemindersRoute: ApiPublicHooksBookingRemindersRoute,
@@ -516,3 +625,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
