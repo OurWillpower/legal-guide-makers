@@ -289,17 +289,23 @@ function Home() {
       </header>
 
       {/* HERO */}
-      <section id="top" className="relative overflow-hidden bg-gradient-navy text-cream">
-        <div
-          aria-hidden
-          className="absolute inset-0 opacity-[0.08]"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 20% 20%, oklch(0.78 0.13 82 / 0.4), transparent 40%), radial-gradient(circle at 80% 80%, oklch(0.78 0.13 82 / 0.3), transparent 45%)",
-          }}
+      <section id="top" className="relative isolate overflow-hidden bg-navy-deep text-cream">
+        {/* Full-width boardroom photograph */}
+        <img
+          src={heroBoardroom}
+          alt="Adv. Vrushali Borade leading a strategic discussion with senior legal advisors in a modern corporate boardroom"
+          className="absolute inset-0 -z-10 h-full w-full object-cover object-center"
+          width={896}
+          height={1200}
+          loading="eager"
+          fetchPriority="high"
         />
-        <div className="relative mx-auto grid max-w-7xl gap-12 px-6 py-20 md:grid-cols-[1.15fr_1fr] md:py-28 lg:py-32">
-          <div className="flex flex-col justify-center">
+        {/* Navy gradient overlays for legibility, brand-tinted */}
+        <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-r from-navy-deep via-navy-deep/90 to-navy-deep/30" />
+        <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-t from-navy-deep via-navy-deep/20 to-navy-deep/70" />
+
+        <div className="relative mx-auto max-w-7xl px-6 py-24 md:py-32 lg:py-40">
+          <div className="max-w-2xl">
             <div className="flex items-center gap-3">
               <span className="h-px w-10 bg-gold" />
               <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
@@ -310,7 +316,7 @@ function Home() {
               Scalable, Compliant &{" "}
               <span className="text-gold-gradient">Investor-Ready</span> Companies
             </h1>
-            <p className="mt-6 max-w-xl text-lg text-cream/75">
+            <p className="mt-6 max-w-xl text-lg text-cream/85">
               WIN Legal Advisors partners with founders, boards and enterprises to
               turn legal complexity into a competitive advantage — from incorporation
               to exit.
@@ -337,35 +343,16 @@ function Home() {
               </Link>
               <a
                 href="#services"
-                className="inline-flex items-center gap-2 rounded-full border border-gold/40 px-7 py-3.5 text-sm font-semibold text-cream transition-colors hover:bg-gold/10"
+                className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-navy-deep/30 px-7 py-3.5 text-sm font-semibold text-cream backdrop-blur-sm transition-colors hover:bg-gold/10"
               >
                 Explore Services
                 <ArrowRight className="h-4 w-4" />
               </a>
             </div>
           </div>
-
-          <div className="relative flex items-center justify-center">
-            <div className="absolute inset-8 rounded-full bg-gradient-gold opacity-20 blur-3xl" />
-            <div className="relative aspect-[4/5] w-full max-w-sm overflow-hidden rounded-[2rem] border border-gold/30 shadow-elegant">
-              <img
-                src={portrait}
-                alt="Adv. Vrushali Borade — Founder, WIN Legal Advisors"
-                className="h-full w-full object-cover"
-                width={1024}
-                height={1280}
-              />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy-deep via-navy-deep/70 to-transparent p-6 pt-16">
-                <p className="font-serif text-xl font-semibold text-cream">Adv. Vrushali Borade</p>
-                <p className="mt-1 text-xs uppercase tracking-[0.2em] text-gold">
-                  Corporate Legal Expert
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <HeroServicesSlider slides={services} className="mt-16 md:mt-20" />
+        <HeroServicesSlider slides={services} className="mt-20 md:mt-28" />
       </section>
 
       {/* ABOUT */}
