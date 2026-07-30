@@ -107,11 +107,11 @@ export const Route = createFileRoute("/api/public/hooks/booking-reminders")({
               .eq("event_type", failedEventType);
             const attempt = (priorFailures ?? 0) + 1;
             const MAX_ATTEMPTS = 5;
-            if (attempt > MAX_ATTEMPTS) {
+            const emailBackedOff = attempt > MAX_ATTEMPTS;
+            if (emailBackedOff) {
               console.warn(
-                `[reminders] ${which} for booking ${b.id} giving up after ${MAX_ATTEMPTS} failed attempts`,
+                `[reminders] ${which} email for booking ${b.id} giving up after ${MAX_ATTEMPTS} failed attempts`,
               );
-              continue;
             }
             try {
               const rendered = await renderDbTemplate(
