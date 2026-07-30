@@ -113,56 +113,61 @@ export const Route = createFileRoute("/api/public/hooks/booking-reminders")({
                 `[reminders] ${which} email for booking ${b.id} giving up after ${MAX_ATTEMPTS} failed attempts`,
               );
             }
-            try {
-              const rendered = await renderDbTemplate(
-                which === "2h" ? "booking_reminder_2h" : "booking_reminder_24h",
-                {
-                  name: b.name,
-                  service: b.service,
-                  preferredDate: b.preferred_date,
-                  preferredTime: b.preferred_time,
-                  manageUrl,
-                  googleCalendarUrl: gcal,
-                  icsUrl,
-                  pdfUrl,
-                  statusUrl,
-                },
-              );
-              if (rendered) {
-                await sendLovableEmail(
+            if (!emailBackedOff) {
+              try {
+                const rendered = await renderDbTemplate(
+                  which === "2h" ? "booking_reminder_2h" : "booking_reminder_24h",
                   {
-                    to: b.email,
-                    from: "WIN Legal Advisors <hello@winlegaladvisors.com>",
-                    subject: rendered.subject,
-                    html: rendered.html,
-                    text: rendered.text,
-                    purpose: "transactional",
-                    reply_to: "contact@winlegaladvisors.com",
-                    idempotency_key: `booking-${b.id}-reminder-${which}-${attempt}`,
+                    name: b.name,
+                    service: b.service,
+                    preferredDate: b.preferred_date,
+                    preferredTime: b.preferred_time,
+                    manageUrl,
+                    googleCalendarUrl: gcal,
+                    icsUrl,
+                    pdfUrl,
+                    statusUrl,
                   },
-                  { apiKey },
                 );
-                const patch = which === "2h"
-                  ? { reminder_2h_sent_at: new Date().toISOString() }
-                  : { reminder_24h_sent_at: new Date().toISOString() };
-                await supabaseAdmin.from("bookings").update(patch).eq("id", b.id);
+                if (rendered) {
+                  await sendLovableEmail(
+                    {
+                      to: b.email,
+                      from: "WIN Legal Advisors <hello@winlegaladvisors.com>",
+                      subject: rendered.subject,
+                      html: rendered.html,
+                      text: rendered.text,
+                      purpose: "transactional",
+                      reply_to: "contact@winlegaladvisors.com",
+                      idempotency_key: `booking-${b.id}-reminder-${which}-${attempt}`,
+                    },
+                    { apiKey },
+                  );
+                  const patch = which === "2h"
+                    ? { reminder_2h_sent_at: new Date().toISOString() }
+                    : { reminder_24h_sent_at: new Date().toISOString() };
+                  await supabaseAdmin.from("bookings").update(patch).eq("id", b.id);
+                  await supabaseAdmin.from("booking_events").insert({
+                    booking_id: b.id,
+                    event_type: `reminder_email_${which}_sent`,
+                    meta: {} as never,
+                  });
+                  sentEmails += 1;
+                }
+              } catch (err) {
+                console.warn(
+                  `[reminders] email send failed (attempt ${attempt}/${MAX_ATTEMPTS}):`,
+                  err,
+                );
                 await supabaseAdmin.from("booking_events").insert({
                   booking_id: b.id,
-                  event_type: `reminder_email_${which}_sent`,
-                  meta: {} as never,
+                  event_type: failedEventType,
+                  meta: {
+                    attempt,
+                    error: err instanceof Error ? err.message : String(err),
+                  } as never,
                 });
-                sentEmails += 1;
               }
-            } catch (err) {
-              console.warn(`[reminders] email send failed (attempt ${attempt}/${MAX_ATTEMPTS}):`, err);
-              await supabaseAdmin.from("booking_events").insert({
-                booking_id: b.id,
-                event_type: failedEventType,
-                meta: {
-                  attempt,
-                  error: err instanceof Error ? err.message : String(err),
-                } as never,
-              });
             }
           }
 
