@@ -304,7 +304,7 @@ function Home() {
         <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-r from-navy-deep via-navy-deep/90 to-navy-deep/30" />
         <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-t from-navy-deep via-navy-deep/20 to-navy-deep/70" />
 
-        <div className="relative mx-auto max-w-7xl px-6 py-24 md:py-32 lg:py-40">
+        <div className="relative mx-auto grid max-w-7xl gap-12 px-6 py-24 md:py-32 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:py-40">
           <div className="max-w-2xl">
             <div className="flex items-center gap-3">
               <span className="h-px w-10 bg-gold" />
