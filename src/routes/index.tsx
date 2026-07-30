@@ -293,10 +293,10 @@ function Home() {
         {/* Full-width boardroom photograph */}
         <img
           src={heroBoardroom}
-          alt="Adv. Vrushali Borade leading a strategic discussion with senior legal advisors in a modern corporate boardroom"
+          alt="Indian corporate advisory team in a strategic boardroom discussion"
           className="absolute inset-0 -z-10 h-full w-full object-cover object-center"
-          width={896}
-          height={1200}
+          width={1280}
+          height={853}
           loading="eager"
           fetchPriority="high"
         />
