@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import logoAsset from "@/assets/win-logo-mark.png.asset.json";
 import portraitAsset from "@/assets/vrushali-portrait.png.asset.json";
-import heroBoardroomAsset from "@/assets/hero-boardroom.jpg.asset.json";
+import heroBoardroomAsset from "@/assets/hero-boardroom-in.jpg.asset.json";
 import sonaliAsset from "@/assets/sonali-deshmukh.jpg.asset.json";
 import jayantAsset from "@/assets/jayant-bhat.jpg.asset.json";
 import { HeroServicesSlider } from "@/components/HeroServicesSlider";
