@@ -322,8 +322,8 @@ function Home() {
         <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-r from-navy-deep via-navy-deep/90 to-navy-deep/30" />
         <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-t from-navy-deep via-navy-deep/20 to-navy-deep/70" />
 
-        <div className="relative mx-auto grid max-w-7xl gap-12 px-6 py-24 md:py-32 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:py-40">
-          <div className="max-w-2xl">
+        <div className="relative mx-auto max-w-7xl px-6 py-28 md:py-36 lg:py-44">
+          <div className="max-w-3xl">
             <div className="flex items-center gap-3">
               <span className="h-px w-10 bg-gold" />
               <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
@@ -339,17 +339,6 @@ function Home() {
               turn legal complexity into a competitive advantage — from incorporation
               to exit.
             </p>
-
-            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
-              {pillars.map((p) => (
-                <div key={p} className="flex items-center gap-3">
-                  <span className="h-1.5 w-1.5 rotate-45 bg-gold" />
-                  <span className="text-sm font-medium uppercase tracking-[0.2em] text-cream/90">
-                    {p}
-                  </span>
-                </div>
-              ))}
-            </div>
 
             <div className="mt-10 flex flex-wrap gap-4">
               <Link
@@ -368,31 +357,7 @@ function Home() {
               </a>
             </div>
           </div>
-
-          {/* Founder — actual photograph */}
-          <div className="mx-auto w-full max-w-sm lg:mx-0">
-            <div className="overflow-hidden rounded-3xl border border-gold/30 bg-navy-deep/40 shadow-2xl backdrop-blur-sm">
-              <img
-                src={portrait}
-                alt="Adv. Vrushali Borade, Founder & Managing Partner, WIN Legal Advisors"
-                className="aspect-[4/5] w-full object-cover object-top"
-                width={800}
-                height={1000}
-                loading="eager"
-              />
-              <div className="px-6 py-5">
-                <p className="font-serif text-xl font-bold text-cream">
-                  Adv. Vrushali Borade
-                </p>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-gold">
-                  Founder &amp; Managing Partner
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
-
-        <HeroServicesSlider slides={services} className="mt-20 md:mt-28" />
       </section>
 
       {/* TRUST & EXPERTISE */}
