@@ -29,7 +29,6 @@ import portraitAsset from "@/assets/vrushali-portrait.png.asset.json";
 import heroBoardroomAsset from "@/assets/hero-boardroom-in.jpg.asset.json";
 import sonaliAsset from "@/assets/sonali-deshmukh.jpg.asset.json";
 import jayantAsset from "@/assets/jayant-bhat.jpg.asset.json";
-import { HeroServicesSlider } from "@/components/HeroServicesSlider";
 import { Reveal } from "@/components/Reveal";
 
 const logo = logoAsset.url;
@@ -210,7 +209,6 @@ const services = [
   },
 ];
 
-const pillars = ["Trust", "Compliance", "Growth", "Sustainability"];
 
 const differentiators = [
   { icon: Briefcase, title: "Business-Focused", desc: "Practical solutions tailored to commercial reality." },
