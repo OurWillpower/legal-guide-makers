@@ -30,12 +30,30 @@ import heroBoardroomAsset from "@/assets/hero-boardroom-in.jpg.asset.json";
 import sonaliAsset from "@/assets/sonali-deshmukh.jpg.asset.json";
 import jayantAsset from "@/assets/jayant-bhat.jpg.asset.json";
 import { HeroServicesSlider } from "@/components/HeroServicesSlider";
+import { Reveal } from "@/components/Reveal";
 
 const logo = logoAsset.url;
 const portrait = portraitAsset.url;
 const heroBoardroom = heroBoardroomAsset.url;
 const sonaliPortrait = sonaliAsset.url;
 const jayantPortrait = jayantAsset.url;
+
+const expertiseAreas = [
+  "Corporate Law",
+  "DPDP Compliance",
+  "FEMA",
+  "Mergers & Acquisitions (M&A)",
+  "Corporate Governance",
+  "Management Advisory",
+  "Startup & Investor Advisory",
+];
+
+const socialProof = [
+  { value: "200+", label: "Legal Consultations Delivered", icon: ClipboardList },
+  { value: "100+", label: "Businesses Advised", icon: Building2 },
+  { value: "25+", label: "Industries Served", icon: Globe },
+];
+
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -376,6 +394,70 @@ function Home() {
 
         <HeroServicesSlider slides={services} className="mt-20 md:mt-28" />
       </section>
+
+      {/* TRUST & EXPERTISE */}
+      <section id="expertise" className="bg-background">
+        <div className="mx-auto max-w-7xl px-6 py-24 md:py-28">
+          <Reveal className="mx-auto max-w-3xl text-center">
+            <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
+              Trust &amp; Expertise
+            </span>
+            <h2 className="mt-4 font-serif text-4xl font-bold text-navy-deep md:text-5xl">
+              50+ Years of Combined Professional Expertise
+            </h2>
+            <div className="divider-gold mx-auto my-8 max-w-sm" />
+            <p className="text-lg leading-relaxed text-muted-foreground">
+              Delivering strategic legal, regulatory, governance and business
+              advisory solutions that help organizations remain compliant,
+              investor-ready and growth-focused.
+            </p>
+          </Reveal>
+
+          <Reveal delay={120} className="mt-12">
+            <ul className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
+              {expertiseAreas.map((area) => (
+                <li key={area}>
+                  <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-card px-5 py-2.5 text-sm font-medium text-navy-deep shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gold hover:shadow-gold">
+                    <span aria-hidden className="h-1.5 w-1.5 rotate-45 bg-gold" />
+                    {area}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* SOCIAL PROOF */}
+      <section id="social-proof" className="bg-muted">
+        <div className="mx-auto max-w-7xl px-6 py-20 md:py-24">
+          <div className="grid gap-6 md:grid-cols-3 md:gap-8">
+            {socialProof.map((stat, i) => (
+              <Reveal key={stat.label} delay={i * 120}>
+                <div className="group h-full rounded-2xl border border-border bg-card p-8 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-gold/50 hover:shadow-elegant">
+                  <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-gold/40 bg-gold/10 text-gold transition-transform duration-300 group-hover:scale-110">
+                    <stat.icon className="h-6 w-6" />
+                  </span>
+                  <p className="mt-6 font-serif text-5xl font-bold text-navy-deep">
+                    {stat.value}
+                  </p>
+                  <div className="divider-gold mx-auto my-4 max-w-[4rem]" />
+                  <p className="text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                    {stat.label}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal delay={360}>
+            <p className="mx-auto mt-12 max-w-3xl text-center text-lg text-muted-foreground">
+              Trusted by founders, SMEs, family businesses, corporates and
+              investors across India.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
 
       {/* ABOUT */}
       <section id="about" className="mx-auto max-w-7xl px-6 py-24">
