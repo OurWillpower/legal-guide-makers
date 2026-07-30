@@ -29,7 +29,6 @@ import portraitAsset from "@/assets/vrushali-portrait.png.asset.json";
 import heroBoardroomAsset from "@/assets/hero-boardroom-in.jpg.asset.json";
 import sonaliAsset from "@/assets/sonali-deshmukh.jpg.asset.json";
 import jayantAsset from "@/assets/jayant-bhat.jpg.asset.json";
-import { HeroServicesSlider } from "@/components/HeroServicesSlider";
 import { Reveal } from "@/components/Reveal";
 
 const logo = logoAsset.url;
@@ -210,7 +209,6 @@ const services = [
   },
 ];
 
-const pillars = ["Trust", "Compliance", "Growth", "Sustainability"];
 
 const differentiators = [
   { icon: Briefcase, title: "Business-Focused", desc: "Practical solutions tailored to commercial reality." },
@@ -322,8 +320,8 @@ function Home() {
         <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-r from-navy-deep via-navy-deep/90 to-navy-deep/30" />
         <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-t from-navy-deep via-navy-deep/20 to-navy-deep/70" />
 
-        <div className="relative mx-auto grid max-w-7xl gap-12 px-6 py-24 md:py-32 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:py-40">
-          <div className="max-w-2xl">
+        <div className="relative mx-auto max-w-7xl px-6 py-28 md:py-36 lg:py-44">
+          <div className="max-w-3xl">
             <div className="flex items-center gap-3">
               <span className="h-px w-10 bg-gold" />
               <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
@@ -339,17 +337,6 @@ function Home() {
               turn legal complexity into a competitive advantage — from incorporation
               to exit.
             </p>
-
-            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
-              {pillars.map((p) => (
-                <div key={p} className="flex items-center gap-3">
-                  <span className="h-1.5 w-1.5 rotate-45 bg-gold" />
-                  <span className="text-sm font-medium uppercase tracking-[0.2em] text-cream/90">
-                    {p}
-                  </span>
-                </div>
-              ))}
-            </div>
 
             <div className="mt-10 flex flex-wrap gap-4">
               <Link
@@ -368,31 +355,7 @@ function Home() {
               </a>
             </div>
           </div>
-
-          {/* Founder — actual photograph */}
-          <div className="mx-auto w-full max-w-sm lg:mx-0">
-            <div className="overflow-hidden rounded-3xl border border-gold/30 bg-navy-deep/40 shadow-2xl backdrop-blur-sm">
-              <img
-                src={portrait}
-                alt="Adv. Vrushali Borade, Founder & Managing Partner, WIN Legal Advisors"
-                className="aspect-[4/5] w-full object-cover object-top"
-                width={800}
-                height={1000}
-                loading="eager"
-              />
-              <div className="px-6 py-5">
-                <p className="font-serif text-xl font-bold text-cream">
-                  Adv. Vrushali Borade
-                </p>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-gold">
-                  Founder &amp; Managing Partner
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
-
-        <HeroServicesSlider slides={services} className="mt-20 md:mt-28" />
       </section>
 
       {/* TRUST & EXPERTISE */}
@@ -502,6 +465,35 @@ function Home() {
         </div>
       </section>
 
+      {/* WHY US */}
+      <section id="why-us" className="mx-auto max-w-7xl px-6 py-24">
+        <div className="mx-auto max-w-2xl text-center">
+          <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
+            Why Choose Us
+          </span>
+          <h2 className="mt-4 font-serif text-4xl font-bold text-navy-deep md:text-5xl">
+            Business-focused. Practical. Measurable.
+          </h2>
+          <div className="divider-gold mx-auto my-6 max-w-xs" />
+        </div>
+        <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {differentiators.map((d) => (
+            <div
+              key={d.title}
+              className="rounded-2xl border border-navy/10 bg-card p-8 transition-all hover:-translate-y-1 hover:shadow-elegant"
+            >
+              <div className="grid h-14 w-14 place-items-center rounded-full bg-gradient-navy text-gold shadow-elegant">
+                <d.icon className="h-6 w-6" />
+              </div>
+              <h3 className="mt-6 font-serif text-xl font-semibold text-navy-deep">
+                {d.title}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{d.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* SERVICES */}
       <section id="services" className="relative bg-navy-deep text-cream">
         <div className="mx-auto max-w-7xl px-6 py-24">
@@ -547,35 +539,6 @@ function Home() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* WHY US */}
-      <section id="why-us" className="mx-auto max-w-7xl px-6 py-24">
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
-            Why Choose Us
-          </span>
-          <h2 className="mt-4 font-serif text-4xl font-bold text-navy-deep md:text-5xl">
-            Business-focused. Practical. Measurable.
-          </h2>
-          <div className="divider-gold mx-auto my-6 max-w-xs" />
-        </div>
-        <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {differentiators.map((d) => (
-            <div
-              key={d.title}
-              className="rounded-2xl border border-navy/10 bg-card p-8 transition-all hover:-translate-y-1 hover:shadow-elegant"
-            >
-              <div className="grid h-14 w-14 place-items-center rounded-full bg-gradient-navy text-gold shadow-elegant">
-                <d.icon className="h-6 w-6" />
-              </div>
-              <h3 className="mt-6 font-serif text-xl font-semibold text-navy-deep">
-                {d.title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{d.desc}</p>
-            </div>
-          ))}
         </div>
       </section>
 
