@@ -350,6 +350,28 @@ function Home() {
               </a>
             </div>
           </div>
+
+          {/* Founder — actual photograph */}
+          <div className="mx-auto w-full max-w-sm lg:mx-0">
+            <div className="overflow-hidden rounded-3xl border border-gold/30 bg-navy-deep/40 shadow-2xl backdrop-blur-sm">
+              <img
+                src={portrait}
+                alt="Adv. Vrushali Borade, Founder & Managing Partner, WIN Legal Advisors"
+                className="aspect-[4/5] w-full object-cover object-top"
+                width={800}
+                height={1000}
+                loading="eager"
+              />
+              <div className="px-6 py-5">
+                <p className="font-serif text-xl font-bold text-cream">
+                  Adv. Vrushali Borade
+                </p>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-gold">
+                  Founder &amp; Managing Partner
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <HeroServicesSlider slides={services} className="mt-20 md:mt-28" />
