@@ -96,6 +96,23 @@ export const Route = createFileRoute("/api/public/hooks/booking-reminders")({
 
           // Email reminder
           if (!emailFlag && sendLovableEmail && apiKey) {
+            // Count prior failed attempts so each retry uses a fresh idempotency
+            // key (the email API rejects reusing a key from a failed send with
+            // 409) and so we eventually back off instead of looping forever.
+            const failedEventType = `reminder_email_${which}_failed`;
+            const { count: priorFailures } = await supabaseAdmin
+              .from("booking_events")
+              .select("id", { count: "exact", head: true })
+              .eq("booking_id", b.id)
+              .eq("event_type", failedEventType);
+            const attempt = (priorFailures ?? 0) + 1;
+            const MAX_ATTEMPTS = 5;
+            if (attempt > MAX_ATTEMPTS) {
+              console.warn(
+                `[reminders] ${which} for booking ${b.id} giving up after ${MAX_ATTEMPTS} failed attempts`,
+              );
+              continue;
+            }
             try {
               const rendered = await renderDbTemplate(
                 which === "2h" ? "booking_reminder_2h" : "booking_reminder_24h",
@@ -121,7 +138,7 @@ export const Route = createFileRoute("/api/public/hooks/booking-reminders")({
                     text: rendered.text,
                     purpose: "transactional",
                     reply_to: "contact@winlegaladvisors.com",
-                    idempotency_key: `booking-${b.id}-reminder-${which}`,
+                    idempotency_key: `booking-${b.id}-reminder-${which}-${attempt}`,
                   },
                   { apiKey },
                 );
@@ -137,7 +154,15 @@ export const Route = createFileRoute("/api/public/hooks/booking-reminders")({
                 sentEmails += 1;
               }
             } catch (err) {
-              console.warn("[reminders] email send failed:", err);
+              console.warn(`[reminders] email send failed (attempt ${attempt}/${MAX_ATTEMPTS}):`, err);
+              await supabaseAdmin.from("booking_events").insert({
+                booking_id: b.id,
+                event_type: failedEventType,
+                meta: {
+                  attempt,
+                  error: err instanceof Error ? err.message : String(err),
+                } as never,
+              });
             }
           }
 
