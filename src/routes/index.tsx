@@ -465,6 +465,35 @@ function Home() {
         </div>
       </section>
 
+      {/* WHY US */}
+      <section id="why-us" className="mx-auto max-w-7xl px-6 py-24">
+        <div className="mx-auto max-w-2xl text-center">
+          <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
+            Why Choose Us
+          </span>
+          <h2 className="mt-4 font-serif text-4xl font-bold text-navy-deep md:text-5xl">
+            Business-focused. Practical. Measurable.
+          </h2>
+          <div className="divider-gold mx-auto my-6 max-w-xs" />
+        </div>
+        <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {differentiators.map((d) => (
+            <div
+              key={d.title}
+              className="rounded-2xl border border-navy/10 bg-card p-8 transition-all hover:-translate-y-1 hover:shadow-elegant"
+            >
+              <div className="grid h-14 w-14 place-items-center rounded-full bg-gradient-navy text-gold shadow-elegant">
+                <d.icon className="h-6 w-6" />
+              </div>
+              <h3 className="mt-6 font-serif text-xl font-semibold text-navy-deep">
+                {d.title}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{d.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* SERVICES */}
       <section id="services" className="relative bg-navy-deep text-cream">
         <div className="mx-auto max-w-7xl px-6 py-24">
@@ -510,35 +539,6 @@ function Home() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* WHY US */}
-      <section id="why-us" className="mx-auto max-w-7xl px-6 py-24">
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
-            Why Choose Us
-          </span>
-          <h2 className="mt-4 font-serif text-4xl font-bold text-navy-deep md:text-5xl">
-            Business-focused. Practical. Measurable.
-          </h2>
-          <div className="divider-gold mx-auto my-6 max-w-xs" />
-        </div>
-        <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {differentiators.map((d) => (
-            <div
-              key={d.title}
-              className="rounded-2xl border border-navy/10 bg-card p-8 transition-all hover:-translate-y-1 hover:shadow-elegant"
-            >
-              <div className="grid h-14 w-14 place-items-center rounded-full bg-gradient-navy text-gold shadow-elegant">
-                <d.icon className="h-6 w-6" />
-              </div>
-              <h3 className="mt-6 font-serif text-xl font-semibold text-navy-deep">
-                {d.title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{d.desc}</p>
-            </div>
-          ))}
         </div>
       </section>
 
