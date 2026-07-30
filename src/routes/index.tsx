@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import logoAsset from "@/assets/win-logo-mark.png.asset.json";
 import portraitAsset from "@/assets/vrushali-portrait.png.asset.json";
-import heroBoardroomAsset from "@/assets/hero-boardroom.jpg.asset.json";
+import heroBoardroomAsset from "@/assets/hero-boardroom-in.jpg.asset.json";
 import sonaliAsset from "@/assets/sonali-deshmukh.jpg.asset.json";
 import jayantAsset from "@/assets/jayant-bhat.jpg.asset.json";
 import { HeroServicesSlider } from "@/components/HeroServicesSlider";
@@ -293,10 +293,10 @@ function Home() {
         {/* Full-width boardroom photograph */}
         <img
           src={heroBoardroom}
-          alt="Adv. Vrushali Borade leading a strategic discussion with senior legal advisors in a modern corporate boardroom"
+          alt="Indian corporate advisory team in a strategic boardroom discussion"
           className="absolute inset-0 -z-10 h-full w-full object-cover object-center"
-          width={896}
-          height={1200}
+          width={1280}
+          height={853}
           loading="eager"
           fetchPriority="high"
         />
@@ -304,7 +304,7 @@ function Home() {
         <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-r from-navy-deep via-navy-deep/90 to-navy-deep/30" />
         <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-t from-navy-deep via-navy-deep/20 to-navy-deep/70" />
 
-        <div className="relative mx-auto max-w-7xl px-6 py-24 md:py-32 lg:py-40">
+        <div className="relative mx-auto grid max-w-7xl gap-12 px-6 py-24 md:py-32 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:py-40">
           <div className="max-w-2xl">
             <div className="flex items-center gap-3">
               <span className="h-px w-10 bg-gold" />
@@ -348,6 +348,28 @@ function Home() {
                 Explore Services
                 <ArrowRight className="h-4 w-4" />
               </a>
+            </div>
+          </div>
+
+          {/* Founder — actual photograph */}
+          <div className="mx-auto w-full max-w-sm lg:mx-0">
+            <div className="overflow-hidden rounded-3xl border border-gold/30 bg-navy-deep/40 shadow-2xl backdrop-blur-sm">
+              <img
+                src={portrait}
+                alt="Adv. Vrushali Borade, Founder & Managing Partner, WIN Legal Advisors"
+                className="aspect-[4/5] w-full object-cover object-top"
+                width={800}
+                height={1000}
+                loading="eager"
+              />
+              <div className="px-6 py-5">
+                <p className="font-serif text-xl font-bold text-cream">
+                  Adv. Vrushali Borade
+                </p>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-gold">
+                  Founder &amp; Managing Partner
+                </p>
+              </div>
             </div>
           </div>
         </div>
