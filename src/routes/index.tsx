@@ -30,12 +30,30 @@ import heroBoardroomAsset from "@/assets/hero-boardroom-in.jpg.asset.json";
 import sonaliAsset from "@/assets/sonali-deshmukh.jpg.asset.json";
 import jayantAsset from "@/assets/jayant-bhat.jpg.asset.json";
 import { HeroServicesSlider } from "@/components/HeroServicesSlider";
+import { Reveal } from "@/components/Reveal";
 
 const logo = logoAsset.url;
 const portrait = portraitAsset.url;
 const heroBoardroom = heroBoardroomAsset.url;
 const sonaliPortrait = sonaliAsset.url;
 const jayantPortrait = jayantAsset.url;
+
+const expertiseAreas = [
+  "Corporate Law",
+  "DPDP Compliance",
+  "FEMA",
+  "Mergers & Acquisitions (M&A)",
+  "Corporate Governance",
+  "Management Advisory",
+  "Startup & Investor Advisory",
+];
+
+const socialProof = [
+  { value: "200+", label: "Legal Consultations Delivered", icon: ClipboardList },
+  { value: "100+", label: "Businesses Advised", icon: Building2 },
+  { value: "25+", label: "Industries Served", icon: Globe },
+];
+
 
 export const Route = createFileRoute("/")({
   component: Home,
