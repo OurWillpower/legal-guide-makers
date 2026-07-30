@@ -15,6 +15,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as DomainDiagnosticsRouteImport } from './routes/domain-diagnostics'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BookingRouteImport } from './routes/booking'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -65,6 +66,11 @@ const McpRoute = McpRouteImport.update({
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DomainDiagnosticsRoute = DomainDiagnosticsRouteImport.update({
+  id: '/domain-diagnostics',
+  path: '/domain-diagnostics',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -182,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/booking': typeof BookingRoute
   '/contact': typeof ContactRoute
+  '/domain-diagnostics': typeof DomainDiagnosticsRoute
   '/faq': typeof FaqRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
@@ -210,6 +217,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/booking': typeof BookingRoute
   '/contact': typeof ContactRoute
+  '/domain-diagnostics': typeof DomainDiagnosticsRoute
   '/faq': typeof FaqRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
@@ -239,6 +247,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/booking': typeof BookingRoute
   '/contact': typeof ContactRoute
+  '/domain-diagnostics': typeof DomainDiagnosticsRoute
   '/faq': typeof FaqRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
@@ -269,6 +278,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/booking'
     | '/contact'
+    | '/domain-diagnostics'
     | '/faq'
     | '/mcp'
     | '/privacy'
@@ -297,6 +307,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/booking'
     | '/contact'
+    | '/domain-diagnostics'
     | '/faq'
     | '/mcp'
     | '/privacy'
@@ -325,6 +336,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/booking'
     | '/contact'
+    | '/domain-diagnostics'
     | '/faq'
     | '/mcp'
     | '/privacy'
@@ -355,6 +367,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BookingRoute: typeof BookingRoute
   ContactRoute: typeof ContactRoute
+  DomainDiagnosticsRoute: typeof DomainDiagnosticsRoute
   FaqRoute: typeof FaqRoute
   McpRoute: typeof McpRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -416,6 +429,13 @@ declare module '@tanstack/react-router' {
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/domain-diagnostics': {
+      id: '/domain-diagnostics'
+      path: '/domain-diagnostics'
+      fullPath: '/domain-diagnostics'
+      preLoaderRoute: typeof DomainDiagnosticsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -603,6 +623,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BookingRoute: BookingRoute,
   ContactRoute: ContactRoute,
+  DomainDiagnosticsRoute: DomainDiagnosticsRoute,
   FaqRoute: FaqRoute,
   McpRoute: McpRoute,
   PrivacyRoute: PrivacyRoute,
