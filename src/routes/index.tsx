@@ -320,7 +320,7 @@ function Home() {
         <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-r from-navy-deep via-navy-deep/90 to-navy-deep/30" />
         <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-t from-navy-deep via-navy-deep/20 to-navy-deep/70" />
 
-        <div className="relative mx-auto max-w-7xl px-6 py-28 md:py-36 lg:py-44">
+        <div className="relative mx-auto max-w-7xl px-6 py-20 md:py-24 lg:py-28">
           <div className="max-w-3xl">
             <div className="flex items-center gap-3">
               <span className="h-px w-10 bg-gold" />
@@ -360,7 +360,7 @@ function Home() {
 
       {/* TRUST & EXPERTISE */}
       <section id="expertise" className="bg-background">
-        <div className="mx-auto max-w-7xl px-6 py-24 md:py-28">
+        <div className="mx-auto max-w-7xl px-6 py-14 md:py-16">
           <Reveal className="mx-auto max-w-3xl text-center">
             <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
               Trust &amp; Expertise
@@ -393,7 +393,7 @@ function Home() {
 
       {/* SOCIAL PROOF */}
       <section id="social-proof" className="bg-muted">
-        <div className="mx-auto max-w-7xl px-6 py-20 md:py-24">
+        <div className="mx-auto max-w-7xl px-6 py-12 md:py-14">
           <div className="grid gap-6 md:grid-cols-3 md:gap-8">
             {socialProof.map((stat, i) => (
               <Reveal key={stat.label} delay={i * 120}>
@@ -423,7 +423,7 @@ function Home() {
 
 
       {/* ABOUT */}
-      <section id="about" className="mx-auto max-w-7xl px-6 py-24">
+      <section id="about" className="mx-auto max-w-7xl px-6 py-14 md:py-16">
         <div className="grid gap-14 md:grid-cols-2 md:items-center">
           <div>
             <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
@@ -466,7 +466,7 @@ function Home() {
       </section>
 
       {/* WHY US */}
-      <section id="why-us" className="mx-auto max-w-7xl px-6 py-24">
+      <section id="why-us" className="mx-auto max-w-7xl px-6 py-14 md:py-16">
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
             Why Choose Us
@@ -496,7 +496,7 @@ function Home() {
 
       {/* SERVICES */}
       <section id="services" className="relative bg-navy-deep text-cream">
-        <div className="mx-auto max-w-7xl px-6 py-24">
+        <div className="mx-auto max-w-7xl px-6 py-14 md:py-16">
           <div className="mx-auto max-w-2xl text-center">
             <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
               What We Do
@@ -544,7 +544,7 @@ function Home() {
 
       {/* LEADERSHIP TEAM */}
       <section id="team" className="bg-muted">
-        <div className="mx-auto max-w-7xl px-6 py-28">
+        <div className="mx-auto max-w-7xl px-6 py-16">
           {/* Section header */}
           <div className="mx-auto max-w-3xl text-center">
             <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
@@ -679,7 +679,7 @@ function Home() {
       </section>
 
       {/* TESTIMONIALS */}
-      <section id="testimonials" className="mx-auto max-w-7xl px-6 py-24">
+      <section id="testimonials" className="mx-auto max-w-7xl px-6 py-14 md:py-16">
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.32em] text-gold">
             Client Voices
@@ -737,7 +737,7 @@ function Home() {
 
       {/* FAQ PREVIEW */}
       <section id="faq" className="bg-cream">
-        <div className="mx-auto max-w-4xl px-6 py-24">
+        <div className="mx-auto max-w-4xl px-6 py-14 md:py-16">
           <div className="text-center">
             <p className="text-xs uppercase tracking-[0.3em] text-gold">Frequently Asked</p>
             <h2 className="mt-3 font-serif text-4xl font-bold text-navy-deep md:text-5xl">
@@ -806,7 +806,7 @@ function Home() {
               "radial-gradient(circle at 80% 20%, oklch(0.78 0.13 82 / 0.4), transparent 45%)",
           }}
         />
-        <div className="relative mx-auto max-w-5xl px-6 py-24 text-center">
+        <div className="relative mx-auto max-w-5xl px-6 py-16 text-center">
           <img src={logo} alt="WIN Legal Advisors — Vision to Victory" className="mx-auto h-24 w-auto brightness-125" />
           <h2 className="mt-8 font-serif text-4xl font-bold md:text-5xl">
             Ready to build a <span className="text-gold-gradient">legally strong</span> company?
