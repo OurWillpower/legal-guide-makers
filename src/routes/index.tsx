@@ -62,7 +62,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Corporate legal, compliance, contracts, DPDP, IPR and regulatory advisory for scalable, investor-ready companies. Led by Adv. Vrushali Borade.",
+          "Corporate legal, compliance, contracts, DPDP, IPR and regulatory advisory for scalable, investor-ready companies. Led by Vrushali Borade.",
       },
       { property: "og:title", content: "WIN Legal Advisors — Vision to Victory" },
       {
@@ -95,14 +95,14 @@ export const Route = createFileRoute("/")({
               url: "https://www.winlegaladvisors.com",
               image: "https://www.winlegaladvisors.com/favicon.png",
               description:
-                "Corporate legal, compliance, contracts, DPDP & data privacy, IPR, M&A and regulatory advisory led by Adv. Vrushali Borade.",
+                "Corporate legal, compliance, contracts, DPDP & data privacy, IPR, M&A and regulatory advisory led by Vrushali Borade.",
               slogan: "Vision to Victory",
               areaServed: "IN",
               priceRange: "$$",
               address: { "@type": "PostalAddress", addressCountry: "IN" },
               founder: {
                 "@type": "Person",
-                name: "Adv. Vrushali Borade",
+                name: "Vrushali Borade",
                 jobTitle: "Founder & Corporate Legal Expert",
               },
               sameAs: ["https://www.winlegaladvisors.com"],
@@ -575,7 +575,7 @@ function Home() {
                   <div className="absolute -inset-6 rounded-full bg-gradient-gold opacity-20 blur-3xl" />
                   <img
                     src={portrait}
-                    alt="Adv. Vrushali Borade — Founder & Managing Partner, WIN Legal Advisors"
+                    alt="Vrushali Borade — Founder & Managing Partner, WIN Legal Advisors"
                     className="relative h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                     loading="lazy"
                     width={1024}
@@ -588,7 +588,7 @@ function Home() {
                     Meet the Founder
                   </span>
                   <h3 className="mt-4 font-serif text-3xl font-bold text-navy-deep md:text-4xl">
-                    Adv. Vrushali Borade
+                    Vrushali Borade
                   </h3>
                   <p className="mt-3 text-base font-semibold text-navy-soft">
                     Founder &amp; Managing Partner

@@ -47,7 +47,7 @@ export const Route = createFileRoute("/articles/dpdp/$slug")({
       meta: [
         { title: `${article.title} | WIN Legal Advisors` },
         { name: "description", content: article.excerpt },
-        { name: "author", content: "Adv. Vrushali Borade" },
+        { name: "author", content: "Vrushali Borade" },
         { name: "keywords", content: article.tags.join(", ") },
         { property: "og:title", content: article.title },
         { property: "og:description", content: article.excerpt },
@@ -55,7 +55,7 @@ export const Route = createFileRoute("/articles/dpdp/$slug")({
         { property: "og:url", content: url },
         { property: "og:site_name", content: "WIN Legal Advisors" },
         { property: "article:published_time", content: article.date },
-        { property: "article:author", content: "Adv. Vrushali Borade" },
+        { property: "article:author", content: "Vrushali Borade" },
         { property: "article:section", content: article.category },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: article.title },
@@ -70,7 +70,7 @@ export const Route = createFileRoute("/articles/dpdp/$slug")({
             "@type": "Article",
             headline: article.title,
             description: article.excerpt,
-            author: { "@type": "Person", name: "Adv. Vrushali Borade" },
+            author: { "@type": "Person", name: "Vrushali Borade" },
             publisher: {
               "@type": "Organization",
               name: "WIN Legal Advisors",
@@ -170,7 +170,7 @@ function DpdpArticleDetail() {
               <Clock className="h-3.5 w-3.5" /> {article.readTime}
             </span>
             <span className="inline-flex items-center gap-1.5 text-gold">
-              <ShieldCheck className="h-3.5 w-3.5" /> Adv. Vrushali Borade
+              <ShieldCheck className="h-3.5 w-3.5" /> Vrushali Borade
             </span>
           </div>
         </div>
@@ -269,7 +269,7 @@ function DpdpArticleDetail() {
             <div className="mt-14 rounded-2xl bg-navy-deep p-8 text-center text-cream md:p-10">
               <h3 className="font-serif text-2xl font-bold">Have questions on this topic?</h3>
               <p className="mt-2 text-cream/70">
-                Book a confidential consultation with Adv. Vrushali Borade.
+                Book a confidential consultation with Vrushali Borade.
               </p>
               <Link
                 to="/booking"

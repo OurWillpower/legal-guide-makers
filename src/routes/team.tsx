@@ -13,10 +13,10 @@ const jayantPortrait = jayantAsset.url;
 const PAGE_URL = "https://www.winlegaladvisors.com/team";
 const PAGE_TITLE = "Our Core Team — WIN Legal Advisors";
 const PAGE_DESC =
-  "Meet the WIN Legal Advisors core team — Adv. Vrushali Borade (Founder), Sonali Deshmukh (Senior IT Consultant) and Jayant Bhat (Business Mentor & Consultant).";
+  "Meet the WIN Legal Advisors core team — Vrushali Borade (Founder), Sonali Deshmukh (Senior IT Consultant) and Jayant Bhat (Business Mentor & Consultant).";
 
 const founder = {
-  name: "Adv. Vrushali Borade",
+  name: "Vrushali Borade",
   role: "Founder · Corporate Legal Expert · Compliance Strategist · Business Enabler",
   image: portrait,
   bio: "Vrushali advises founders and boards on the legal decisions that matter most — structuring for growth, closing rounds, building compliance into the DNA of the company, and resolving disputes when they arise. She blends UK-trained legal rigour with on-the-ground understanding of Indian business.",

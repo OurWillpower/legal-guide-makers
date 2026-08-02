@@ -20,7 +20,7 @@ export const Route = createFileRoute("/articles/dpdp/")({
       {
         property: "og:description",
         content:
-          "In-depth articles on DPDP Act compliance for Indian businesses, by Adv. Vrushali Borade.",
+          "In-depth articles on DPDP Act compliance for Indian businesses, by Vrushali Borade.",
       },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "WIN Legal Advisors" },
@@ -50,7 +50,7 @@ export const Route = createFileRoute("/articles/dpdp/")({
             url: `https://www.winlegaladvisors.com/articles/dpdp/${a.slug}`,
             datePublished: a.date,
             description: a.excerpt,
-            author: { "@type": "Person", name: "Adv. Vrushali Borade" },
+            author: { "@type": "Person", name: "Vrushali Borade" },
           })),
         }),
       },
@@ -265,7 +265,7 @@ function DpdpArticles() {
             Need DPDP guidance tailored to your business?
           </h3>
           <p className="mt-3 text-cream/70">
-            Book a consultation with Adv. Vrushali Borade to build a compliance roadmap.
+            Book a consultation with Vrushali Borade to build a compliance roadmap.
           </p>
           <Link
             to="/booking"
