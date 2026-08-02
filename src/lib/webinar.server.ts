@@ -31,35 +31,59 @@ export interface WebinarRegistrationRecord {
   challenge?: string | undefined;
 }
 
+export type DeliveryStatus = "sent" | "skipped" | "failed";
+export interface DeliveryResult {
+  status: DeliveryStatus;
+  detail: string;
+}
+
 async function send(opts: {
   to: string;
   subject: string;
   html: string;
   purpose: string;
   idempotencyKey?: string;
-}) {
+}): Promise<DeliveryResult> {
   const apiKey = process.env.LOVABLE_API_KEY;
   if (!apiKey) {
     console.warn("[webinar] LOVABLE_API_KEY missing — email skipped");
-    return;
+    return { status: "skipped", detail: "Email service is not configured for this project." };
   }
-  const { sendLovableEmail } = await import("@lovable.dev/email-js");
-  await sendLovableEmail(
-    {
-      to: opts.to,
-      from: FROM,
-      subject: opts.subject,
-      html: opts.html,
-      text: stripHtml(opts.html),
-      purpose: opts.purpose,
-      reply_to: "contact@winlegaladvisors.com",
-      ...(opts.idempotencyKey ? { idempotency_key: opts.idempotencyKey } : {}),
-    } as Parameters<typeof sendLovableEmail>[0],
-    { apiKey },
-  );
+  try {
+    const { sendLovableEmail } = await import("@lovable.dev/email-js");
+    const res = (await sendLovableEmail(
+      {
+        to: opts.to,
+        from: FROM,
+        subject: opts.subject,
+        html: opts.html,
+        text: stripHtml(opts.html),
+        purpose: opts.purpose,
+        reply_to: "contact@winlegaladvisors.com",
+        ...(opts.idempotencyKey ? { idempotency_key: opts.idempotencyKey } : {}),
+      } as Parameters<typeof sendLovableEmail>[0],
+      { apiKey },
+    )) as { sent?: boolean; reason?: string } | undefined;
+
+    if (res && res.sent === false) {
+      return {
+        status: "skipped",
+        detail:
+          res.reason === "recipient_suppressed"
+            ? "This address previously bounced or unsubscribed, so the provider blocked delivery."
+            : (res.reason ?? "The email provider did not accept this message."),
+      };
+    }
+    return { status: "sent", detail: "Accepted by the email provider for delivery." };
+  } catch (err) {
+    const detail = err instanceof Error ? err.message : String(err);
+    console.warn("[webinar] email failed:", detail);
+    return { status: "failed", detail };
+  }
 }
 
-export async function sendWebinarEmails(reg: WebinarRegistrationRecord) {
+
+export async function sendWebinarEmails(reg: WebinarRegistrationRecord, attempt = 1) {
   const detail = (label: string, value?: string) =>
     value
       ? `<tr><td style="padding:6px 12px 6px 0;color:#7a8299;font-size:13px;">${esc(label)}</td><td style="padding:6px 0;font-size:14px;font-weight:600;">${esc(value)}</td></tr>`
@@ -96,24 +120,55 @@ export async function sendWebinarEmails(reg: WebinarRegistrationRecord) {
       ${reg.challenge ? `<p style="margin:16px 0 0;"><strong>Biggest compliance challenge:</strong><br/>${esc(reg.challenge)}</p>` : ""}`,
   });
 
-  const results = await Promise.allSettled([
+  const suffix = attempt > 1 ? `-r${attempt}` : "";
+  const [attendee, internal] = await Promise.all([
     send({
       to: reg.email,
       subject: `Registration confirmed — ${WEBINAR.title}`,
       html: attendeeHtml,
       purpose: "webinar_registration_confirmation",
-      idempotencyKey: `webinar-attendee-${reg.id}`,
+      idempotencyKey: `webinar-attendee-${reg.id}${suffix}`,
     }),
     send({
       to: WEBINAR.notifyEmail,
       subject: `New webinar registration: ${reg.fullName}${reg.company ? ` (${reg.company})` : ""}`,
       html: internalHtml,
       purpose: "webinar_registration_notification",
-      idempotencyKey: `webinar-internal-${reg.id}`,
+      idempotencyKey: `webinar-internal-${reg.id}${suffix}`,
     }),
   ]);
 
-  for (const r of results) {
-    if (r.status === "rejected") console.warn("[webinar] email failed:", r.reason);
-  }
+  return { attendee, internal };
 }
+
+/** Reports whether outgoing mail is configured, for the email setup wizard. */
+export async function emailInfrastructureStatus() {
+  const hasApiKey = Boolean(process.env.LOVABLE_API_KEY);
+  let senderDomainReachable = false;
+  let detail = "Email service key is missing, so no mail can leave the app.";
+
+  if (hasApiKey) {
+    const probe = await send({
+      to: WEBINAR.notifyEmail,
+      subject: "WIN Legal Advisors — email delivery self-test",
+      html: wrapBrandShell({
+        preview: "Email delivery self-test",
+        contentHtml:
+          '<h1 style="margin:0 0 12px;font-size:22px;">Delivery self-test</h1><p style="margin:0;">If you are reading this, outgoing mail from the website is working.</p>',
+      }),
+      purpose: "email_setup_self_test",
+      idempotencyKey: `email-self-test-${new Date().toISOString().slice(0, 13)}`,
+    });
+    senderDomainReachable = probe.status === "sent";
+    detail = probe.detail;
+  }
+
+  return {
+    hasApiKey,
+    senderDomainReachable,
+    detail,
+    fromAddress: FROM,
+    notifyEmail: WEBINAR.notifyEmail,
+  };
+}
+

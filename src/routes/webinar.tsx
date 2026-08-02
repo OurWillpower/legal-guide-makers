@@ -28,7 +28,7 @@ import logoAsset from "@/assets/win-logo-mark.png.asset.json";
 import portrait from "@/assets/vrushali-portrait.png.asset.json";
 import { Reveal } from "@/components/Reveal";
 import { WEBINAR } from "@/lib/webinar.schema";
-import { registerForWebinar } from "@/lib/webinar.functions";
+import { registerForWebinar, resendWebinarConfirmation } from "@/lib/webinar.functions";
 
 const PAGE_URL = "https://www.winlegaladvisors.com/webinar";
 const TITLE = "Executive Masterclass | WIN Legal Advisors";
@@ -234,8 +234,29 @@ function Field({
   );
 }
 
+type Delivery = { status: "sent" | "skipped" | "failed"; detail: string };
+
+function DeliveryBadge({ label, d }: { label: string; d: Delivery }) {
+  const map = {
+    sent: { text: "Sent", cls: "border-emerald-400/40 bg-emerald-400/10 text-emerald-200" },
+    skipped: { text: "Queued / blocked", cls: "border-amber-400/40 bg-amber-400/10 text-amber-200" },
+    failed: { text: "Failed", cls: "border-red-400/40 bg-red-400/10 text-red-200" },
+  } as const;
+  const s = map[d.status];
+  return (
+    <div className="rounded-xl border border-cream/15 bg-white/5 p-3 text-left">
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-xs uppercase tracking-[0.14em] text-cream/60">{label}</span>
+        <span className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${s.cls}`}>{s.text}</span>
+      </div>
+      <p className="mt-1.5 text-xs leading-relaxed text-cream/70">{d.detail}</p>
+    </div>
+  );
+}
+
 function RegistrationForm() {
   const submit = useServerFn(registerForWebinar);
+  const resend = useServerFn(resendWebinarConfirmation);
   const [form, setForm] = useState({
     fullName: "",
     company: "",
@@ -249,6 +270,10 @@ function RegistrationForm() {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [delivery, setDelivery] = useState<{ attendee: Delivery; internal: Delivery } | null>(null);
+  const [resendEmail, setResendEmail] = useState("");
+  const [resending, setResending] = useState(false);
+  const [resendMsg, setResendMsg] = useState<string | null>(null);
 
   const update = (k: keyof typeof form, v: string) => setForm((f) => ({ ...f, [k]: v }));
 
@@ -261,7 +286,9 @@ function RegistrationForm() {
     setSubmitting(true);
     setError(null);
     try {
-      await submit({ data: { ...form, consent: true as const } });
+      const res = await submit({ data: { ...form, consent: true as const } });
+      setDelivery(res.delivery ?? null);
+      setResendEmail(form.email);
       setDone(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
@@ -270,29 +297,83 @@ function RegistrationForm() {
     }
   }
 
+  async function onResend(e: React.FormEvent) {
+    e.preventDefault();
+    setResending(true);
+    setResendMsg(null);
+    try {
+      const res = await resend({ data: { email: resendEmail } });
+      if (!res.found) {
+        setResendMsg("We could not find a registration with that email address.");
+      } else if (res.delivery) {
+        setDelivery(res.delivery);
+        setResendMsg("Confirmation re-sent — see the delivery status above.");
+      }
+    } catch (err) {
+      setResendMsg(err instanceof Error ? err.message : "Could not resend right now.");
+    } finally {
+      setResending(false);
+    }
+  }
+
   if (done) {
+    const failed = delivery && delivery.attendee.status !== "sent";
     return (
-      <div className="rounded-2xl border border-gold/40 bg-navy-deep p-10 text-center shadow-[0_30px_90px_-50px_rgba(11,31,58,0.9)]">
+      <div className="rounded-2xl border border-gold/40 bg-navy-deep p-8 text-center shadow-[0_30px_90px_-50px_rgba(11,31,58,0.9)] sm:p-10">
         <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-gold/15 text-gold">
           <CheckCircle2 className="h-8 w-8" />
         </span>
         <h3 className="mt-6 font-serif text-2xl font-bold text-gold">Registration Successful</h3>
-        <p className="mt-3 text-cream/80">Thank you for registering.</p>
-        <p className="text-cream/80">Your seat has been confirmed.</p>
-        <p className="mt-4 text-sm text-cream/60">
-          The webinar joining link will be emailed before the event.
-        </p>
+        <p className="mt-3 text-cream/80">Your seat has been confirmed and saved.</p>
+
+        {delivery && (
+          <div className="mt-6 space-y-2.5">
+            <DeliveryBadge label="Confirmation to you" d={delivery.attendee} />
+            <DeliveryBadge label="Notification to our team" d={delivery.internal} />
+          </div>
+        )}
+
+        {failed && (
+          <p className="mt-4 text-xs text-cream/60">
+            Your seat is safe regardless of email delivery. You can retry below.
+          </p>
+        )}
+
+        <form onSubmit={onResend} className="mt-6 space-y-3 text-left">
+          <label className="text-xs uppercase tracking-[0.14em] text-cream/60" htmlFor="w-resend">
+            Resend confirmation
+          </label>
+          <input
+            id="w-resend"
+            type="email"
+            required
+            value={resendEmail}
+            onChange={(e) => setResendEmail(e.target.value)}
+            placeholder="Email you registered with"
+            className={fieldClass}
+          />
+          <button
+            type="submit"
+            disabled={resending}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-gold/50 px-6 py-3 text-sm font-semibold text-gold transition hover:bg-gold hover:text-navy-deep disabled:opacity-60"
+          >
+            {resending ? "Sending…" : "Resend confirmation email"}
+          </button>
+          {resendMsg && <p className="text-xs text-cream/75">{resendMsg}</p>}
+        </form>
+
         <a
           href={WHATSAPP}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-8 inline-flex items-center justify-center rounded-full border border-gold/50 px-6 py-3 text-sm font-semibold text-gold transition hover:bg-gold hover:text-navy-deep"
+          className="mt-6 inline-flex items-center justify-center rounded-full border border-gold/50 px-6 py-3 text-sm font-semibold text-gold transition hover:bg-gold hover:text-navy-deep"
         >
           Chat on WhatsApp
         </a>
       </div>
     );
   }
+
 
   return (
     <form
