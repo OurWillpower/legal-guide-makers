@@ -31,33 +31,57 @@ export interface WebinarRegistrationRecord {
   challenge?: string | undefined;
 }
 
+export type DeliveryStatus = "sent" | "skipped" | "failed";
+export interface DeliveryResult {
+  status: DeliveryStatus;
+  detail: string;
+}
+
 async function send(opts: {
   to: string;
   subject: string;
   html: string;
   purpose: string;
   idempotencyKey?: string;
-}) {
+}): Promise<DeliveryResult> {
   const apiKey = process.env.LOVABLE_API_KEY;
   if (!apiKey) {
     console.warn("[webinar] LOVABLE_API_KEY missing — email skipped");
-    return;
+    return { status: "skipped", detail: "Email service is not configured for this project." };
   }
-  const { sendLovableEmail } = await import("@lovable.dev/email-js");
-  await sendLovableEmail(
-    {
-      to: opts.to,
-      from: FROM,
-      subject: opts.subject,
-      html: opts.html,
-      text: stripHtml(opts.html),
-      purpose: opts.purpose,
-      reply_to: "contact@winlegaladvisors.com",
-      ...(opts.idempotencyKey ? { idempotency_key: opts.idempotencyKey } : {}),
-    } as Parameters<typeof sendLovableEmail>[0],
-    { apiKey },
-  );
+  try {
+    const { sendLovableEmail } = await import("@lovable.dev/email-js");
+    const res = (await sendLovableEmail(
+      {
+        to: opts.to,
+        from: FROM,
+        subject: opts.subject,
+        html: opts.html,
+        text: stripHtml(opts.html),
+        purpose: opts.purpose,
+        reply_to: "contact@winlegaladvisors.com",
+        ...(opts.idempotencyKey ? { idempotency_key: opts.idempotencyKey } : {}),
+      } as Parameters<typeof sendLovableEmail>[0],
+      { apiKey },
+    )) as { sent?: boolean; reason?: string } | undefined;
+
+    if (res && res.sent === false) {
+      return {
+        status: "skipped",
+        detail:
+          res.reason === "recipient_suppressed"
+            ? "This address previously bounced or unsubscribed, so the provider blocked delivery."
+            : (res.reason ?? "The email provider did not accept this message."),
+      };
+    }
+    return { status: "sent", detail: "Accepted by the email provider for delivery." };
+  } catch (err) {
+    const detail = err instanceof Error ? err.message : String(err);
+    console.warn("[webinar] email failed:", detail);
+    return { status: "failed", detail };
+  }
 }
+
 
 export async function sendWebinarEmails(reg: WebinarRegistrationRecord) {
   const detail = (label: string, value?: string) =>
