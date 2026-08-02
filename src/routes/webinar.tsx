@@ -28,7 +28,7 @@ import logoAsset from "@/assets/win-logo-mark.png.asset.json";
 import portrait from "@/assets/vrushali-portrait.png.asset.json";
 import { Reveal } from "@/components/Reveal";
 import { WEBINAR } from "@/lib/webinar.schema";
-import { registerForWebinar } from "@/lib/webinar.functions";
+import { registerForWebinar, resendWebinarConfirmation } from "@/lib/webinar.functions";
 
 const PAGE_URL = "https://www.winlegaladvisors.com/webinar";
 const TITLE = "Executive Masterclass | WIN Legal Advisors";
