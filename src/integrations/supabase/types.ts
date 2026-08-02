@@ -403,6 +403,54 @@ export type Database = {
         }
         Relationships: []
       }
+      webinar_registrations: {
+        Row: {
+          challenge: string | null
+          company: string | null
+          consent: boolean
+          created_at: string
+          designation: string | null
+          email: string
+          full_name: string
+          id: string
+          mobile: string | null
+          reported_at: string | null
+          updated_at: string
+          webinar_slug: string
+          website: string | null
+        }
+        Insert: {
+          challenge?: string | null
+          company?: string | null
+          consent?: boolean
+          created_at?: string
+          designation?: string | null
+          email: string
+          full_name: string
+          id?: string
+          mobile?: string | null
+          reported_at?: string | null
+          updated_at?: string
+          webinar_slug?: string
+          website?: string | null
+        }
+        Update: {
+          challenge?: string | null
+          company?: string | null
+          consent?: boolean
+          created_at?: string
+          designation?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          mobile?: string | null
+          reported_at?: string | null
+          updated_at?: string
+          webinar_slug?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
