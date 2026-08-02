@@ -689,7 +689,9 @@ function WebinarPage() {
         </div>
       </footer>
 
+      <FloatingRegisterCta />
       <WhatsAppFab />
+
     </div>
   );
 }
