@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WebinarRouteImport } from './routes/webinar'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TeamRouteImport } from './routes/team'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -34,10 +35,16 @@ import { Route as ArticlesDpdpSlugRouteImport } from './routes/articles.dpdp.$sl
 import { Route as AuthenticatedManageBookingIdRouteImport } from './routes/_authenticated/manage-booking.$id'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as ApiPublicHooksWebinarDailyReportRouteImport } from './routes/api/public/hooks/webinar-daily-report'
 import { Route as ApiPublicHooksBookingRemindersRouteImport } from './routes/api/public/hooks/booking-reminders'
 import { Route as ApiPublicBookingPdfIdRouteImport } from './routes/api/public/booking-pdf.$id'
 import { Route as ApiPublicBookingIcsIdRouteImport } from './routes/api/public/booking-ics.$id'
 
+const WebinarRoute = WebinarRouteImport.update({
+  id: '/webinar',
+  path: '/webinar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
@@ -166,6 +173,12 @@ const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksWebinarDailyReportRoute =
+  ApiPublicHooksWebinarDailyReportRouteImport.update({
+    id: '/api/public/hooks/webinar-daily-report',
+    path: '/api/public/hooks/webinar-daily-report',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksBookingRemindersRoute =
   ApiPublicHooksBookingRemindersRouteImport.update({
     id: '/api/public/hooks/booking-reminders',
@@ -195,6 +208,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/terms': typeof TermsRoute
+  '/webinar': typeof WebinarRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -211,6 +225,7 @@ export interface FileRoutesByFullPath {
   '/api/public/booking-ics/$id': typeof ApiPublicBookingIcsIdRoute
   '/api/public/booking-pdf/$id': typeof ApiPublicBookingPdfIdRoute
   '/api/public/hooks/booking-reminders': typeof ApiPublicHooksBookingRemindersRoute
+  '/api/public/hooks/webinar-daily-report': typeof ApiPublicHooksWebinarDailyReportRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -224,6 +239,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/terms': typeof TermsRoute
+  '/webinar': typeof WebinarRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -239,6 +255,7 @@ export interface FileRoutesByTo {
   '/api/public/booking-ics/$id': typeof ApiPublicBookingIcsIdRoute
   '/api/public/booking-pdf/$id': typeof ApiPublicBookingPdfIdRoute
   '/api/public/hooks/booking-reminders': typeof ApiPublicHooksBookingRemindersRoute
+  '/api/public/hooks/webinar-daily-report': typeof ApiPublicHooksWebinarDailyReportRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -254,6 +271,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/terms': typeof TermsRoute
+  '/webinar': typeof WebinarRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
@@ -270,6 +288,7 @@ export interface FileRoutesById {
   '/api/public/booking-ics/$id': typeof ApiPublicBookingIcsIdRoute
   '/api/public/booking-pdf/$id': typeof ApiPublicBookingPdfIdRoute
   '/api/public/hooks/booking-reminders': typeof ApiPublicHooksBookingRemindersRoute
+  '/api/public/hooks/webinar-daily-report': typeof ApiPublicHooksWebinarDailyReportRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -285,6 +304,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/team'
     | '/terms'
+    | '/webinar'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/admin'
@@ -301,6 +321,7 @@ export interface FileRouteTypes {
     | '/api/public/booking-ics/$id'
     | '/api/public/booking-pdf/$id'
     | '/api/public/hooks/booking-reminders'
+    | '/api/public/hooks/webinar-daily-report'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -314,6 +335,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/team'
     | '/terms'
+    | '/webinar'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/admin'
@@ -329,6 +351,7 @@ export interface FileRouteTypes {
     | '/api/public/booking-ics/$id'
     | '/api/public/booking-pdf/$id'
     | '/api/public/hooks/booking-reminders'
+    | '/api/public/hooks/webinar-daily-report'
   id:
     | '__root__'
     | '/'
@@ -343,6 +366,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/team'
     | '/terms'
+    | '/webinar'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/admin'
@@ -359,6 +383,7 @@ export interface FileRouteTypes {
     | '/api/public/booking-ics/$id'
     | '/api/public/booking-pdf/$id'
     | '/api/public/hooks/booking-reminders'
+    | '/api/public/hooks/webinar-daily-report'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -374,6 +399,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeamRoute: typeof TeamRoute
   TermsRoute: typeof TermsRoute
+  WebinarRoute: typeof WebinarRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   ArticlesDpdpRoute: typeof ArticlesDpdpRouteWithChildren
@@ -385,10 +411,18 @@ export interface RootRouteChildren {
   ApiPublicBookingIcsIdRoute: typeof ApiPublicBookingIcsIdRoute
   ApiPublicBookingPdfIdRoute: typeof ApiPublicBookingPdfIdRoute
   ApiPublicHooksBookingRemindersRoute: typeof ApiPublicHooksBookingRemindersRoute
+  ApiPublicHooksWebinarDailyReportRoute: typeof ApiPublicHooksWebinarDailyReportRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/webinar': {
+      id: '/webinar'
+      path: '/webinar'
+      fullPath: '/webinar'
+      preLoaderRoute: typeof WebinarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/terms': {
       id: '/terms'
       path: '/terms'
@@ -564,6 +598,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/webinar-daily-report': {
+      id: '/api/public/hooks/webinar-daily-report'
+      path: '/api/public/hooks/webinar-daily-report'
+      fullPath: '/api/public/hooks/webinar-daily-report'
+      preLoaderRoute: typeof ApiPublicHooksWebinarDailyReportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/booking-reminders': {
       id: '/api/public/hooks/booking-reminders'
       path: '/api/public/hooks/booking-reminders'
@@ -630,6 +671,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeamRoute: TeamRoute,
   TermsRoute: TermsRoute,
+  WebinarRoute: WebinarRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
@@ -642,6 +684,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicBookingIcsIdRoute: ApiPublicBookingIcsIdRoute,
   ApiPublicBookingPdfIdRoute: ApiPublicBookingPdfIdRoute,
   ApiPublicHooksBookingRemindersRoute: ApiPublicHooksBookingRemindersRoute,
+  ApiPublicHooksWebinarDailyReportRoute: ApiPublicHooksWebinarDailyReportRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
