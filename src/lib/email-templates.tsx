@@ -277,7 +277,7 @@ export const BookingConfirmationEmail: React.FC<BookingEmailProps> = (props) => 
     <P style={{ marginTop: 24 }}>
       Warm regards,
       <br />
-      <strong>Adv. Vrushali Borade</strong>
+      <strong>Vrushali Borade</strong>
       <br />
       <span style={{ color: MUTED, fontSize: 13 }}>Founder, WIN Legal Advisors</span>
     </P>

@@ -36,7 +36,7 @@ export const Route = createFileRoute("/booking")({
       {
         property: "og:description",
         content:
-          "Corporate, compliance, DPDP, IPR and regulatory advisory. Pick a service and time to meet with Adv. Vrushali Borade.",
+          "Corporate, compliance, DPDP, IPR and regulatory advisory. Pick a service and time to meet with Vrushali Borade.",
       },
       { property: "og:url", content: "https://www.winlegaladvisors.com/booking" },
       { property: "og:type", content: "website" },
@@ -45,7 +45,7 @@ export const Route = createFileRoute("/booking")({
       { name: "twitter:title", content: "Book a Free Legal Consultation — WIN Legal Advisors" },
       {
         name: "twitter:description",
-        content: "Pick a service and time to meet with Adv. Vrushali Borade.",
+        content: "Pick a service and time to meet with Vrushali Borade.",
       },
     ],
     links: [{ rel: "canonical", href: "https://www.winlegaladvisors.com/booking" }],

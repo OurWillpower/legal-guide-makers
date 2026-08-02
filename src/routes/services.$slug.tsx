@@ -285,7 +285,7 @@ function ServicePageView() {
           <h2 className="font-serif text-2xl font-bold">Ready to get started?</h2>
 
           <p className="mt-2 text-cream/80">
-            Book a consultation with Adv. Vrushali Borade to discuss your requirements and get a fixed-scope proposal.
+            Book a consultation with Vrushali Borade to discuss your requirements and get a fixed-scope proposal.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link

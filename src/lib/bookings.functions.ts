@@ -319,7 +319,7 @@ export const getBookingIcs = createServerFn({ method: "GET" })
     const ics = buildIcs({
       uid: `${row.id}@winlegaladvisors.com`,
       title: `Legal Consultation — WIN Legal Advisors (${row.service})`,
-      description: `Consultation with Adv. Vrushali Borade at WIN Legal Advisors.\nService: ${row.service}`,
+      description: `Consultation with Vrushali Borade at WIN Legal Advisors.\nService: ${row.service}`,
       location: "WIN Legal Advisors (Video link to follow)",
       startISO,
       durationMinutes: 45,
