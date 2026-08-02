@@ -34,6 +34,7 @@ import { Route as ArticlesDpdpSlugRouteImport } from './routes/articles.dpdp.$sl
 import { Route as AuthenticatedManageBookingIdRouteImport } from './routes/_authenticated/manage-booking.$id'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as ApiPublicHooksWebinarDailyReportRouteImport } from './routes/api/public/hooks/webinar-daily-report'
 import { Route as ApiPublicHooksBookingRemindersRouteImport } from './routes/api/public/hooks/booking-reminders'
 import { Route as ApiPublicBookingPdfIdRouteImport } from './routes/api/public/booking-pdf.$id'
 import { Route as ApiPublicBookingIcsIdRouteImport } from './routes/api/public/booking-ics.$id'
@@ -166,6 +167,12 @@ const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksWebinarDailyReportRoute =
+  ApiPublicHooksWebinarDailyReportRouteImport.update({
+    id: '/api/public/hooks/webinar-daily-report',
+    path: '/api/public/hooks/webinar-daily-report',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksBookingRemindersRoute =
   ApiPublicHooksBookingRemindersRouteImport.update({
     id: '/api/public/hooks/booking-reminders',
@@ -211,6 +218,7 @@ export interface FileRoutesByFullPath {
   '/api/public/booking-ics/$id': typeof ApiPublicBookingIcsIdRoute
   '/api/public/booking-pdf/$id': typeof ApiPublicBookingPdfIdRoute
   '/api/public/hooks/booking-reminders': typeof ApiPublicHooksBookingRemindersRoute
+  '/api/public/hooks/webinar-daily-report': typeof ApiPublicHooksWebinarDailyReportRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -239,6 +247,7 @@ export interface FileRoutesByTo {
   '/api/public/booking-ics/$id': typeof ApiPublicBookingIcsIdRoute
   '/api/public/booking-pdf/$id': typeof ApiPublicBookingPdfIdRoute
   '/api/public/hooks/booking-reminders': typeof ApiPublicHooksBookingRemindersRoute
+  '/api/public/hooks/webinar-daily-report': typeof ApiPublicHooksWebinarDailyReportRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -270,6 +279,7 @@ export interface FileRoutesById {
   '/api/public/booking-ics/$id': typeof ApiPublicBookingIcsIdRoute
   '/api/public/booking-pdf/$id': typeof ApiPublicBookingPdfIdRoute
   '/api/public/hooks/booking-reminders': typeof ApiPublicHooksBookingRemindersRoute
+  '/api/public/hooks/webinar-daily-report': typeof ApiPublicHooksWebinarDailyReportRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -301,6 +311,7 @@ export interface FileRouteTypes {
     | '/api/public/booking-ics/$id'
     | '/api/public/booking-pdf/$id'
     | '/api/public/hooks/booking-reminders'
+    | '/api/public/hooks/webinar-daily-report'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -329,6 +340,7 @@ export interface FileRouteTypes {
     | '/api/public/booking-ics/$id'
     | '/api/public/booking-pdf/$id'
     | '/api/public/hooks/booking-reminders'
+    | '/api/public/hooks/webinar-daily-report'
   id:
     | '__root__'
     | '/'
@@ -359,6 +371,7 @@ export interface FileRouteTypes {
     | '/api/public/booking-ics/$id'
     | '/api/public/booking-pdf/$id'
     | '/api/public/hooks/booking-reminders'
+    | '/api/public/hooks/webinar-daily-report'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -385,6 +398,7 @@ export interface RootRouteChildren {
   ApiPublicBookingIcsIdRoute: typeof ApiPublicBookingIcsIdRoute
   ApiPublicBookingPdfIdRoute: typeof ApiPublicBookingPdfIdRoute
   ApiPublicHooksBookingRemindersRoute: typeof ApiPublicHooksBookingRemindersRoute
+  ApiPublicHooksWebinarDailyReportRoute: typeof ApiPublicHooksWebinarDailyReportRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -564,6 +578,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/webinar-daily-report': {
+      id: '/api/public/hooks/webinar-daily-report'
+      path: '/api/public/hooks/webinar-daily-report'
+      fullPath: '/api/public/hooks/webinar-daily-report'
+      preLoaderRoute: typeof ApiPublicHooksWebinarDailyReportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/booking-reminders': {
       id: '/api/public/hooks/booking-reminders'
       path: '/api/public/hooks/booking-reminders'
@@ -642,6 +663,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicBookingIcsIdRoute: ApiPublicBookingIcsIdRoute,
   ApiPublicBookingPdfIdRoute: ApiPublicBookingPdfIdRoute,
   ApiPublicHooksBookingRemindersRoute: ApiPublicHooksBookingRemindersRoute,
+  ApiPublicHooksWebinarDailyReportRoute: ApiPublicHooksWebinarDailyReportRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
