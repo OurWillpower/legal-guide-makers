@@ -58,9 +58,9 @@ async function send(opts: {
         subject: opts.subject,
         html: opts.html,
         text: stripHtml(opts.html),
-        purpose: opts.purpose,
+        purpose: "transactional",
         reply_to: "contact@winlegaladvisors.com",
-        ...(opts.idempotencyKey ? { idempotency_key: opts.idempotencyKey } : {}),
+        idempotency_key: opts.idempotencyKey ?? `${opts.purpose}-${opts.to}-${Date.now()}`,
       } as Parameters<typeof sendLovableEmail>[0],
       { apiKey },
     )) as { sent?: boolean; reason?: string } | undefined;
