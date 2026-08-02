@@ -104,6 +104,8 @@ export async function sendWebinarEmails(reg: WebinarRegistrationRecord, attempt 
       <p style="margin:20px 0 0;color:#7a8299;font-size:13px;">Questions? Reply to this email or WhatsApp us at +91 74982 85423.</p>`,
   });
 
+  const cumulative = await buildCumulativeReport();
+
   const internalHtml = wrapBrandShell({
     preview: `New webinar registration — ${reg.fullName}`,
     contentHtml: `
@@ -117,11 +119,13 @@ export async function sendWebinarEmails(reg: WebinarRegistrationRecord, attempt 
         ${detail("Website", reg.website)}
         ${detail("Webinar", WEBINAR.title)}
       </table>
-      ${reg.challenge ? `<p style="margin:16px 0 0;"><strong>Biggest compliance challenge:</strong><br/>${esc(reg.challenge)}</p>` : ""}`,
+      ${reg.challenge ? `<p style="margin:16px 0 0;"><strong>Biggest compliance challenge:</strong><br/>${esc(reg.challenge)}</p>` : ""}
+      ${cumulative}`,
   });
 
   const suffix = attempt > 1 ? `-r${attempt}` : "";
-  const [attendee, internal] = await Promise.all([
+  const internalSubject = `New webinar registration: ${reg.fullName}${reg.company ? ` (${reg.company})` : ""}`;
+  const [attendee, ...internalResults] = await Promise.all([
     send({
       to: reg.email,
       subject: `Registration confirmed — ${WEBINAR.title}`,
@@ -129,14 +133,20 @@ export async function sendWebinarEmails(reg: WebinarRegistrationRecord, attempt 
       purpose: "webinar_registration_confirmation",
       idempotencyKey: `webinar-attendee-${reg.id}${suffix}`,
     }),
-    send({
-      to: WEBINAR.notifyEmail,
-      subject: `New webinar registration: ${reg.fullName}${reg.company ? ` (${reg.company})` : ""}`,
-      html: internalHtml,
-      purpose: "webinar_registration_notification",
-      idempotencyKey: `webinar-internal-${reg.id}${suffix}`,
-    }),
+    ...notifyRecipients().map((to) =>
+      send({
+        to,
+        subject: internalSubject,
+        html: internalHtml,
+        purpose: "webinar_registration_notification",
+        idempotencyKey: `webinar-internal-${reg.id}-${to}${suffix}`,
+      }),
+    ),
   ]);
+
+  const internal: DeliveryResult =
+    internalResults.find((r) => r.status === "sent") ??
+    internalResults[0] ?? { status: "failed", detail: "No internal recipient configured." };
 
   const whatsapp = await sendWebinarWhatsapp(reg);
 
