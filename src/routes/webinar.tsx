@@ -361,6 +361,7 @@ function RegistrationForm() {
         {delivery && (
           <div className="mt-6 space-y-2.5">
             <DeliveryBadge label="Confirmation to you" d={delivery.attendee} />
+            <DeliveryBadge label="WhatsApp confirmation" d={delivery.whatsapp} />
             <DeliveryBadge label="Notification to our team" d={delivery.internal} />
           </div>
         )}
