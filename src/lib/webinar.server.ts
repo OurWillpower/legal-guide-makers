@@ -138,7 +138,35 @@ export async function sendWebinarEmails(reg: WebinarRegistrationRecord, attempt 
     }),
   ]);
 
-  return { attendee, internal };
+  const whatsapp = await sendWebinarWhatsapp(reg);
+
+  return { attendee, internal, whatsapp };
+}
+
+/** Sends the WhatsApp registration confirmation to the attendee. */
+export async function sendWebinarWhatsapp(reg: WebinarRegistrationRecord): Promise<DeliveryResult> {
+  if (!reg.mobile) {
+    return { status: "skipped", detail: "No WhatsApp number was provided." };
+  }
+
+  const { sendWhatsappTemplate } = await import("./whatsapp.server");
+  const result = await sendWhatsappTemplate({
+    to: reg.mobile,
+    templateName: process.env.WHATSAPP_WEBINAR_TEMPLATE ?? "webinar_registration_confirmation",
+    languageCode: process.env.WHATSAPP_WEBINAR_TEMPLATE_LANG ?? "en",
+    bodyParams: [reg.fullName, WEBINAR.title, WEBINAR.dateLabel, WEBINAR.timeLabel],
+  });
+
+  if (result.sent) {
+    return { status: "sent", detail: "Delivered to WhatsApp for the number you provided." };
+  }
+  if (result.skipped === "whatsapp_not_configured") {
+    return { status: "skipped", detail: "WhatsApp messaging is not configured for this project yet." };
+  }
+  if (result.skipped === "no_phone") {
+    return { status: "skipped", detail: "The WhatsApp number could not be read." };
+  }
+  return { status: "failed", detail: result.error ?? "WhatsApp provider did not accept the message." };
 }
 
 /** Reports whether outgoing mail is configured, for the email setup wizard. */
