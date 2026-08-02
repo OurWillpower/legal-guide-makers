@@ -291,6 +291,7 @@ function Home() {
             <a href="/#team" className="hover:text-gold transition-colors">Our Core Team</a>
             <a href="#testimonials" className="hover:text-gold transition-colors">Testimonials</a>
             <Link to="/articles/dpdp" className="hover:text-gold transition-colors">Articles</Link>
+            <Link to="/webinar" className="font-semibold text-gold hover:text-gold/80 transition-colors">Masterclass</Link>
             <a href="#faq" className="hover:text-gold transition-colors">FAQ</a>
             <Link to="/contact" className="hover:text-gold transition-colors">Contact</Link>
           </nav>
