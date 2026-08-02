@@ -83,7 +83,7 @@ async function send(opts: {
 }
 
 
-export async function sendWebinarEmails(reg: WebinarRegistrationRecord) {
+export async function sendWebinarEmails(reg: WebinarRegistrationRecord, attempt = 1) {
   const detail = (label: string, value?: string) =>
     value
       ? `<tr><td style="padding:6px 12px 6px 0;color:#7a8299;font-size:13px;">${esc(label)}</td><td style="padding:6px 0;font-size:14px;font-weight:600;">${esc(value)}</td></tr>`
