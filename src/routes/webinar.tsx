@@ -302,7 +302,7 @@ function RegistrationForm() {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [delivery, setDelivery] = useState<{ attendee: Delivery; internal: Delivery } | null>(null);
+  const [delivery, setDelivery] = useState<{ attendee: Delivery; internal: Delivery; whatsapp: Delivery } | null>(null);
   const [resendEmail, setResendEmail] = useState("");
   const [resending, setResending] = useState(false);
   const [resendMsg, setResendMsg] = useState<string | null>(null);
