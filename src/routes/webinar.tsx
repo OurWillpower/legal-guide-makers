@@ -302,7 +302,7 @@ function RegistrationForm() {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [delivery, setDelivery] = useState<{ attendee: Delivery; internal: Delivery } | null>(null);
+  const [delivery, setDelivery] = useState<{ attendee: Delivery; internal: Delivery; whatsapp: Delivery } | null>(null);
   const [resendEmail, setResendEmail] = useState("");
   const [resending, setResending] = useState(false);
   const [resendMsg, setResendMsg] = useState<string | null>(null);
@@ -361,6 +361,7 @@ function RegistrationForm() {
         {delivery && (
           <div className="mt-6 space-y-2.5">
             <DeliveryBadge label="Confirmation to you" d={delivery.attendee} />
+            <DeliveryBadge label="WhatsApp confirmation" d={delivery.whatsapp} />
             <DeliveryBadge label="Notification to our team" d={delivery.internal} />
           </div>
         )}
@@ -424,7 +425,9 @@ function RegistrationForm() {
           value={form.designation} onChange={(e) => update("designation", e.target.value)} />
         <Field id="w-email" label="Email Address *" icon={Mail} type="email" required maxLength={254}
           value={form.email} onChange={(e) => update("email", e.target.value)} />
-        <Field id="w-mobile" label="Mobile Number" icon={Phone} type="tel" maxLength={40}
+        <Field id="w-mobile" label="WhatsApp Number (with country code) *" icon={Phone} type="tel" required
+          maxLength={40} inputMode="tel" pattern="[+0-9][0-9 ()\-]{7,}"
+          title="Enter your WhatsApp number with country code, e.g. +91 98765 43210"
           value={form.mobile} onChange={(e) => update("mobile", e.target.value)} />
         <Field id="w-website" label="Company Website (Optional)" icon={Globe} maxLength={300}
           value={form.website} onChange={(e) => update("website", e.target.value)} />

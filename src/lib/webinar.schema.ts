@@ -5,7 +5,12 @@ export const webinarRegistrationSchema = z.object({
   company: z.string().trim().max(160).optional().or(z.literal("")),
   designation: z.string().trim().max(120).optional().or(z.literal("")),
   email: z.string().trim().email("Enter a valid business email").max(254),
-  mobile: z.string().trim().max(40).optional().or(z.literal("")),
+  mobile: z
+    .string()
+    .trim()
+    .min(8, "Enter your WhatsApp number")
+    .max(40)
+    .regex(/^[+\d][\d\s()-]{7,}$/, "Enter a valid WhatsApp number with country code"),
   website: z.string().trim().max(300).optional().or(z.literal("")),
   challenge: z.string().trim().max(2000).optional().or(z.literal("")),
   consent: z.literal(true, { message: "Please accept to continue" }),
