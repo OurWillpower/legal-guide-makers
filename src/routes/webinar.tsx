@@ -504,9 +504,11 @@ function WebinarPage() {
               </div>
             </Reveal>
 
-            <Reveal delay={100} id="register" className="scroll-mt-24">
-              <RegistrationForm />
-            </Reveal>
+            <div id="register" className="scroll-mt-24">
+              <Reveal delay={100}>
+                <RegistrationForm />
+              </Reveal>
+            </div>
           </div>
         </section>
 
