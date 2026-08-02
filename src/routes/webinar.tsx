@@ -190,8 +190,40 @@ function Countdown() {
   );
 }
 
+function FloatingRegisterCta() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const target = document.getElementById("register");
+    if (!target) {
+      setVisible(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => setVisible(!entry?.isIntersecting),
+      { threshold: 0.15 },
+    );
+    io.observe(target);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <a
+      href="#register"
+      aria-label="Jump to the masterclass registration form"
+      className={`shimmer-cta fixed bottom-5 left-1/2 z-40 -translate-x-1/2 rounded-full bg-gradient-gold px-7 py-3 text-sm font-bold text-navy-deep shadow-gold transition-all duration-300 md:left-6 md:translate-x-0 ${
+        visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-6 opacity-0"
+      }`}
+    >
+      <span className="shimmer-cta-sheen" aria-hidden="true" />
+      <span className="relative">Register Now — Free Seat</span>
+    </a>
+  );
+}
+
 function WhatsAppFab() {
   return (
+
     <a
       href={WHATSAPP}
       target="_blank"
