@@ -291,6 +291,7 @@ function Home() {
             <a href="/#team" className="hover:text-gold transition-colors">Our Core Team</a>
             <a href="#testimonials" className="hover:text-gold transition-colors">Testimonials</a>
             <Link to="/articles/dpdp" className="hover:text-gold transition-colors">Articles</Link>
+            <Link to="/webinar" className="font-semibold text-gold hover:text-gold/80 transition-colors">Masterclass</Link>
             <a href="#faq" className="hover:text-gold transition-colors">FAQ</a>
             <Link to="/contact" className="hover:text-gold transition-colors">Contact</Link>
           </nav>
@@ -859,6 +860,7 @@ function Home() {
               <li><a href="#why-us" className="hover:text-gold">Why Us</a></li>
               <li><Link to="/team" className="hover:text-gold">Our Core Team</Link></li>
               <li><a href="#testimonials" className="hover:text-gold">Testimonials</a></li>
+              <li><Link to="/webinar" className="hover:text-gold">Free Masterclass</Link></li>
               <li><Link to="/faq" className="hover:text-gold">FAQ</Link></li>
               <li><Link to="/booking" className="hover:text-gold">Book Consultation</Link></li>
               <li><Link to="/contact" className="hover:text-gold">Contact</Link></li>
