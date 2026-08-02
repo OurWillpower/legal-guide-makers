@@ -120,24 +120,55 @@ export async function sendWebinarEmails(reg: WebinarRegistrationRecord) {
       ${reg.challenge ? `<p style="margin:16px 0 0;"><strong>Biggest compliance challenge:</strong><br/>${esc(reg.challenge)}</p>` : ""}`,
   });
 
-  const results = await Promise.allSettled([
+  const suffix = attempt > 1 ? `-r${attempt}` : "";
+  const [attendee, internal] = await Promise.all([
     send({
       to: reg.email,
       subject: `Registration confirmed — ${WEBINAR.title}`,
       html: attendeeHtml,
       purpose: "webinar_registration_confirmation",
-      idempotencyKey: `webinar-attendee-${reg.id}`,
+      idempotencyKey: `webinar-attendee-${reg.id}${suffix}`,
     }),
     send({
       to: WEBINAR.notifyEmail,
       subject: `New webinar registration: ${reg.fullName}${reg.company ? ` (${reg.company})` : ""}`,
       html: internalHtml,
       purpose: "webinar_registration_notification",
-      idempotencyKey: `webinar-internal-${reg.id}`,
+      idempotencyKey: `webinar-internal-${reg.id}${suffix}`,
     }),
   ]);
 
-  for (const r of results) {
-    if (r.status === "rejected") console.warn("[webinar] email failed:", r.reason);
-  }
+  return { attendee, internal };
 }
+
+/** Reports whether outgoing mail is configured, for the email setup wizard. */
+export async function emailInfrastructureStatus() {
+  const hasApiKey = Boolean(process.env.LOVABLE_API_KEY);
+  let senderDomainReachable = false;
+  let detail = "Email service key is missing, so no mail can leave the app.";
+
+  if (hasApiKey) {
+    const probe = await send({
+      to: WEBINAR.notifyEmail,
+      subject: "WIN Legal Advisors — email delivery self-test",
+      html: wrapBrandShell({
+        preview: "Email delivery self-test",
+        contentHtml:
+          '<h1 style="margin:0 0 12px;font-size:22px;">Delivery self-test</h1><p style="margin:0;">If you are reading this, outgoing mail from the website is working.</p>',
+      }),
+      purpose: "email_setup_self_test",
+      idempotencyKey: `email-self-test-${new Date().toISOString().slice(0, 13)}`,
+    });
+    senderDomainReachable = probe.status === "sent";
+    detail = probe.detail;
+  }
+
+  return {
+    hasApiKey,
+    senderDomainReachable,
+    detail,
+    fromAddress: FROM,
+    notifyEmail: WEBINAR.notifyEmail,
+  };
+}
+
