@@ -291,17 +291,24 @@ function Home() {
             <a href="/#team" className="hover:text-gold transition-colors">Our Core Team</a>
             <a href="#testimonials" className="hover:text-gold transition-colors">Testimonials</a>
             <Link to="/articles/dpdp" className="hover:text-gold transition-colors">Articles</Link>
-            <Link to="/webinar" className="font-semibold text-gold hover:text-gold/80 transition-colors">Masterclass</Link>
             <a href="#faq" className="hover:text-gold transition-colors">FAQ</a>
             <Link to="/contact" className="hover:text-gold transition-colors">Contact</Link>
           </nav>
-          <Link
-            to="/booking"
-            className="hidden items-center gap-2 rounded-full bg-gradient-gold px-5 py-2.5 text-sm font-semibold text-navy-deep shadow-gold transition-transform hover:scale-[1.03] md:inline-flex"
-          >
-            <Calendar className="h-4 w-4" />
-            Book Consultation
-          </Link>
+          <div className="hidden items-center gap-3 md:flex">
+            <Link
+              to="/booking"
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-gold px-5 py-2.5 text-sm font-semibold text-navy-deep shadow-gold transition-transform hover:scale-[1.03]"
+            >
+              <Calendar className="h-4 w-4" />
+              Book Consultation
+            </Link>
+            <Link
+              to="/webinar"
+              className="inline-flex items-center rounded-full border border-gold px-5 py-2.5 text-sm font-semibold text-gold transition-colors hover:bg-gold hover:text-navy-deep"
+            >
+              Masterclass
+            </Link>
+          </div>
         </div>
       </header>
 
