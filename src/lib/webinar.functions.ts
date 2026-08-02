@@ -33,16 +33,21 @@ export const registerForWebinar = createServerFn({ method: "POST" })
       throw new Error("Could not complete your registration. Please try again.");
     }
 
-    let delivery: { attendee: EmailDelivery; internal: EmailDelivery } = {
+    let delivery: { attendee: EmailDelivery; internal: EmailDelivery; whatsapp: EmailDelivery } = {
       attendee: { status: "failed", detail: "Email could not be attempted." },
       internal: { status: "failed", detail: "Email could not be attempted." },
+      whatsapp: { status: "failed", detail: "WhatsApp message could not be attempted." },
     };
     try {
       const { sendWebinarEmails } = await import("./webinar.server");
       delivery = await sendWebinarEmails({ id: row.id, ...data });
     } catch (emailErr) {
       const detail = emailErr instanceof Error ? emailErr.message : String(emailErr);
-      delivery = { attendee: { status: "failed", detail }, internal: { status: "failed", detail } };
+      delivery = {
+        attendee: { status: "failed", detail },
+        internal: { status: "failed", detail },
+        whatsapp: { status: "failed", detail },
+      };
     }
 
     return { id: row.id, ok: true, delivery };
