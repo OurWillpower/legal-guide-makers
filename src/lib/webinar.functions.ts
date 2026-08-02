@@ -73,7 +73,7 @@ export const resendWebinarConfirmation = createServerFn({ method: "POST" })
     if (!row) {
       return {
         found: false,
-        delivery: null as null | { attendee: EmailDelivery; internal: EmailDelivery },
+        delivery: null as null | { attendee: EmailDelivery; internal: EmailDelivery; whatsapp: EmailDelivery },
       };
     }
 
