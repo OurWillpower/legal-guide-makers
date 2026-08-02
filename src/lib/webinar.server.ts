@@ -83,6 +83,56 @@ async function send(opts: {
 }
 
 
+/** All internal addresses that should receive registration alerts. */
+function notifyRecipients(): string[] {
+  const extra = (process.env.WEBINAR_NOTIFY_EMAILS ?? "")
+    .split(/[,;\s]+/)
+    .map((s) => s.trim())
+    .filter((s) => s.includes("@"));
+  return Array.from(new Set([WEBINAR.notifyEmail, ...extra]));
+}
+
+/** Running totals + full registrant list, appended to each internal alert. */
+async function buildCumulativeReport(): Promise<string> {
+  try {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: rows, error } = await supabaseAdmin
+      .from("webinar_registrations")
+      .select("full_name, company, email, mobile, created_at")
+      .eq("webinar_slug", WEBINAR.slug)
+      .order("created_at", { ascending: false });
+    if (error || !rows) return "";
+
+    const fmt = (iso: string) =>
+      new Date(iso).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+    const today = new Date().toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata" });
+    const todayCount = rows.filter(
+      (r) => new Date(r.created_at).toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata" }) === today,
+    ).length;
+
+    const list = rows
+      .map(
+        (r, i) =>
+          `<tr><td style="padding:6px 10px 6px 0;font-size:12px;color:#7a8299;">${rows.length - i}</td><td style="padding:6px 10px 6px 0;font-size:12px;">${esc(fmt(r.created_at))}</td><td style="padding:6px 10px 6px 0;font-size:12px;font-weight:600;">${esc(r.full_name)}</td><td style="padding:6px 10px 6px 0;font-size:12px;">${esc(r.company ?? "—")}</td><td style="padding:6px 10px 6px 0;font-size:12px;">${esc(r.email)}</td><td style="padding:6px 0;font-size:12px;">${esc(r.mobile ?? "—")}</td></tr>`,
+      )
+      .join("");
+
+    return `
+      <div style="margin:28px 0 0;padding:16px;background:#fff;border:1px solid #e5e1d6;border-radius:10px;">
+        <p style="margin:0 0 4px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#c9a24a;">Cumulative report</p>
+        <p style="margin:0 0 12px;font-size:15px;"><strong>${rows.length}</strong> total registration${rows.length === 1 ? "" : "s"} &nbsp;•&nbsp; <strong>${todayCount}</strong> today (${esc(today)})</p>
+        <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+          <tr><th align="left" style="font-size:11px;color:#7a8299;padding-bottom:6px;">#</th><th align="left" style="font-size:11px;color:#7a8299;">Registered (IST)</th><th align="left" style="font-size:11px;color:#7a8299;">Name</th><th align="left" style="font-size:11px;color:#7a8299;">Company</th><th align="left" style="font-size:11px;color:#7a8299;">Email</th><th align="left" style="font-size:11px;color:#7a8299;">WhatsApp</th></tr>
+          ${list}
+        </table>
+      </div>`;
+  } catch (err) {
+    console.warn("[webinar] cumulative report failed:", err);
+    return "";
+  }
+}
+
+
 export async function sendWebinarEmails(reg: WebinarRegistrationRecord, attempt = 1) {
   const detail = (label: string, value?: string) =>
     value
@@ -104,6 +154,8 @@ export async function sendWebinarEmails(reg: WebinarRegistrationRecord, attempt 
       <p style="margin:20px 0 0;color:#7a8299;font-size:13px;">Questions? Reply to this email or WhatsApp us at +91 74982 85423.</p>`,
   });
 
+  const cumulative = await buildCumulativeReport();
+
   const internalHtml = wrapBrandShell({
     preview: `New webinar registration — ${reg.fullName}`,
     contentHtml: `
@@ -117,11 +169,13 @@ export async function sendWebinarEmails(reg: WebinarRegistrationRecord, attempt 
         ${detail("Website", reg.website)}
         ${detail("Webinar", WEBINAR.title)}
       </table>
-      ${reg.challenge ? `<p style="margin:16px 0 0;"><strong>Biggest compliance challenge:</strong><br/>${esc(reg.challenge)}</p>` : ""}`,
+      ${reg.challenge ? `<p style="margin:16px 0 0;"><strong>Biggest compliance challenge:</strong><br/>${esc(reg.challenge)}</p>` : ""}
+      ${cumulative}`,
   });
 
   const suffix = attempt > 1 ? `-r${attempt}` : "";
-  const [attendee, internal] = await Promise.all([
+  const internalSubject = `New webinar registration: ${reg.fullName}${reg.company ? ` (${reg.company})` : ""}`;
+  const [attendee, ...internalResults] = await Promise.all([
     send({
       to: reg.email,
       subject: `Registration confirmed — ${WEBINAR.title}`,
@@ -129,14 +183,20 @@ export async function sendWebinarEmails(reg: WebinarRegistrationRecord, attempt 
       purpose: "webinar_registration_confirmation",
       idempotencyKey: `webinar-attendee-${reg.id}${suffix}`,
     }),
-    send({
-      to: WEBINAR.notifyEmail,
-      subject: `New webinar registration: ${reg.fullName}${reg.company ? ` (${reg.company})` : ""}`,
-      html: internalHtml,
-      purpose: "webinar_registration_notification",
-      idempotencyKey: `webinar-internal-${reg.id}${suffix}`,
-    }),
+    ...notifyRecipients().map((to) =>
+      send({
+        to,
+        subject: internalSubject,
+        html: internalHtml,
+        purpose: "webinar_registration_notification",
+        idempotencyKey: `webinar-internal-${reg.id}-${to}${suffix}`,
+      }),
+    ),
   ]);
+
+  const internal: DeliveryResult =
+    internalResults.find((r) => r.status === "sent") ??
+    internalResults[0] ?? { status: "failed", detail: "No internal recipient configured." };
 
   const whatsapp = await sendWebinarWhatsapp(reg);
 
