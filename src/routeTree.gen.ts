@@ -16,6 +16,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as EmailSetupRouteImport } from './routes/email-setup'
 import { Route as DomainDiagnosticsRouteImport } from './routes/domain-diagnostics'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BookingRouteImport } from './routes/booking'
@@ -73,6 +74,11 @@ const McpRoute = McpRouteImport.update({
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmailSetupRoute = EmailSetupRouteImport.update({
+  id: '/email-setup',
+  path: '/email-setup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DomainDiagnosticsRoute = DomainDiagnosticsRouteImport.update({
@@ -202,6 +208,7 @@ export interface FileRoutesByFullPath {
   '/booking': typeof BookingRoute
   '/contact': typeof ContactRoute
   '/domain-diagnostics': typeof DomainDiagnosticsRoute
+  '/email-setup': typeof EmailSetupRoute
   '/faq': typeof FaqRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
@@ -233,6 +240,7 @@ export interface FileRoutesByTo {
   '/booking': typeof BookingRoute
   '/contact': typeof ContactRoute
   '/domain-diagnostics': typeof DomainDiagnosticsRoute
+  '/email-setup': typeof EmailSetupRoute
   '/faq': typeof FaqRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
@@ -265,6 +273,7 @@ export interface FileRoutesById {
   '/booking': typeof BookingRoute
   '/contact': typeof ContactRoute
   '/domain-diagnostics': typeof DomainDiagnosticsRoute
+  '/email-setup': typeof EmailSetupRoute
   '/faq': typeof FaqRoute
   '/mcp': typeof McpRoute
   '/privacy': typeof PrivacyRoute
@@ -298,6 +307,7 @@ export interface FileRouteTypes {
     | '/booking'
     | '/contact'
     | '/domain-diagnostics'
+    | '/email-setup'
     | '/faq'
     | '/mcp'
     | '/privacy'
@@ -329,6 +339,7 @@ export interface FileRouteTypes {
     | '/booking'
     | '/contact'
     | '/domain-diagnostics'
+    | '/email-setup'
     | '/faq'
     | '/mcp'
     | '/privacy'
@@ -360,6 +371,7 @@ export interface FileRouteTypes {
     | '/booking'
     | '/contact'
     | '/domain-diagnostics'
+    | '/email-setup'
     | '/faq'
     | '/mcp'
     | '/privacy'
@@ -393,6 +405,7 @@ export interface RootRouteChildren {
   BookingRoute: typeof BookingRoute
   ContactRoute: typeof ContactRoute
   DomainDiagnosticsRoute: typeof DomainDiagnosticsRoute
+  EmailSetupRoute: typeof EmailSetupRoute
   FaqRoute: typeof FaqRoute
   McpRoute: typeof McpRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -463,6 +476,13 @@ declare module '@tanstack/react-router' {
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/email-setup': {
+      id: '/email-setup'
+      path: '/email-setup'
+      fullPath: '/email-setup'
+      preLoaderRoute: typeof EmailSetupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/domain-diagnostics': {
@@ -665,6 +685,7 @@ const rootRouteChildren: RootRouteChildren = {
   BookingRoute: BookingRoute,
   ContactRoute: ContactRoute,
   DomainDiagnosticsRoute: DomainDiagnosticsRoute,
+  EmailSetupRoute: EmailSetupRoute,
   FaqRoute: FaqRoute,
   McpRoute: McpRoute,
   PrivacyRoute: PrivacyRoute,
