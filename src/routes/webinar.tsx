@@ -464,10 +464,12 @@ function WebinarPage() {
             </Link>
             <a
               href="#register"
-              className="inline-flex rounded-full bg-gradient-gold px-5 py-2.5 text-sm font-semibold text-navy-deep shadow-gold transition-transform hover:scale-[1.03]"
+              className="shimmer-cta relative inline-flex rounded-full bg-gradient-gold px-5 py-2.5 text-sm font-semibold text-navy-deep shadow-gold transition-transform hover:scale-[1.03]"
             >
-              Masterclass
+              <span className="shimmer-cta-sheen" aria-hidden="true" />
+              <span className="relative">Masterclass</span>
             </a>
+
           </div>
         </div>
       </header>
