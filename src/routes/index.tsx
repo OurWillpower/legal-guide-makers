@@ -304,10 +304,12 @@ function Home() {
             </Link>
             <Link
               to="/webinar"
-              className="inline-flex items-center rounded-full border border-gold px-5 py-2.5 text-sm font-semibold text-gold transition-colors hover:bg-gold hover:text-navy-deep"
+              className="shimmer-cta relative inline-flex items-center rounded-full border border-gold px-5 py-2.5 text-sm font-semibold text-gold transition-colors hover:bg-gold hover:text-navy-deep"
             >
-              Masterclass
+              <span className="shimmer-cta-sheen" aria-hidden="true" />
+              <span className="relative">Masterclass</span>
             </Link>
+
           </div>
         </div>
       </header>
